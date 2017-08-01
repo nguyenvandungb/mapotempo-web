@@ -199,3 +199,9 @@ Setup assets:
 If you focus one test only or for any other good reasons, you don't want to check i18n and coverage:
 
     rake test I18N=false COVERAGE=false
+
+## Translation
+
+Add new locale:
+* Update `config/application.rb`
+* Require the translation assets into `app/assets/javascripts/application.js`
