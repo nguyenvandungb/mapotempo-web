@@ -138,6 +138,7 @@ en:
       unauthorized: Unauthorized
       list: Can't list devices
       get_vehicles_pos: Can't get vehicles positions
+      timeout: Request Timeout
     alyacom:
       unauthorized: Unauthorized
       timeout: Request Timeout

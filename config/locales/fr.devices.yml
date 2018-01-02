@@ -140,6 +140,7 @@ fr:
       unauthorized: Non autorisé
       list: Impossible de lister les appareils
       get_vehicles_pos: Impossible de lister les positions des véhicules
+      timeout: Délai d'attente depassé
     alyacom:
       unauthorized: Non autorisé
       timeout: Délai d'attente depassé

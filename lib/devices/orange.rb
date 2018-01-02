@@ -138,9 +138,18 @@ class Orange < DeviceBase
     f = Tempfile.new Time.zone.now.to_i.to_s
     f.write to_xml(route, options)
     f.rewind
-    response = RestClient::Request.execute method: :post, user: customer.devices[:orange][:user], password: customer.devices[:orange][:password], url: api_url + '/pnd/index.php', payload: { multipart: true, file: f }
+    response = RestClient::Request.execute(method: :post, user: customer.devices[:orange][:user], password: customer.devices[:orange][:password], url: api_url + '/pnd/index.php', payload: { multipart: true, file: f }) { |resp, req, res|
+      case resp.code
+        when 301, 302, 307
+          resp.follow_redirection
+        else
+          resp.return!
+      end
+    }
     f.unlink
     response
+    rescue RestClient::RequestTimeout => e
+      raise DeviceServiceError.new('orange: %s' % [ I18n.t('errors.orange.timeout') ])
   end
 
   def to_xml(route, options = {})
