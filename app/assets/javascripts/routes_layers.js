@@ -799,7 +799,7 @@ var RoutesLayer = L.FeatureGroup.extend({
         marker.properties.route_color = this.options.colorsByRoute[geoJsonPoint.properties.route_id];
 
         if (storeId) {
-          this.markerStores.push(marker);
+          this._removeStore(storeId).push(marker);
         } else {
           if (!this.clustersByRoute[routeId]) {
             this.clustersByRoute[routeId] = L.markerClusterGroup(this.markerOptions);
@@ -841,5 +841,16 @@ var RoutesLayer = L.FeatureGroup.extend({
       }
     }.bind(this));
     popupModule.activeClickMarker = false;
+  },
+
+  _removeStore: function(storeId) {
+    for (var i = 0; i < this.markerStores.length; i++) {
+      if (this.markerStores[i] && this.markerStores[i].properties.store_id !== storeId) continue;
+
+      this.removeLayer(this.markerStores[i]);
+      delete this.markerStores[i];
+    }
+
+    return this.markerStores;
   }
 });
