@@ -375,6 +375,7 @@ class ImporterDestinations < ImporterBase
       }.merge(@planning_hash))
 
       @planning.set_routes @routes, false, true
+      @planning.split_by_zones(nil) if @planning_hash.key?(:zonings) || @planning_hash.key?(:zoning_ids)
     end
   end
 
