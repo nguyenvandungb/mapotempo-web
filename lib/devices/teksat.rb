@@ -66,6 +66,9 @@ class Teksat < DeviceBase
     else
       raise DeviceServiceError.new('Teksat: %s' % [I18n.t('errors.teksat.list')])
     end
+  # Factorise the code in another method
+  rescue RestClient::RequestTimeout, Errno::ECONNREFUSED, SocketError
+    raise DeviceServiceError.new('Teksat: %s' % [I18n.t('errors.teksat.list')])
   end
 
   def send_route(customer, route, _options = {})

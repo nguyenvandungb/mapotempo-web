@@ -37,6 +37,11 @@ class DeviceService
     route.clear_sent_to
   end
 
+  def service_name_id
+    service_name_id = service.definition[:forms][:vehicle] if service.definition[:forms]
+    service_name_id.keys.first if service_name_id
+  end
+
   private
 
   def with_cache(key, &block)

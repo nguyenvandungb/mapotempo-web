@@ -65,4 +65,25 @@ module PlanningsHelper
       unit[1]
     }
   end
+
+  # It collect the enabled devices, instantiate the service then list them
+  def devices(customer)
+    devices = {}
+    device_confs = customer.device.configured_definitions || []
+
+    device_confs.each { |key, definition|
+      service_class = ("#{definition[:device].camelize}Service").constantize
+      device = service_class.new(customer: customer)
+
+      next unless device.respond_to?(:list_devices)
+
+      begin
+        list = device.list_devices
+        devices[device.service_name_id] = list unless list.empty?
+      rescue DeviceServiceError => e
+        Rails.logger.info(e)
+      end
+    }
+    devices
+  end
 end

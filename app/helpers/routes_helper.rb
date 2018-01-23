@@ -51,4 +51,21 @@ module RoutesHelper
       end
     }
   end
+
+  # Devices hashes from PlanningHelper, collect all devices binded with the current route.
+  # Otherwise, takes the Device's id from the vehicle model
+  def route_devices(devices, route)
+    route_devices_hash = {}
+    devices_route = route.vehicle_usage.vehicle.devices
+
+    devices_route.each do |key, value|
+      if devices && devices.has_key?(key)
+        match_device = devices[key].select{ |dv| dv[:id] == value }.first
+        route_devices_hash[key] = match_device unless match_device.nil? || match_device.empty?
+      else
+        route_devices_hash[key] = value
+      end
+    end
+    route_devices_hash
+  end
 end
