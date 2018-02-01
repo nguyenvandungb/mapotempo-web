@@ -191,8 +191,13 @@ class V01::VisitsTest < ActiveSupport::TestCase
   end
 
   test 'should destroy multiple destinations' do
-    assert_difference('Visit.count', -2) do
-      delete api + "&ids=#{visits(:visit_one).id},#{visits(:visit_two).id}"
+    assert_difference('Visit.count', -3) do
+      delete api + "&ids=#{visits(:visit_one).id},ref:#{visits(:visit_two).ref}"
+      assert_equal 204, last_response.status, last_response.body
+    end
+
+    assert_difference('Visit.count', -1) do
+      delete api
       assert_equal 204, last_response.status, last_response.body
     end
   end

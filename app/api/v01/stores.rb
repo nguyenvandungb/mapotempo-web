@@ -162,8 +162,8 @@ class V01::Stores < Grape::API
         current_customer.stores.select{ |store|
           params[:ids].any?{ |s| ParseIdsRefs.match(s, store) }
         }.each(&:destroy)
+        status 204
       end
-      status 204
     end
 
     desc 'Geocode store.',

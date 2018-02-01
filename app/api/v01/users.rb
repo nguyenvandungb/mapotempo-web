@@ -133,14 +133,19 @@ class V01::Users < Grape::API
       detail: 'Only available with an admin api_key.',
       nickname: 'deleteUsers'
     params do
-      requires :ids, type: Array[String], desc: 'Ids separated by comma. You can specify ref (not containing comma) instead of id, in this case you have to add "ref:" before each ref, e.g. ref:ref1,ref:ref2,ref:ref3.', coerce_with: CoerceArrayString
+      optional :ids, type: Array[String], desc: 'Ids separated by comma. You can specify ref (not containing comma) instead of id, in this case you have to add "ref:" before each ref, e.g. ref:ref1,ref:ref2,ref:ref3. If no Id is provided, all objects are deleted.', coerce_with: CoerceArrayString
     end
     delete do
       if @current_user.admin?
         User.transaction do
-          (User.for_reseller_id(@current_user.reseller_id) + User.from_customers_for_reseller_id(@current_user.reseller_id)).select{ |user|
-            params[:ids].any?{ |s| ParseIdsRefs.match(s, user) }
-          }.each(&:destroy)
+          if params[:ids]
+            (User.for_reseller_id(@current_user.reseller_id) + User.from_customers_for_reseller_id(@current_user.reseller_id)).select{ |user|
+              params[:ids].any?{ |s| ParseIdsRefs.match(s, user) }
+            }.each(&:destroy)
+          else
+            User.for_reseller_id(@current_user.reseller_id).delete_all
+            User.from_customers_for_reseller_id(@current_user.reseller_id).delete_all
+          end
         end
         status 204
       else

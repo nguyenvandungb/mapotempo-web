@@ -100,13 +100,17 @@ class V01::Tags < Grape::API
     desc 'Delete multiple tags.',
          nickname: 'deleteTags'
     params do
-      requires :ids, type: Array[String], desc: 'Ids separated by comma. You can specify ref (not containing comma) instead of id, in this case you have to add "ref:" before each ref, e.g. ref:ref1,ref:ref2,ref:ref3.', coerce_with: CoerceArrayString
+      optional :ids, type: Array[String], desc: 'Ids separated by comma. You can specify ref (not containing comma) instead of id, in this case you have to add "ref:" before each ref, e.g. ref:ref1,ref:ref2,ref:ref3. If no Id is provided, all objects are deleted.', coerce_with: CoerceArrayString
     end
     delete do
       Tag.transaction do
-        current_customer.tags.select do |tag|
-          params[:ids].any?{ |s| ParseIdsRefs.match(s, tag) }
-        end.each(&:destroy)
+        if params[:ids]
+          current_customer.tags.select do |tag|
+            params[:ids].any?{ |s| ParseIdsRefs.match(s, tag) }
+          end.each(&:destroy)
+        else
+          current_customer.tags.delete_all
+        end
         status 204
       end
     end

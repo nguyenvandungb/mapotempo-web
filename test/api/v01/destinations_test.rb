@@ -693,6 +693,11 @@ class V01::DestinationsTest < ActiveSupport::TestCase
       delete api + "&ids=#{destinations(:destination_one).id},#{destinations(:destination_two).id}"
       assert_equal 204, last_response.status, last_response.body
     end
+
+    assert_difference('Destination.count', -2) do
+      delete api
+      assert_equal 204, last_response.status, last_response.body
+    end
   end
 
   test 'should geocode' do

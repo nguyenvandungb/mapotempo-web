@@ -99,11 +99,15 @@ class V01::Zonings < Grape::API
     desc 'Delete multiple zonings.',
       nickname: 'deleteZonings'
     params do
-      requires :ids, type: Array[Integer], coerce_with: CoerceArrayInteger
+      optional :ids, type: Array[Integer], coerce_with: CoerceArrayInteger, desc: 'Ids separated by comma. If no Id is provided, all objects are deleted.'
     end
     delete do
       Zoning.transaction do
-        current_customer.zonings.select{ |zoning| params[:ids].include?(zoning.id) }.each(&:destroy)
+        if params[:ids]
+          current_customer.zonings.select{ |zoning| params[:ids].include?(zoning.id) }.each(&:destroy)
+        else
+          current_customer.zonings.delete_all
+        end
         status 204
       end
     end
