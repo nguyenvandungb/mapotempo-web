@@ -349,36 +349,6 @@ span.color[data-color=''][data-selected]:after {
 }
 
 [data-controller='plannings'][data-action='edit'],
-[data-controller='plannings'][data-action='update'],
-[data-controller='zonings'][data-action='edit'],
-[data-controller='zonings'][data-action='update'] {
-  #map {
-    top: $navbar-height;
-  }
-  .sidebar {
-    top: $navbar-height + $sidebar-margins;
-
-    &.collapsed {
-      top: $navbar-height + $sidebar-margins !important;
-    }
-  }
-  @media(max-width:768px) {
-    .sidebar {
-      top: $navbar-height;
-    }
-  }
-}
-
-[data-controller='api_web_v01_plannings'][data-action='edit'],
-[data-controller='api_web_v01_plannings'][data-action='update'],
-[data-controller='api_web_v01_zonings'][data-action='edit'],
-[data-controller='api_web_v01_zonings'][data-action='update'] {
-  #map {
-    top: 0px;
-  }
-}
-
-[data-controller='plannings'][data-action='edit'],
 [data-controller='api_web_v01_plannings'][data-action='edit'],
 [data-controller='plannings'][data-action='update'],
 [data-controller='api_web_v01_plannings'][data-action='update'],
@@ -425,6 +395,12 @@ span.color[data-color=''][data-selected]:after {
         .panel .panel-heading {
             padding: 2px 5px;
         }
+        .control-label {
+          overflow      : hidden;
+          padding-right : 0px;
+          text-align    : left !important;
+          text-overflow : clip '.';
+        }
       }
       .sidebar-close {
         position: relative;
@@ -470,6 +446,36 @@ span.color[data-color=''][data-selected]:after {
     .flash {
       right: 56px;
     }
+  }
+}
+
+[data-controller='plannings'][data-action='edit'],
+[data-controller='plannings'][data-action='update'],
+[data-controller='zonings'][data-action='edit'],
+[data-controller='zonings'][data-action='update'] {
+  #map {
+    top: $navbar-height;
+  }
+  .sidebar {
+    top: $navbar-height + $sidebar-margins;
+
+    &.collapsed {
+      top: $navbar-height + $sidebar-margins !important;
+    }
+  }
+  @media(max-width:768px) {
+    .sidebar {
+      top: $navbar-height;
+    }
+  }
+}
+
+[data-controller='api_web_v01_plannings'][data-action='edit'],
+[data-controller='api_web_v01_plannings'][data-action='update'],
+[data-controller='api_web_v01_zonings'][data-action='edit'],
+[data-controller='api_web_v01_zonings'][data-action='update'] {
+  #map {
+    top: 0px;
   }
 }
 
