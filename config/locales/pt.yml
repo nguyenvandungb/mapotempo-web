@@ -184,6 +184,10 @@ pt:
           do camião
         router_options_track: Utilizar vias
         optimization_max_split_size: Dimensão da divisão de otimização
+        max_plannings: Max planos
+        max_zonings: Max zonas
+        max_destinations: Max destinos
+        max_vehicle_usage_sets: Max configurações de veículos
       deliverable_unit:
         label: Etiqueta
         ref: Referência
@@ -191,6 +195,8 @@ pt:
         default_quantity: Quantidade por defeito
         default_capacity: Capacidade por defeito
         optimization_overload_multiplier: Coeficiente de sobrecarga
+        operation_fill: Preenchimento
+        operation_empty: Esvaziar
       destination:
         ref: Referência
         ref_small: Ref.ª
@@ -268,7 +274,7 @@ pt:
         code: Código
         name: Nome
       reseller:
-        host: ''
+        host: Anfitrião
         name: Nome do revendedor
         welcome_url: URL de acolhimento
         help_url: URL de ajuda
@@ -283,6 +289,10 @@ pt:
         facebook_url: URL de Facebook
         twitter_url: URL de Twitter
         linkedin_url: URL do Linkedin
+        audience_url: URL de audiência
+        behavior_url: URL de comportamento
+        customer_audience_url: URL de audiência do cliente
+        customer_behavior_url: URL de comportamento de cliente
       route:
         distance: Distância
         emission: Emissões
@@ -384,6 +394,7 @@ pt:
         ref: Referência
         contact_email: E-mail
         capacities: Capacidades
+        tag_ids: Especificidades do veículo
       vehicle_usage:
         vehicle_id: Veículo
         open: Hora de início
@@ -392,8 +403,8 @@ pt:
         store_start_id: Partida do armazém
         store_stop: Chegada ao armazém
         store_stop_id: Chegada ao Armazém
-        rest_start: Período de repouso início
-        rest_stop: Período de repouso fim
+        rest_start: Início de período para repouso
+        rest_stop: Fim do período para repouso
         rest_duration: Duração do repouso
         store_rest: Local de repouso
         store_rest_id: Local de repouso
@@ -408,8 +419,8 @@ pt:
         store_start_id: Partida do Armazém
         store_stop: Chegada ao armazém
         store_stop_id: Chegada ao Armazém
-        rest_start: Início do período de repouso
-        rest_stop: Fim do período de repouso
+        rest_start: Início do período para repouso
+        rest_stop: Fim do período para repouso
         rest_duration: Duração do repouso
         store_rest: Local de repouso
         store_rest_id: Local de repouso
@@ -464,6 +475,19 @@ pt:
       zone:
         vehicle: Veículo
         name: Nome
+      vehicles:
+        name: Nome
+        emission: Emissão
+        consumption: Consumo
+        color: Cor
+        router: Calculador de itinerário
+        router_id: Calculador de itinerário
+        router_dimension: Objetivo do calculador
+        speed_multiplicator: Ajuste da velocidade
+        customised_color: Selecionar uma cor personalizada
+        ref: Referencia
+        contact_email: E-mail
+        capacities: Capacidades
     successful:
       messages:
         created: '%{model} foi criado com sucesso'
@@ -492,9 +516,9 @@ pt:
             rest_stop:
               after: deve ser posterior à hora de abertura
           missing_rest_window: deve ser preenchido se a duração do repouso for preenchida
-          missing_rest_duration: deve ser preenchido se um período de repouso for
+          missing_rest_duration: deve ser preenchido se um período para repouso for
             preenchido
-          rest_range: O período de repouso deve estar compreendido entre %{start}
+          rest_range: O período para repouso deve estar compreendido entre %{start}
             e %{end}
           service_range: não pode ser igual ou superior ao tempo de trabalho
         vehicle_usage_set:
@@ -505,7 +529,7 @@ pt:
               after: deve ser após a hora de fecho
           at_least_one: É obrigatória, no mínimo, uma configuração de veículo
           missing_rest_window: deve ser preenchido se a duração do repouso for preenchida
-          missing_rest_duration: deve ser preenchido se um período de repouso for
+          missing_rest_duration: deve ser preenchido se um período para repouso for
             preenchido
         visit:
           attributes:
@@ -833,7 +857,7 @@ pt:
         import:
           title: Importar armazéns
           in_progress: Importação em curso. Por favor aguarde
-      title: Listra de armazéns
+      title: Lista de armazéns
       new: Novo armazém
     new:
       title: Novo armazém
@@ -895,7 +919,7 @@ pt:
         string: texto
         integer: numero
         hour: HH:MM
-        float: '0,123'
+        float: 0,123
         required: obrigatório
         advisable: recomendado
         optionnal: opcional
@@ -946,10 +970,10 @@ pt:
       store_start_desc: referência do armazém de partida para o estafeta
       store_stop_ref: referência do armazém de chegada
       store_stop_desc: referência do armazém de chegada para o estafeta
-      rest_start: início do período de repouso
-      rest_start_desc: hora de início do período de repouso
-      rest_stop: fim do período de repouso
-      rest_stop_desc: hora de fim do período de repouso
+      rest_start: início do período para repouso
+      rest_start_desc: hora de início do período para repouso
+      rest_stop: fim do período para repouso
+      rest_stop_desc: hora de fim do período para repouso
       rest_duration: duração do repouso
       rest_duration_desc: duração do repouso para o estafeta
       store_rest_ref: referência do armazém de repouso
@@ -1010,9 +1034,9 @@ pt:
         ultima paragem.
       rest_duration_store: Duração do repouso / local
       rest_duration:
-        help: Se preenchido, requer um período de repouso
-      rest_start_stop: Período de repouso
-      rest_start_stop_help: Sem ter em conta o período de repouso
+        help: Se preenchido, requer um período para repouso
+      rest_start_stop: Período para repouso
+      rest_start_stop_help: Sem ter em conta a duração do repouso
   web:
     help_menu: Ajuda
     key_not_found: Chave de ligação inválida
@@ -1282,7 +1306,7 @@ pt:
       format:
         string: texto
         integer: numero inteiro
-        float: '0,123'
+        float: 0,123
         hour: HH:MM
         second: HH:MM:SS
         yes_no: sim/não
@@ -1986,11 +2010,11 @@ pt:
         default: '%{n} (defeito)'
       rest_stop:
         default: '%{n} (defeito)'
-      rest_start_stop: Período de repouso
+      rest_start_stop: Período para repouso
       rest_start_stop_help: Sem ter em conta a duração da pausa
       rest_duration:
         default: '%{n} (valor por defeito)'
-        help: Requer período de repouso se preenchido
+        help: Requer período para repouso se preenchido
       store_rest:
         default: Defeito
         none: Nenhum
@@ -2173,4 +2197,4 @@ pt:
         sign_up_prefix: Necessita criar uma conta?
     sessions:
       new:
-        remember_me: Sembrar-se de mim
+        remember_me: Lembrar-se de mim
