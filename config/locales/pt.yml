@@ -412,6 +412,7 @@ pt:
         service_time_end: Duração do serviço posterior
         vehicle: Veículo
         work_time: Duração do trabalho
+        tag_ids: Atribuições
       vehicle_usage_set:
         name: Nome
         open: Abertura
