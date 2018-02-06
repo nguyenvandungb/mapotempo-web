@@ -201,7 +201,7 @@ pt:
         ref: Referência
         ref_small: Ref.ª
         name: Nome
-        address: Endereço
+        address: Morada
         street: Rua
         detail: Detalhe
         postalcode: Código postal
@@ -912,7 +912,7 @@ pt:
         por um valor entre 0 e 1. Explo. 0,70 significa 70% de precisão.
       geocoding_accuracy_format: numero com virgula entre 0 e 1
       geocoding_level: nivel de geocodificação
-      geocoding_level_desc: nivel de precisão conseguido com a conversão da morada
+      geocoding_level_desc: nivel de precisão conseguido com a conversão do endereço
         do destino em coordenadas geográficas
       missing_name: '"nome" em falta.'
       missing_location: '"localidade" ou "código postal" ou "lat" e "lng" em falta.'
@@ -1061,7 +1061,7 @@ pt:
     contact: Contactar o suporte
     choose_file: Selecionar ficheiro
     geocoder:
-      search: Procurar morada...
+      search: Procurar endereço...
       empty_result: Sem resultados
   deliverable_units:
     edit:
@@ -1117,7 +1117,8 @@ pt:
       locate_manually: Localizar manualmente sobre o mapa
       geocoding_accuracy_none: Não aplicável
       geocoding_fail: A geocodificação falhou
-      geocoding_accuracy_help: Qualidade da conversão da morada em localização geográfica
+      geocoding_accuracy_help: Qualidade da conversão do endereço numa localização
+        geográfica
       country_default: '%{n} (valor por defeito)'
       geocoding_level:
         point: Ponto
@@ -1171,9 +1172,9 @@ pt:
           def_help: Se não pretende utilizar nomes de colunas por defeito, poderá
             defini-los livremente. Poderá definir um conjunto de números de colunas
             ou de títulos.
-          def_example: Por exemplo para "morada", definir "rua, numero, 4" para unir
-            as colunas "rua", "numero" e a 4ª coluna (em título) para formar o valor
-            de "morada" na aplicação.
+          def_example: Por exemplo para "endereço",  poderà definir "rua, nùmero,
+            4" para unir as colunas "rua", "numero" e a 4ª coluna (em título) para
+            formar o valor de "morada" na aplicação.
       tomtom:
         title: TomTom
         help: Importar os endereços de TomTom WEBFLEET como destinos
@@ -1207,7 +1208,7 @@ pt:
             Pretende verifica-los na lista?
           hide_help: 'Para não voltar a ver esta mensagem, os seus destinos com geocodificação
             pouco fiável e:'
-          correct_help: Verifique a morada para a corrigir ou completar se necessário
+          correct_help: Verifique o endereço para o corrigir ou completar se for necessário
           move_help: Desloque os pontos manualmente no mapa se necessário
           dismiss: Ignorar
           sort_geocoding: Mostrar primeiro as geocodificações pouco fiáveis
@@ -1258,9 +1259,9 @@ pt:
         -0,781
       lng_format: numero com vírgula entre -180 e 180
       geocoding_accuracy: fiabilidade da geocodificação
-      geocoding_accuracy_desc: classificação da fiabilidade da conversão da morada
-        postal em coordenadas geográficas. Esta classificação é expressa numa escala
-        entre 0 e 1. Explo. 0,70 que significa 70% de fiabilidade.
+      geocoding_accuracy_desc: classificação da fiabilidade da conversão do endereço
+        em coordenadas geográficas. Esta classificação é expressa numa escala entre
+        0 e 1. Explo. 0,70 que significa 70% de fiabilidade.
       stop_type_visit_desc: ' '
       geocoding_accuracy_format: número com vírgula de 0 a 1
       geocoding_level: nível de geocodificação
@@ -1325,7 +1326,7 @@ pt:
       invalid_numeric_value: valor numérico « %{value} » invalido.
       check_custom_columns: Verifique a definição das colunas a importar.
     reverse_geocoding:
-      apply: Aplicar nova morada
+      apply: Aplicar novo endereço
   index:
     unsupported_browser:
       unsupported_browser: Browser não suportado
