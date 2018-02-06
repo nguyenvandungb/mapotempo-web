@@ -411,6 +411,7 @@ pt:
         service_time_start: Duração do serviço anterior
         service_time_end: Duração do serviço posterior
         vehicle: Veículo
+        work_time: Duração do trabalho
       vehicle_usage_set:
         name: Nome
         open: Abertura
@@ -488,6 +489,7 @@ pt:
         ref: Referencia
         contact_email: E-mail
         capacities: Capacidades
+        tag_ids: Particularidades de veículo
     successful:
       messages:
         created: '%{model} foi criado com sucesso'
