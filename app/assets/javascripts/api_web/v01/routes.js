@@ -17,9 +17,10 @@
 //
 'use strict';
 
-var api_web_v01_routes_index = function(params) {
-  'use strict';
+import * as scaffolds from '../../scaffolds';
+import {RoutesLayer} from '../../../../assets/javascripts/routes_layers';
 
+const api_web_v01_routes_index = function(params) {
   var progressBar = Turbolinks.enableProgressBar();
   progressBar && progressBar.advanceTo(25);
 
@@ -27,7 +28,7 @@ var api_web_v01_routes_index = function(params) {
     planning_id = params.planning_id,
     route_ids = params.routes_array.map(function(route) { return route.route_id; } );
 
-  var map = mapInitialize(params);
+  var map = scaffolds.mapInitialize(params);
   L.control.attribution({
     prefix: false
   }).addTo(map);
@@ -64,7 +65,7 @@ var api_web_v01_routes_index = function(params) {
   }
 
   // Must be placed after caption, otherwise hash is override
-  var fitBounds = initializeMapHash(map, true);
+  var fitBounds = scaffolds.initializeMapHash(map, true);
 
   routesLayer.showRoutesWithStore(route_ids, null, function() {
     if (fitBounds) {
@@ -84,9 +85,7 @@ var api_web_v01_routes_index = function(params) {
   progressBar && progressBar.advanceTo(50);
 };
 
-var api_web_v01_routes_print = function(params) {
-  'use strict';
-
+const api_web_v01_routes_print = function(params) {
   $('.btn-print').click(function() {
     window.print();
   });

@@ -17,7 +17,15 @@
 //
 'use strict';
 
-var api_web_v01_display_destinations_ = function(api, map, data) {
+import * as ajax from '../../ajax';
+import * as scaffolds from '../../scaffolds';
+import GlobalConfiguration from '../../configuration.js.erb';
+
+import {
+  destinations_edit
+} from '../../destinations';
+
+export const api_web_v01_display_destinations_ = function(api, map, data) {
   var tags = {};
 
   var prepare_display_destination = function(destination) {
@@ -31,7 +39,7 @@ var api_web_v01_display_destinations_ = function(api, map, data) {
       });
     });
     destination.tags = t;
-    destination.i18n = mustache_i18n;
+    destination.i18n = ajax.mustache_i18n;
     return destination;
   };
 
@@ -85,14 +93,12 @@ var api_web_v01_display_destinations_ = function(api, map, data) {
 };
 
 var api_web_v01_destinations_index = function(params, api) {
-  'use strict';
-
   var progressBar = Turbolinks.enableProgressBar();
   progressBar && progressBar.advanceTo(25);
 
   var ids = params.ids;
 
-  var map = mapInitialize(params);
+  var map = scaffolds.mapInitialize(params);
   L.control.attribution({
     prefix: false
   }).addTo(map);
@@ -108,7 +114,7 @@ var api_web_v01_destinations_index = function(params, api) {
   });
   map.addLayer(markersLayers);
 
-  var fitBounds = initializeMapHash(map, true);
+  var fitBounds = scaffolds.initializeMapHash(map, true);
 
   if (api === 'destinations') {
     var storesLayers = map.storesLayers = L.featureGroup();
@@ -133,7 +139,7 @@ var api_web_v01_destinations_index = function(params, api) {
     url: '/api-web/0.1/' + api + '.json',
     method: params.method,
     data: ajaxParams,
-    beforeSend: beforeSendWaiting,
+    beforeSend: ajax.beforeSendWaiting,
     success: function(data) {
       if ((data.destinations && data.destinations.length) || (data.stores && data.stores.length)) {
         display_destinations(data);
@@ -142,8 +148,8 @@ var api_web_v01_destinations_index = function(params, api) {
       }
       progressBar && progressBar.done();
     },
-    complete: completeWaiting,
-    error: ajaxError
+    complete: ajax.completeWaiting,
+    error: ajax.ajaxError
   });
 };
 

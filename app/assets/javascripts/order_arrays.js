@@ -17,6 +17,9 @@
 //
 'use strict';
 
+import * as ajax from '../../assets/javascripts/ajax';
+import * as scaffolds from '../../assets/javascripts/scaffolds';
+
 var order_arrays_form = function() {
   $('#order_array_base_date').datepicker({
     language: I18n.currentLocale(),
@@ -29,14 +32,10 @@ var order_arrays_form = function() {
 };
 
 var order_arrays_new = function(params) {
-  'use strict';
-
   order_arrays_form();
 };
 
 var order_arrays_edit = function(params) {
-  'use strict';
-
   var order_array_id = params.order_array_id,
     planning_id = params.planning_id,
     block_save_select_change = false,
@@ -71,7 +70,7 @@ var order_arrays_edit = function(params) {
   };
 
   var set_fake_select2 = function(products, selector, shift) {
-    fake_select2(selector, function(select) {
+    ajax.fake_select2(selector, function(select) {
       var data = $.map(select[0].options || [], function(option) {
         return {
           id: option.value,
@@ -108,12 +107,12 @@ var order_arrays_edit = function(params) {
             product_ids: product_ids
           },
           url: '/api/0.1/order_arrays/' + order_array_id + '/orders/' + id + '.json',
-          beforeSend: beforeSendWaiting,
-          complete: completeWaiting,
+          beforeSend: ajax.beforeSendWaiting,
+          complete: ajax.completeWaiting,
           success: function() {
             select.select2('close');
           },
-          error: ajaxError
+          error: ajax.ajaxError
         });
 
         select.find('option:not(:selected)').remove();
@@ -204,7 +203,7 @@ var order_arrays_edit = function(params) {
     $.each(data.columns, function(i, column) {
       column.index = i;
     });
-    data.i18n = mustache_i18n;
+    data.i18n = ajax.mustache_i18n;
     $(container).html(SMT['order_arrays/edit'](data));
 
     var false_formater = function() {
@@ -315,9 +314,9 @@ var order_arrays_edit = function(params) {
         data: {
           orders: JSON.stringify(orders)
         },
-        beforeSend: beforeSendWaiting,
-        complete: completeWaiting,
-        error: ajaxError
+        beforeSend: ajax.beforeSendWaiting,
+        complete: ajax.completeWaiting,
+        error: ajax.ajaxError
       });
     };
 
@@ -382,9 +381,9 @@ var order_arrays_edit = function(params) {
           order_array_id: order_array_id,
           shift: shift
         },
-        beforeSend: beforeSendWaiting,
-        complete: completeWaiting,
-        error: ajaxError,
+        beforeSend: ajax.beforeSendWaiting,
+        complete: ajax.completeWaiting,
+        error: ajax.ajaxError,
         success: function() {
           window.location = '/plannings/' + planning_id + '/edit';
         }
@@ -392,7 +391,7 @@ var order_arrays_edit = function(params) {
     });
   };
 
-  var dialog_loading = bootstrap_dialog({
+  var dialog_loading = scaffolds.bootstrap_dialog({
     title: I18n.t('order_arrays.edit.dialog.loading.title'),
     icon: 'fa-check-square-o',
     message: SMT['modals/default_with_progress']({
@@ -400,17 +399,17 @@ var order_arrays_edit = function(params) {
     })
   });
 
-  dialog_loading.modal(modal_options());
+  dialog_loading.modal(scaffolds.modal_options());
 
   $.ajax({
     url: '/order_arrays/' + order_array_id + '.json' + (planning_id ? '?planning_id=' + planning_id : ''),
-    beforeSend: beforeSendWaiting,
+    beforeSend: ajax.beforeSendWaiting,
     success: display_order_array,
     complete: function(data) {
-      completeWaiting(data);
+      ajax.completeWaiting(data);
       dialog_loading.modal('hide');
     },
-    error: ajaxError
+    error: ajax.ajaxError
   });
 };
 

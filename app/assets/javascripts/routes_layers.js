@@ -17,13 +17,15 @@
 //
 'use strict';
 
+import * as ajax from '../../assets/javascripts/ajax';
+import * as scaffolds from '../../assets/javascripts/scaffolds';
+import GlobalConfiguration from '../../assets/javascripts/configuration.js.erb';
+
 /******************
  * PopupModule
  *
  */
-var popupModule = (function() {
-  'use strict';
-
+const popupModule = (function() {
   var _context,
     _previousMarker,
     _activeClickMarker,
@@ -91,7 +93,7 @@ var popupModule = (function() {
 
     _ajaxRequest.current = $.ajax({
       url: url,
-      beforeSend: beforeSendWaiting,
+      beforeSend: ajax.beforeSendWaiting,
       success: function(data) {
         var popup = marker.bindPopup(L.responsivePopup({
           offset: marker.options.icon.options.iconSize.divideBy(2)
@@ -101,7 +103,7 @@ var popupModule = (function() {
           closeOnClick: false
         }).addTo(map).getPopup();
 
-        data.i18n = mustache_i18n;
+        data.i18n = ajax.mustache_i18n;
         data.routes = _context.options.routes.filter(function(route) { return route.vehicle_usage_id; }); // unnecessary to load all for each stop
         data.out_of_route_id = _context.options.outOfRouteId;
         data.number = marker.properties.number;
@@ -109,7 +111,7 @@ var popupModule = (function() {
           data.tomtom = marker.properties.tomtom;
         }
         if (_context.options.url_click2call) {
-          phoneNumberCall(data, _context.options.url_click2call);
+          ajax.phoneNumberCall(data, _context.options.url_click2call);
         }
         $.extend(data, _context.options.popupOptions);
         popup.setContent(SMT['stops/show'](data));
@@ -121,8 +123,8 @@ var popupModule = (function() {
         $('#isodistance_lng').val(data.lng);
         $('#isodistance_vehicle_usage_id').val(data.vehicle_usage_id);
       },
-      complete: completeAjaxMap,
-      error: ajaxError
+      complete: ajax.completeAjaxMap,
+      error: ajax.ajaxError
     });
   };
 
@@ -256,7 +258,7 @@ function markerClusterIcon(childCount, defaultColor, borderColors) {
 }
 
 var nbRoutes = 0;
-var RoutesLayer = L.FeatureGroup.extend({
+export const RoutesLayer = L.FeatureGroup.extend({
   defaultOptions: {
     outOfRouteId: undefined,
     routes: [],
@@ -285,7 +287,7 @@ var RoutesLayer = L.FeatureGroup.extend({
     animate: false,
     maxClusterRadius: function(currentZoom) {
       // Markers have to be clustered during map initialization with defaultMapZoom
-      return currentZoom > defaultMapZoom ? 1 : nbRoutes < 4 ? 30 * nbRoutes : 100;
+      return currentZoom > scaffolds.defaultMapZoom ? 1 : nbRoutes < 4 ? 30 * nbRoutes : 100;
     },
     spiderfyDistanceMultiplier: 0.5,
     // Updated in initialize
@@ -625,15 +627,15 @@ var RoutesLayer = L.FeatureGroup.extend({
     if (!geojson) {
       $.ajax({
         url: '/api/0.1/plannings/' + this.planningId + '/routes.geojson?geojson=' + (this.options.withPolylines ? 'polyline' : 'point') + '&ids=' + routeIds.join(',') + '&stores=' + includeStores,
-        beforeSend: beforeSendWaiting,
+        beforeSend: ajax.beforeSendWaiting,
         success: function(data) {
           this._addRoutes(data);
           if (typeof callback === 'function') {
             callback();
           }
         }.bind(this),
-        complete: completeAjaxMap,
-        error: ajaxError
+        complete: ajax.completeAjaxMap,
+        error: ajax.ajaxError
       });
     } else {
       this._addRoutes(geojson);
@@ -653,27 +655,27 @@ var RoutesLayer = L.FeatureGroup.extend({
     $.ajax({
       url: this.planningId ? '/api/0.1/plannings/' + this.planningId + '.geojson' : '/api/0.1/visits.geojson',
       data: requestData,
-      beforeSend: beforeSendWaiting,
+      beforeSend: ajax.beforeSendWaiting,
       success: function(data) {
         this._addRoutes(data);
         if (typeof callback === 'function') {
           callback();
         }
       }.bind(this),
-      complete: completeAjaxMap,
-      error: ajaxError
+      complete: ajax.completeAjaxMap,
+      error: ajax.ajaxError
     });
   },
 
   _loadAllStores: function() {
     $.ajax({
       url: "/api/0.1/stores.geojson",
-      beforeSend: beforeSendWaiting,
+      beforeSend: ajax.beforeSendWaiting,
       success: function(data) {
         this._addRoutes(data);
       }.bind(this),
-      complete: completeAjaxMap,
-      error: ajaxError
+      complete: ajax.completeAjaxMap,
+      error: ajax.ajaxError
     });
   },
 

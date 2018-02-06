@@ -17,17 +17,18 @@
 //
 'use strict';
 
-var customers_index = function(params) {
-  'use strict';
+import * as ajax from '../../assets/javascripts/ajax';
+import * as scaffolds from '../../assets/javascripts/scaffolds';
 
+const customers_index = function (params) {
   var map_layers = params.map_layers,
     map_attribution = params.map_attribution;
 
   var is_map_init = false;
 
-  var map_init = function() {
+  var map_init = function () {
 
-    var map = mapInitialize(params);
+    var map = scaffolds.mapInitialize(params);
     L.control.attribution({
       prefix: false
     }).addTo(map);
@@ -48,14 +49,10 @@ var customers_index = function(params) {
 
     }
 
-    var display_customers = function(data) {
-
-      $.each(data.customers, function(i, customer) {
-
+    var display_customers = function (data) {
+      $.each(data.customers, function (i, customer) {
         var iconImg = '/images/point-' + determineIconColor(customer) + '.svg';
-
-        var marker = L.marker(new L.LatLng(customer.lat, customer.lng), {
-
+        L.marker(new L.LatLng(customer.lat, customer.lng), {
           icon: new L.NumberedDivIcon({
             number: customer.max_vehicles,
             iconUrl: iconImg,
@@ -64,9 +61,7 @@ var customers_index = function(params) {
             popupAnchor: new L.Point(0, -6),
             className: "small"
           })
-
         }).addTo(layer).bindPopup(customer.name);
-
       });
 
       map.invalidateSize();
@@ -82,10 +77,10 @@ var customers_index = function(params) {
 
     $.ajax({
       url: '/customers.json',
-      beforeSend: beforeSendWaiting,
+      beforeSend: ajax.beforeSendWaiting,
       success: display_customers,
-      complete: completeWaiting,
-      error: ajaxError
+      complete: ajax.completeWaiting,
+      error: ajax.ajaxError
     });
 
   };
@@ -98,12 +93,10 @@ var customers_index = function(params) {
   });
 };
 
-var customers_edit = function(params) {
-  'use strict';
-
+const customers_edit = function (params) {
   /* Speed Multiplier */
-  $('form.number-to-percentage').submit(function(e) {
-    $.each($(e.target).find('input[type=\'number\'].number-to-percentage'), function(i, element) {
+  $('form.number-to-percentage').submit(function (e) {
+    $.each($(e.target).find('input[type=\'number\'].number-to-percentage'), function (i, element) {
       var value = $(element).val() ? Number($(element).val()) / 100 : 1;
       $($(document.createElement('input')).attr('type', 'hidden').attr('name', 'customer[' + $(element).attr('name') + ']').val(value)).insertAfter($(element));
     });
@@ -162,12 +155,10 @@ var customers_edit = function(params) {
     $('#customer_sms_template').on('keyup', smsCharacterCount);
   }
 
-  routerOptionsSelect('#customer_router', params);
+  scaffolds.routerOptionsSelect('#customer_router', params);
 };
 
-var devicesObserveCustomer = (function() {
-  'use strict';
-
+const devicesObserveCustomer = (function () {
   function _devicesInitCustomer(base_name, config, params) {
     var requests = [];
 
@@ -190,7 +181,7 @@ var devicesObserveCustomer = (function() {
 
     function _userCredential() {
       var hash = {};
-      $.each(config.forms.settings, function(key) {
+      $.each(config.forms.settings, function (key) {
         hash[key] = $('#' + base_name + '_' + config.name + '_' + key).val() || void(0);
         if (key == 'password' && hash[key] == params.default_password)
           hash[key] = void(0);
@@ -201,7 +192,7 @@ var devicesObserveCustomer = (function() {
     function _allFieldsFilled() {
       var isNotEmpty = true;
       var inputs = $('input[type="text"], input[type="password"]', '#' + config.name + '_container');
-      inputs.each(function() {
+      inputs.each(function () {
         if ($(this).val() === '') {
           isNotEmpty = false;
         }
@@ -210,7 +201,7 @@ var devicesObserveCustomer = (function() {
     }
 
     function _ajaxCall(all) {
-      $.when($(requests)).done(function() {
+      $.when($(requests)).done(function () {
         if (!_allFieldsFilled()) return;
         requests.push($.ajax({
           url: '/api/0.1/devices/' + config.name + '/auth/' + params.customer_id + '.json',
@@ -218,15 +209,15 @@ var devicesObserveCustomer = (function() {
             check_only: 1
           }),
           dataType: 'json',
-          beforeSend: function() {
+          beforeSend: function (jqXHR, settings) {
             if (!all) hideNotices();
-            beforeSendWaiting();
+            ajax.beforeSendWaiting();
           },
-          complete: completeWaiting,
+          complete: ajax.completeWaiting,
           success: function(data) {
             (data && data.error) ? errorCallback(data.error) : successCallback();
           },
-          error: function(jqXHR, textStatus) {
+          error: function(jqXHR, textStatus, error) {
             errorCallback(jqXHR.status === 400 && textStatus === 'error' ? I18n.t('customers.form.devices.sync.no_credentials') : textStatus);
           }
         }));
@@ -240,11 +231,11 @@ var devicesObserveCustomer = (function() {
     }
 
     // Check Credentials: Observe User Events with Delay
-    var _observe = function() {
+    var _observe = function () {
       var timeout_id;
 
       // Anonymous function handle setTimeout()
-      var checkCredentialsWithDelay = function() {
+      var checkCredentialsWithDelay = function () {
         if (timeout_id) clearTimeout(timeout_id);
         timeout_id = setTimeout(function() { _ajaxCall(false); }, 750);
       };
@@ -258,7 +249,7 @@ var devicesObserveCustomer = (function() {
     /* Password Inputs: set fake password  (input view fake) */
     if ("password" in config) {
       var password_field = '#' + [base_name, config.name, "password"].join('_');
-      if ($(password_field).val() == '') {
+      if ($(password_field).val() === '') {
         $(password_field).val(params.default_password);
       }
     }
@@ -272,16 +263,20 @@ var devicesObserveCustomer = (function() {
           data: $.extend(_userCredential(), {
             customer_id: params.customer_id
           }),
-          beforeSend: beforeSendWaiting,
-          complete: completeWaiting,
-          success: function() {
+          beforeSend: function(jqXHR, settings) {
+            ajax.beforeSendWaiting();
+          },
+          complete: function(jqXHR, textStatus) {
+            ajax.completeWaiting();
+          },
+          success: function(data, textStatus, jqXHR) {
             alert(I18n.t('customers.form.devices.sync.complete'));
           }
         });
       }
     });
 
-    // Check credantial for current device config
+    // Check credential for current device config
     // Observe Widget if Customer has Service Enabled or Admin (New Customer)
     checkCredentials();
     _observe();
@@ -289,10 +284,10 @@ var devicesObserveCustomer = (function() {
 
   /* Chrome / FF, Prevent Sending Default Password
      The browsers would ask to remember it. */
-  (function() {
-    $('form.clear-passwords').on('submit', function(e) {
-      $.each($(e.target).find('input[type=\'password\']'), function(i, element) {
-        if ($(element).val() == params.default_password) {
+  (function () {
+    $('form.clear-passwords').on('submit', function (e) {
+      $.each($(e.target).find('input[type=\'password\']'), function (i, element) {
+        if ($(element).val() === params.default_password) {
           $(element).val('');
         }
       });
@@ -300,8 +295,8 @@ var devicesObserveCustomer = (function() {
     });
   })();
 
-  var initialize = function(params) {
-    $.each(params['devices'], function(deviceName, config) {
+  const initialize = function (params) {
+    $.each(params['devices'], function (deviceName, config) {
       config.name = deviceName;
       _devicesInitCustomer('customer_devices', config, params);
     });
@@ -318,7 +313,7 @@ var devicesObserveCustomer = (function() {
           customer_id: params.customer_id
         },
         dataType: 'json',
-        beforeSend: beforeSendWaiting,
+        beforeSend: ajax.beforeSendWaiting,
         success: function(data) {
           $('#create-customer-device').attr('disabled', false);
 
@@ -335,7 +330,7 @@ var devicesObserveCustomer = (function() {
           $('#create-customer-device').attr('disabled', false);
           stickyError(error.statusText + ' : ' + error.responseJSON.message);
         },
-        complete: completeWaiting
+        complete: ajax.completeWaiting
       });
     });
 
@@ -351,7 +346,7 @@ var devicesObserveCustomer = (function() {
           customer_id: params.customer_id
         },
         dataType: 'json',
-        beforeSend: beforeSendWaiting,
+        beforeSend: ajax.beforeSendWaiting,
         success: function(data) {
           $('#create-user-device').attr('disabled', false);
 
@@ -373,28 +368,28 @@ var devicesObserveCustomer = (function() {
           $('#create-user-device').attr('disabled', false);
           stickyError(error.statusText);
         },
-        complete: completeWaiting
+        complete: ajax.completeWaiting
       });
     });
   };
 
-  return { init: initialize };
+  return {init: initialize};
 })();
 
 Paloma.controller('Customers', {
-  index: function() {
+  index: function () {
     customers_index(this.params);
   },
-  new: function() {
+  new: function () {
     customers_edit(this.params);
   },
-  create: function() {
+  create: function () {
     customers_edit(this.params);
   },
-  edit: function() {
+  edit: function () {
     customers_edit(this.params);
   },
-  update: function() {
+  update: function () {
     customers_edit(this.params);
   }
 });

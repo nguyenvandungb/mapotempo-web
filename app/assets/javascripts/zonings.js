@@ -17,9 +17,17 @@
 //
 'use strict';
 
-var zonings_edit = function(params) {
-  'use strict';
+import * as scaffolds from '../../assets/javascripts/scaffolds';
+import * as ajax from '../../assets/javascripts/ajax';
 
+import {RoutesLayer} from '../../assets/javascripts/routes_layers';
+
+import 'leaflet-draw';
+import './i18n/leaflet.draw.i18n';
+
+import leafletPip from '@mapbox/leaflet-pip';
+
+export const zonings_edit = function(params) {
   /**********************************************
    Override by prototype _onTouch() leaflet Draw
   ************************************************/
@@ -28,7 +36,7 @@ var zonings_edit = function(params) {
     var clientX;
     var clientY;
     if (originalEvent.touches && originalEvent.touches[0] && !this._clickHandled && !this._touchHandled && !this._disableMarkers && L.Browser.touch) {
-      // Add L.Browser.touch condition do not block dblcick event anymore, as we are checking if browser is truly a touch screen.
+      // Add L.Browser.touch condition do not block dblclick event anymore, as we are checking if browser is truly a touch screen.
       clientX = originalEvent.touches[0].clientX;
       clientY = originalEvent.touches[0].clientY;
       this._disableNewMarkers();
@@ -61,7 +69,7 @@ var zonings_edit = function(params) {
   });
   sidebar.open('zoning');
 
-  var map = mapInitialize(params);
+  var map = scaffolds.mapInitialize(params);
   L.control.attribution({
     prefix: false,
     position: 'bottomleft'
@@ -118,7 +126,7 @@ var zonings_edit = function(params) {
 
   L.disableClustersControl(map, markersGroup);
 
-  var fitBounds = initializeMapHash(map);
+  var fitBounds = scaffolds.initializeMapHash(map);
 
   function checkZoningChanges(e) {
     var zones_changed = false;
@@ -339,7 +347,7 @@ var zonings_edit = function(params) {
 
     featureGroup.addLayer(geom);
 
-    zone.i18n = mustache_i18n;
+    zone.i18n = ajax.mustache_i18n;
     $.each(params.manage_zoning, function(i, elt) {
       zone['manage_' + elt] = true;
     });
@@ -580,15 +588,15 @@ var zonings_edit = function(params) {
           n: $(this).data('n'),
           hide_out_of_route: $("#hide_out_of_route").is(":checked") ? 1 : 0
         },
-        beforeSend: beforeSendWaiting,
+        beforeSend: ajax.beforeSendWaiting,
         success: function(data) {
           fitBounds = true;
           displayZoning(data);
         },
         complete: function() {
-          completeAjaxMap();
+          ajax.completeAjaxMap();
         },
-        error: ajaxError
+        error: ajax.ajaxError
       });
     }
   });
@@ -600,13 +608,13 @@ var zonings_edit = function(params) {
     $.ajax({
       type: "patch",
       url: '/zonings/' + zoning_id + '/from_planning' + (planning_id ? '/planning/' + planning_id : '') + '.json',
-      beforeSend: beforeSendWaiting,
+      beforeSend: ajax.beforeSendWaiting,
       success: function(data) {
         fitBounds = true;
         displayZoning(data);
       },
-      complete: completeAjaxMap,
-      error: ajaxError
+      complete: ajax.completeAjaxMap,
+      error: ajax.ajaxError
     });
   });
 
@@ -646,13 +654,13 @@ var zonings_edit = function(params) {
         size: size,
         departure_date: $('#isochrone_date').datepicker('getDate')
       },
-      beforeSend: beforeSendWaiting,
+      beforeSend: ajax.beforeSendWaiting,
       success: function(data) {
         fitBounds = true;
         displayZoning(data);
       },
       complete: function() {
-        completeAjaxMap();
+        ajax.completeAjaxMap();
         $('#isochrone-progress-modal').modal('hide');
       },
       error: ajaxError
@@ -680,25 +688,25 @@ var zonings_edit = function(params) {
         size: size,
         departure_date: $('#isodistance_date').datepicker('getDate')
       },
-      beforeSend: beforeSendWaiting,
+      beforeSend: ajax.beforeSendWaiting,
       success: function(data) {
         fitBounds = true;
         displayZoning(data);
       },
       complete: function() {
-        completeAjaxMap();
+        ajax.completeAjaxMap();
         $('#isodistance-progress-modal').modal('hide');
       },
-      error: ajaxError
+      error: ajax.ajaxError
     });
   });
 
   $.ajax({
     url: '/zonings/' + (zoning_id ? zoning_id + '/edit' : 'new') + '.json',
-    beforeSend: beforeSendWaiting,
+    beforeSend: ajax.beforeSendWaiting,
     success: displayZoningFirstTime,
-    complete: completeWaiting,
-    error: ajaxError
+    complete: ajax.completeWaiting,
+    error: ajax.ajaxError
   });
 };
 

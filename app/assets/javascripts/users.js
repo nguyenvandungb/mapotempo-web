@@ -17,12 +17,12 @@
 //
 'use strict';
 
-var user_edit_settings = function(params) {
-  'use strict';
+import * as scaffolds from '../../assets/javascripts/scaffolds';
 
+const user_edit_settings = function(params) {
   var available_layers = params.map_available_layers;
 
-  var map = mapInitialize(params);
+  var map = scaffolds.mapInitialize(params);
   L.control.attribution({
     prefix: false
   }).addTo(map);

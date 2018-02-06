@@ -17,13 +17,18 @@
 //
 'use strict';
 
-var api_web_v01_zones_index = function(params) {
-  'use strict';
+import * as scaffolds from '../../scaffolds';
+import * as ajax from '../../ajax';
 
+import {
+  api_web_v01_display_destinations_
+} from './destinations';
+
+const api_web_v01_zones_index = function(params) {
   var progressBar = Turbolinks.enableProgressBar();
   progressBar && progressBar.advanceTo(25);
 
-  var map = mapInitialize(params);
+  var map = scaffolds.mapInitialize(params);
   L.control.attribution({
     prefix: false
   }).addTo(map);
@@ -53,7 +58,7 @@ var api_web_v01_zones_index = function(params) {
 
   map.addLayer(featureGroup).addLayer(map.storesLayers).addLayer(map.markersLayers);
 
-  var fitBounds = initializeMapHash(map, true);
+  var fitBounds = scaffolds.initializeMapHash(map, true);
 
   var setColor = function(polygon, vehicle_id, speed_multiplier) {
     polygon.setStyle((speed_multiplier === 0) ? {
@@ -124,7 +129,7 @@ var api_web_v01_zones_index = function(params) {
     map.storesLayers.clearLayers();
     $.each(data.stores, function(i, store) {
       store.store = true;
-      store.i18n = mustache_i18n;
+      store.i18n = ajax.mustache_i18n;
       if ($.isNumeric(store.lat) && $.isNumeric(store.lng)) {
         var m = L.marker(new L.LatLng(store.lat, store.lng), {
           icon: L.divIcon({
@@ -169,7 +174,7 @@ var api_web_v01_zones_index = function(params) {
     url: '/api-web/0.1/zonings/' + params.zoning_id + '/zones.json',
     method: params.method,
     data: ajaxParams,
-    beforeSend: beforeSendWaiting,
+    beforeSend: ajax.beforeSendWaiting,
     success: function(data) {
       if (data.zoning && data.zoning.length) {
         displayZoning(data);
@@ -178,8 +183,8 @@ var api_web_v01_zones_index = function(params) {
       }
       progressBar && progressBar.done();
     },
-    complete: completeWaiting,
-    error: ajaxError
+    complete: ajax.completeWaiting,
+    error: ajax.ajaxError
   });
 };
 

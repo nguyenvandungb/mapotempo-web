@@ -17,9 +17,9 @@
 //
 'use strict';
 
-var vehicle_usages_form = function(params) {
-  'use strict';
+import * as scaffolds from '../../assets/javascripts/scaffolds';
 
+const vehicle_usages_form = function(params) {
   /* Speed Multiplier */
   $('form.number-to-percentage').submit(function(e) {
     $.each($(e.target).find('input[type=\'number\'].number-to-percentage'), function(i, element) {
@@ -39,7 +39,7 @@ var vehicle_usages_form = function(params) {
     theme: 'fontawesome'
   });
 
-  customColorInitialize('#vehicle_usage_vehicle_color');
+  scaffolds.customColorInitialize('#vehicle_usage_vehicle_color');
 
   $('#capacity-unit-add').click(function(event) {
     $(this).hide();
@@ -51,14 +51,14 @@ var vehicle_usages_form = function(params) {
   /* API: Devices */
   devicesObserveVehicle.init(params);
 
-  routerOptionsSelect('#vehicle_usage_vehicle_router', params);
+  scaffolds.routerOptionsSelect('#vehicle_usage_vehicle_router', params);
 
   var noResults = I18n.t('vehicles.form.tags_empty');
   $('select[name$=\\[tag_ids\\]\\[\\]]', '#vehicle_usage_vehicle_tag_ids_input').select2({
     theme: 'bootstrap',
     minimumResultsForSearch: -1,
-    templateSelection: templateTag,
-    templateResult: templateTag,
+    templateSelection: scaffolds.templateTag,
+    templateResult: scaffolds.templateTag,
     language: {
       noResults: function() {
         return noResults;
@@ -69,8 +69,8 @@ var vehicle_usages_form = function(params) {
   $('select[name$=\\[tag_ids\\]\\[\\]]', '#vehicle_usage_tag_ids_input').select2({
     theme: 'bootstrap',
     minimumResultsForSearch: -1,
-    templateSelection: templateTag,
-    templateResult: templateTag,
+    templateSelection: scaffolds.templateTag,
+    templateResult: scaffolds.templateTag,
     language: {
       noResults: function() {
         return noResults;
@@ -80,9 +80,7 @@ var vehicle_usages_form = function(params) {
   });
 };
 
-var devicesObserveVehicle = (function() {
-  'use strict';
-
+const devicesObserveVehicle = (function() {
   var _buildSelect = function(name, datas) {
     $('[data-device=' + name + ']').select2({
       data: datas || [],

@@ -16,6 +16,7 @@
 // <http://www.gnu.org/licenses/agpl.html>
 //
 'use strict';
+
 $(document).on('ready page:load', function() {
   $('.index_toggle_selection').click(function() {
     $('input:checkbox').each(function() {
@@ -31,7 +32,7 @@ $(document).on('ready page:load', function() {
   });
 });
 
-var modal_options = function() {
+export const modal_options = function() {
   return {
     keyboard: false,
     show: true,
@@ -39,7 +40,7 @@ var modal_options = function() {
   };
 };
 
-var bootstrap_dialog = function(options) {
+export const bootstrap_dialog = function(options) {
   var default_modal = $('#default-modal').clone();
   default_modal.find('.modal-title').html(options.title);
   default_modal.find('.modal-body').html(options.message);
@@ -50,8 +51,8 @@ var bootstrap_dialog = function(options) {
   return default_modal;
 };
 
-var defaultMapZoom = 12;
-var mapInitialize = function(params) {
+export const defaultMapZoom = 12;
+export const mapInitialize = function(params) {
   var mapLayer, mapBaseLayers = {},
     mapOverlays = {},
     nbLayers = 0;
@@ -95,7 +96,8 @@ var mapInitialize = function(params) {
   if (params.geocoder) {
     var geocoderLayer = L.featureGroup();
     map.addLayer(geocoderLayer);
-    var geocoder = L.Control.geocoder({
+
+    L.Control.geocoder({
       geocoder: L.Control.Geocoder.nominatim({
         serviceUrl: "/api/0.1/geocoder/"
       }),
@@ -157,7 +159,7 @@ var mapInitialize = function(params) {
 };
 
 // FIXME initOnly used for api-web because Firefox doesn't support hash replace (in Leaflet Hash) within an iframe. A new url is fetched by Turbolinks. Chrome works.
-var initializeMapHash = function(map, initOnly) {
+export const initializeMapHash = function(map, initOnly) {
   if (initOnly) {
     var urlParams = L.Hash.parseHash(window.location.hash);
     if (urlParams) {
@@ -177,7 +179,7 @@ var initializeMapHash = function(map, initOnly) {
   return !window.location.hash;
 };
 
-var customColorInitialize = function(selecter) {
+export const customColorInitialize = function(selecter) {
   $('#customised_color_picker').click(function() {
     var colorPicker = $('#color_picker'),
       options_wrap = $(selecter + ' option[selected="selected"]');
@@ -217,7 +219,7 @@ function decimalAdjust(type, value, exp) {
   return +(value[0] + 'e' + (value[1] ? (+value[1] + exp) : exp));
 }
 
-var dropdownAutoDirection = function($updatedElement) {
+export const dropdownAutoDirection = function($updatedElement) {
   $updatedElement.parent().on('show.bs.dropdown', function() {
     $(this).find('.dropdown-menu').first().stop(true, true).slideDown({
       duration: 200
@@ -230,9 +232,6 @@ var dropdownAutoDirection = function($updatedElement) {
       var $window = $(window);
       var $dropdown = $(this).children('.dropdown-menu');
 
-      var newDirection = null;
-
-      var position = $parent.position();
       var offset = $parent.offset();
 
       offset.bottom = offset.top + $parent.outerHeight(false);
@@ -256,7 +255,7 @@ var dropdownAutoDirection = function($updatedElement) {
       var enoughRoomAbove = viewport.top < (offset.top - dropdown.height);
       var enoughRoomBelow = viewport.bottom > (offset.bottom + dropdown.height);
 
-      newDirection = 'below';
+      var newDirection = 'below';
 
       if (!enoughRoomBelow && enoughRoomAbove) {
         newDirection = 'above';
@@ -273,7 +272,7 @@ var dropdownAutoDirection = function($updatedElement) {
       //   css.top = container.top - dropdown.height;
       // }
 
-      if (newDirection == 'above') {
+      if (newDirection === 'above') {
         if ($parent.hasClass('dropdown')) $parent.removeClass('dropdown');
         if (!$parent.hasClass('dropup')) $parent.addClass('dropup');
       } else {
@@ -290,7 +289,7 @@ var dropdownAutoDirection = function($updatedElement) {
   });
 };
 
-var routerOptionsSelect = function(selectId, params) {
+export const routerOptionsSelect = function(selectId, params) {
   var checkInputFieldState = function($field, stateValue) {
     if (stateValue === true) {
       $field.fadeIn();
@@ -442,4 +441,19 @@ Date.prototype.toLocalISOString = function() {
     + pad(d.getHours())+':'
     + pad(d.getMinutes())+':'
     + pad(d.getSeconds()) + tzs
+};
+
+export const templateTag = function(item) {
+  var color = $(item.element).attr('data-color');
+  var icon = $(item.element).attr('data-icon');
+
+  if (icon && color) {
+    return $('<span><i style="color:#' + color + '" class="fa ' + icon + '"></i>&nbsp;</span>').append($("<span/>").text(item.text));
+  } else if (icon) {
+    return $('<span><i class="fa ' + icon + '"></i>&nbsp;</span>').append($("<span/>").text(item.text));
+  } else if (color) {
+    return $('<span><i style="color:#' + color + '" class="fa fa-flag"></i>&nbsp;</span>').append($("<span/>").text(item.text));
+  } else {
+    return item.text;
+  }
 };

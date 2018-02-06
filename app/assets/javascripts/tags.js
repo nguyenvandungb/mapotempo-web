@@ -17,16 +17,16 @@
 //
 'use strict';
 
+import * as scaffolds from '../../assets/javascripts/scaffolds';
+
 // Place all the behaviors and hooks related to the matching controller here.
 // All this logic will automatically be available in application.js.
-var tags_form = function() {
-  'use strict';
-
+const tags_form = function() {
   $('#tag_color').simplecolorpicker({
     theme: 'fontawesome'
   });
 
-  customColorInitialize('#tag_color');
+  scaffolds.customColorInitialize('#tag_color');
 
   //for turbolinks, when clicking on link_to
   $('.selectpicker').selectpicker();
@@ -46,18 +46,3 @@ Paloma.controller('Tags', {
     tags_form();
   }
 });
-
-var templateTag = function(item) {
-  var color = $(item.element).attr('data-color');
-  var icon = $(item.element).attr('data-icon');
-
-  if (icon && color) {
-    return $('<span><i style="color:#' + color + '" class="fa ' + icon + '"></i>&nbsp;</span>').append($("<span/>").text(item.text));
-  } else if (icon) {
-    return $('<span><i class="fa ' + icon + '"></i>&nbsp;</span>').append($("<span/>").text(item.text));
-  } else if (color) {
-    return $('<span><i style="color:#' + color + '" class="fa fa-flag"></i>&nbsp;</span>').append($("<span/>").text(item.text));
-  } else {
-    return item.text;
-  }
-};
