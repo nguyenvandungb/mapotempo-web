@@ -700,7 +700,7 @@ var destinations_index = function(params, api) {
           },
           complete: completeWaiting,
           error: function(request, status, error) {
-            $('[name=' + event.currentTarget.name.replace(/([\[\]])/g, "\\$1") + ']', row).val(event.currentTarget.defaultValue);
+            if (event.currentTarget.name) $('[name=' + event.currentTarget.name.replace(/([\[\]])/g, "\\$1") + ']', row).val(event.currentTarget.defaultValue);
             ajaxError(request, status, error);
           }
         });
