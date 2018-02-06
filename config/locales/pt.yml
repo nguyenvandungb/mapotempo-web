@@ -201,7 +201,7 @@ pt:
         ref: Referência
         ref_small: Ref.ª
         name: Nome
-        address: Morada
+        address: Endereço
         street: Rua
         detail: Detalhe
         postalcode: Código postal
@@ -222,7 +222,7 @@ pt:
         visits: Visitas
       destinations:
         name: Nome
-        address: Morada
+        address: Endereço
         street: Rua
         detail: Detalhe
         postalcode: Cód. Postal
@@ -1394,7 +1394,7 @@ pt:
       link: 'Link para descarregar: <a href=%{link}>iCalendar Plan</a>'
   user_mailer:
     layout:
-      welcome: Benvindo(a) a %{name} !
+      welcome: Bemvindo(a) a %{name} !
       staff:
         content: Para si, a experiência %{name} começa agora! A nossa equipa está
           mobilizada para garantir o sucesso.
@@ -1408,7 +1408,7 @@ pt:
     password:
       subject: Defina a sua palavra passe para %{name}
       title: Defina a sua palavra passe
-      welcome: Benvindo a %{name} !
+      welcome: Bemvindo a %{name} !
       detail:
         content: Obrigado por ter escolhido a solução de planificação e otimização
           de rotas %{application_name}%{limit}.
