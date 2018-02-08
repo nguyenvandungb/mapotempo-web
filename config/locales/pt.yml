@@ -30,9 +30,9 @@ pt:
   default_time_zone: Lisboa
   activemodel:
     models:
-      import_csv: CSV Import
+      import_csv: Importação CSV
       import_csvs:
-        one: Importação CSV
+        one: Importar CSV
         other: Importações CSV
       import_tomtom: Importação TomTom
       import_tomtoms:
@@ -97,10 +97,10 @@ pt:
       stores:
         one: base
         other: bases
-      tag: Etiqueta
+      tag: Marcador
       tags:
-        one: etiqueta
-        other: etiquetas
+        one: marcador
+        other: marcadores
       user: Utilizador
       users:
         one: utilizador
@@ -166,14 +166,14 @@ pt:
         optimization_force_start: Forçar hora de partida do veículo
         profile: Perfil
         profile_id: Perfil
-        speed_multiplicator: Ajuste de velocidade
+        speed_multiplicator: Multiplicador de velocidade
         default_country: País por defeito
         with_state: Adicionar campo de Estado nos endereços
         ref: Referência
         ref_help: A referência deve ser única
         description_title: Descrição
         description_label: Informação de contabilidade
-        description_help: Detalhes do cliente e utilizadores
+        description_help: Detalhes da conta e dos utilizadores
         enable_vehicle_position: Ativar posicionamento do veículo
         enable_stop_status: Ativar status das visitas
         router_options_approach: Chegada/Partida no sentido da circulação
@@ -1439,8 +1439,8 @@ pt:
       header: A nossa equipa acompanhá-lo-á
       main_content: 'Afim de lhe oferecer a melhor experiência, poderá contar com
         a nossa equipa para o acompanhar. Assim, '
-      highlight: 'para qualquer questão, poderá contactarnos: '
-      contact_support: Contacte o suporte
+      highlight: 'para qualquer pergunta, pode contactar-nos: '
+      contact_support: Contactar o suporte
       panels_header: 'Recursos para iniciar: 1ª parte'
       documentation: documentação online
       panels_subtitle: Conheça as três primeiras secções do nosso
