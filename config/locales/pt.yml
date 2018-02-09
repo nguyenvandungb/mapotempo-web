@@ -491,6 +491,8 @@ pt:
         contact_email: E-mail
         capacities: Capacidades
         tag_ids: Particularidades de veículo
+      vehicle_usages:
+        vehicle_id: veículo
     successful:
       messages:
         created: '%{model} foi criado com sucesso'
