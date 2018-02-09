@@ -47,18 +47,18 @@ pt:
         replace: Substituir
   activerecord:
     models:
-      customer: Cliente
+      customer: Conta cliente
       customers:
-        one: cliente
-        other: clientes
+        one: conta cliente
+        other: contas clientes
       deliverable_unit: Unidade de despacho
       deliverable_units:
         one: unidade de despacho
         other: unidades de despacho
-      destination: Destino
+      destination: Ponto
       destinations:
-        one: destino
-        other: destinos
+        one: ponto
+        other: pontos
       layer: Mapa base
       layers:
         one: mapa base
@@ -129,7 +129,7 @@ pt:
       customer:
         enable_external_callback: Ativar URL de chamada
         end_subscription: Fim de subscrição
-        max_vehicles: Máximo de veículos
+        max_vehicles: Nùmero de veículos
         take_over: Duração da visita
         name: Nome
         destinations: Pontos
@@ -144,7 +144,7 @@ pt:
         router_options_height: Altura do veículo
         router_options_width: Largura do veículo
         router_options_length: Comprimento do veículo
-        router_options_hazardous_goods: Tipo de matérias perigosas
+        router_options_hazardous_goods: Tipo de substâncias perigosas
         router_options_max_walk_distance: Distância máxima a pé
         print_planning_annotating: Incluir anotação
         print_header: Cabeçalho de rotas
@@ -160,9 +160,9 @@ pt:
         jobs: Tarefas
         optimization_cluster_size: Dimensão do “cluster” de otimização
         optimization_time: Tempo máximo de otimização por veículo
-        optimization_stop_soft_upper_bound: Coeficiente de atrasos em paragens
-        optimization_vehicle_soft_upper_bound: Coeficientes de atrasos nos veículos
-        optimization_cost_waiting_time: Coeficiente de tempos de espera
+        optimization_stop_soft_upper_bound: Coeficiente de atraso em paragens
+        optimization_vehicle_soft_upper_bound: Coeficiente de atraso por veículos
+        optimization_cost_waiting_time: Coeficiente de tempo de espera
         optimization_force_start: Forçar hora de partida do veículo
         profile: Perfil
         profile_id: Perfil
@@ -172,10 +172,10 @@ pt:
         ref: Referência
         ref_help: A referência deve ser única
         description_title: Descrição
-        description_label: Informação de contabilidade
+        description_label: Informação de conta
         description_help: Detalhes da conta e dos utilizadores
         enable_vehicle_position: Ativar posicionamento do veículo
-        enable_stop_status: Ativar status das visitas
+        enable_stop_status: Ativar estado das visitas
         router_options_approach: Chegada/Partida no sentido da circulação
         router_options_snap: Ligar a paragem ao cruzamento
         router_options_truck_restriction_penalty: Respeito estrito das limitações
@@ -185,18 +185,18 @@ pt:
         router_options_track: Utilizar vias
         optimization_max_split_size: Dimensão da divisão de otimização
         max_plannings: Max planos
-        max_zonings: Max zonas
-        max_destinations: Max destinos
-        max_vehicle_usage_sets: Max configurações de veículos
+        max_zonings: Max zoneamentos
+        max_destinations: Max pontos
+        max_vehicle_usage_sets: Max parâmetros base dos veículos
       deliverable_unit:
-        label: Etiqueta
+        label: Marcador
         ref: Referência
-        icon: Icon
+        icon: Icone
         default_quantity: Quantidade por defeito
         default_capacity: Capacidade por defeito
         optimization_overload_multiplier: Coeficiente de sobrecarga
         operation_fill: Preenchimento
-        operation_empty: Esvaziar
+        operation_empty: Esvaziamento
       destination:
         ref: Referência
         ref_small: Ref.ª
@@ -276,13 +276,13 @@ pt:
       reseller:
         host: Anfitrião
         name: Nome do revendedor
-        welcome_url: URL de acolhimento
+        welcome_url: URL de bem-vinda
         help_url: URL de ajuda
         contact_url: URL de contacto
         logo_large: Logo grande
         logo_small: Logo pequeno
         favicon: Favicon
-        website_url: URL do sítio web
+        website_url: URL do website
         url_protocol: Tipo de conexão
         application_name: Nome da aplicação
         subscription_url: URL de subscrição
@@ -345,8 +345,8 @@ pt:
         lng: Longitude
         open: Hora de abertura
         close: Hora de fecho
-        store_start: Início armazém
-        store_end: Fim armazém
+        store_start: Armazém de início
+        store_end: Armazém de fim
         color: Cor
         icon: Icon
         icon_size: Tamanho de icon
@@ -417,10 +417,10 @@ pt:
         name: Nome
         open: Abertura
         close: Fecho
-        store_start: Partida do armazém
-        store_start_id: Partida do Armazém
-        store_stop: Chegada ao armazém
-        store_stop_id: Chegada ao Armazém
+        store_start: Armazém de partida
+        store_start_id: Armazém de partida
+        store_stop: Armazém de chegada
+        store_stop_id: Armazém de chegada
         rest_start: Início do período para repouso
         rest_stop: Fim do período para repouso
         rest_duration: Duração do repouso
@@ -428,6 +428,7 @@ pt:
         store_rest_id: Local de repouso
         service_time_start: Duração de serviço anterior
         service_time_end: Duração de serviço posterior
+        work_time: Tempo de trabalho
       visit:
         ref: Referência
         ref_small: Ref.ª
@@ -449,6 +450,7 @@ pt:
         tags: Marcadores
         tag_ids: Marcadores
         quantities: Quantidades
+        priority: Prioridade
       visits:
         ref: Referência
         ref_small: Ref.ª
@@ -472,6 +474,7 @@ pt:
         quantities:
           one: Quantidade
           other: Quantidades
+        priority: Prioridade
       zoning:
         name: Nome
       zone:
@@ -490,9 +493,22 @@ pt:
         ref: Referencia
         contact_email: E-mail
         capacities: Capacidades
-        tag_ids: Particularidades de veículo
+        tag_ids: Especificidades de veículo
       vehicle_usages:
         vehicle_id: veículo
+        open: Abrir
+        close: Fechar
+        store_start: Armazém de início
+        store_start_id: Armazém de início
+        rest_start: Janela temporal para pausa
+        rest_stop: Janela temporal para pausa
+        rest_duration: Duração da pausa
+        store_rest: Lugar da pausa
+        store_rest_id: Lugar da pausa
+        service_time_start: Tempo de serviço anterior
+        service_time_end: Tempo de serviço posterior
+        work_time: Tempo de trabalho
+        vehicle: Veículo
     successful:
       messages:
         created: '%{model} foi criado com sucesso'
@@ -519,13 +535,15 @@ pt:
             close:
               after: deve ser posterior à hora de abertura
             rest_stop:
-              after: deve ser posterior à hora de abertura
-          missing_rest_window: deve ser preenchido se a duração do repouso for preenchida
+              after: deve ser posterior à hora de abertura, que deve ser especificada
+          missing_rest_window: deve ser preenchido se a duração ou a hora do repouso
+            for preenchida
           missing_rest_duration: deve ser preenchido se um período para repouso for
             preenchido
           rest_range: O período para repouso deve estar compreendido entre %{start}
             e %{end}
           service_range: não pode ser igual ou superior ao tempo de trabalho
+          work_time_inside_window: deve ser menor ou igual à janela temporal de trabalho
         vehicle_usage_set:
           attributes:
             close:
@@ -535,7 +553,8 @@ pt:
           at_least_one: É obrigatória, no mínimo, uma configuração de veículo
           missing_rest_window: deve ser preenchido se a duração do repouso for preenchida
           missing_rest_duration: deve ser preenchido se um período para repouso for
-            preenchido
+            especificado
+          work_time_inside_window: deve ser menor ou igual à janela temporal de trabalho
         visit:
           attributes:
             close1:
@@ -548,18 +567,26 @@ pt:
             quantities:
               not_float: deve ser um número
               negative_value: deve ser um valor positivo (%{value})
+            priority: deve estar compreendido entre -4 e 4
         zone:
           attributes:
             vehicle:
               bad_customer: não associado com uma conta cliente
             polygon:
-              invalid_json: não é uma string json válida
+              invalid_json: não é uma cadeia de caracteres json válida
         customer:
           attributes:
             destinations:
               over_max_limit: Ultrapassado o numero máximo de pontos
             stores:
               over_max_limit: Ultrapassado o número máximo de armazéns
+            plannings:
+              over_max_limit: O nùmero màximo de planos foi atingido
+            zonings:
+              over_max_limit: O nùmero màximo de zoneamentos foi atingido
+            vehicle_usage_sets:
+              over_max_limit: O nùmero màximo de parâmetros base dos veículos foi
+                atingido
         store:
           at_least_one: Necessário, no mínimo, um armazém
           icon_unknown: não é um ícone font-awesome autorizado
@@ -595,7 +622,7 @@ pt:
           default: Ocorreu um erro interno. O problema foi reportado, por favor tente
             outra ação. Contacte o suporte se urgente.
           '404': Página não encontrada no servidor. Poderá ter sido removida.
-          '422': Não está autorizado a executar esta ação.
+          '422': Não é possível executar esta ação.
           '500': Ocorreu um erro interno. O problema foi reportado, por favor tente
             outra ação. Contacte o suporte se urgente.
       back_button: Página anterior
@@ -627,6 +654,8 @@ pt:
       tomtom: Dados tomtom inválidos, registo %{s}
     template_csv: Modelo de importação de folha de cálculo standard
     template_excel: Modelo de importação de folha de cálculo Excel
+    without_stop_type: Nenhum valor para "tipo de paragem", apague a coluna /chave
+      ou escolha um valor dos seguintes valores [visit | store | rest].
   admin:
     profiles:
       menu:
@@ -640,6 +669,8 @@ pt:
         reseller: Revendedor
       edit:
         title: Alterar revendedor
+        help_urls: Centro de ajuda e contactos URL
+        social_urls: URL das redes sociais
       form:
         host_help: Hostname e porta de URL web utilizados para deteção deste revendedor
         name_help: Marca do revendedor
@@ -666,6 +697,14 @@ pt:
         facebook_url_help: Link do Facebook do revendedor
         twitter_url_help: Link do Twitter do revendedor
         linkedin_url_help: Link do Linkedin do revendedor
+        audience_url_help: 'Página web que contém o painel de audiência. Pode utilizar
+          "{ID}" que serà substituído pelo idioma como « en », « fr »  (ie: https://analytics.mapotempo.com/public/dashboard/{ID}'
+        customer_audience_url_help: 'Página web que contém o painel de audiência par
+          um cliente. Pode utilizar "{ID}" que serà substituído pelo idioma como «
+          en », « fr »   (ie: https://analytics.mapotempo.com/public/dashboard/{ID}'
+        customer_behavior_url_help: 'Página web que contém o painel de comportamento
+          de um cliente. Pode utilizar "{ID}" que serà substituído pelo idioma como
+          « en », « fr »   (ie: https://analytics.mapotempo.com/public/dashboard/{ID}'
     users:
       menu:
         users: Utilizadores
@@ -719,6 +758,8 @@ pt:
       status_no_sign_in_user: Utilizador nunca se ligou
       status_inactive_user: Utilizador inativo
       created_end_subscription: Criada - Fim de subscrição
+      audience_url: Painel de audiência para todas as contas
+      behavior_url: Painel de comportamento para todas as contas
     new:
       title: Nova conta cliente
     destroy:
@@ -812,9 +853,24 @@ pt:
         será o resultado da otimização (poderá, no entanto, ser mais frequente o caso
         em que não é encontrada solução para o tempo requerido). Quanto menor for
         o valor, tanto mais rápida será a otimização (mas a solução encontrada poderá
-        ser de inferior qualidade). Um valor correspondente a 10 a 20 vezes o tamanho
-        das rotas, será correto. Considerar apenas em casos em que os veículos são
-        homogéneos (router, stores, time windows, capacities...)
+        ser de inferior qualidade). Um valor correspondente a 10-20 vezes o tamanho
+        médio das rotas, será correto.
+      limits: Limites
+      max_plannings_default: '%{n} (valor por defeito)'
+      max_plannings_help: Nùmero màximo de planos autorizados na conta.
+      max_zonings_default: '%{n} (valor por defeito)'
+      max_zonings_help: Nùmero màximo de zoneamentos autorizados na conta.
+      max_destinations_default: '%{n} (valor por defeito)'
+      max_destinations_help: Nùmero màximo de pontos autorizados na conta.
+      max_vehicle_usage_sets_default: '%{n} (valor por defeito)'
+      max_vehicle_usage_sets_help: Nùmero màximo de parâmetros base dos veículos autorizados
+        na conta.
+      optimization_cost_waiting_time_help: Permite avaliar a importancia dos tempos
+        de espera. Maior o valor, maior serà a penalização do atraso antes do começo
+        da janela temporal (0 para desativar o tempo de espera).
+      enable_global_optimization_test: Desativado se Test
+      audience_url_help: Ir para a pàgina do painel de audiência do cliente
+      behavior_url_help: Ir para a pàgina do painel de comportamento do cliente
   stores:
     default:
       lat: '38.78280'
@@ -987,7 +1043,7 @@ pt:
       service_time_start_desc: duração de serviço anterior sem ter em conta a duração
         da pausa
       service_time_end: duração do serviço após
-      service_time_end_desc: duração do serviço após sem ter em conta a duração de
+      service_time_end_desc: duração do serviço após, sem ter em conta a duração de
         pausa
       format:
         string: texto
@@ -1026,7 +1082,7 @@ pt:
     new:
       title: Nova configuração de veículos
     form:
-      open_close: Horário
+      open_close: Janela temporal
       open_close_help: Horário de trabalho do estafeta
       stores: Partida / Chegada
       store:
@@ -1041,7 +1097,7 @@ pt:
       rest_duration:
         help: Se preenchido, requer um período para repouso
       rest_start_stop: Período para repouso
-      rest_start_stop_help: Sem ter em conta a duração do repouso
+      rest_start_stop_help: Sem tomar conta da duração do repouso
   web:
     help_menu: Ajuda
     key_not_found: Chave de ligação inválida
@@ -1215,6 +1271,8 @@ pt:
           move_help: Desloque os pontos manualmente no mapa se necessário
           dismiss: Ignorar
           sort_geocoding: Mostrar primeiro as geocodificações pouco fiáveis
+      over_max_limit: 'Você atingiu o nùmero màximo de pontos para a sua conta. (Limite
+        da conta : %{limit})'
     new:
       title: Novo destino
     import_file:
@@ -1229,7 +1287,7 @@ pt:
       ref_vehicle_desc: referência ou nome do veículo utilizado para efetuar a paragem
         na rota.
       stop_type: tipo de paragem
-      stop_type_desc: tipo de paragem na rota.
+      stop_type_desc: tipo de paragem na rota. A valor por defeito é [visit]
       stop_type_visit: visita
       stop_format: '[visita | armazém | pausa]'
       name: nome
@@ -1302,12 +1360,12 @@ pt:
       phone_number_desc: número do telefone de contacto no destino.
       tags: etiquetas
       tags_desc: categorização do destino (permitirá agrupa-los).
-      tags_format: etiqueta 1, etiqueta 2
+      tags_format: marcador 1, marcador 2
       without_visit: sem visita
       without_visit_desc: precisa que não existe nenhuma visita associada
       ref_visit: visita de referência
       ref_visit_desc: referência da visita.
-      tags_visit: etiqueta a visita
+      tags_visit: marcador visita
       tags_visit_desc: categorização da visita (permitirá, por exemplo, agrupa-las).
       format:
         string: texto
@@ -1328,6 +1386,12 @@ pt:
       missing_location: '"localidade / código postal" ou "lat / long" em falta.'
       invalid_numeric_value: valor numérico « %{value} » invalido.
       check_custom_columns: Verifique a definição das colunas a importar.
+      quantity_operation_format: '[preencher | esvaziar]'
+      quantity_operation_fill: preencher
+      quantity_operation_empty: esvaziar
+      priority: prioridade
+      priority_desc: prioridade de inclusão durante otimização, de -4 (mínimo) até
+        4 (màximo).
     reverse_geocoding:
       apply: Aplicar novo endereço
   index:
@@ -1426,6 +1490,7 @@ pt:
       footer:
         first_step: 'Passo 1: Defina a sua palavra passe'
         second_step: 'Passo 2: Entre na aplicação'
+      preheader: Bem-vindo e obrigado por ter escolhido experimentar %{name}
     connection:
       subject: Ligação à sua conta %{name}
       title: Ligue-se à sua conta
@@ -1434,6 +1499,7 @@ pt:
         content: 'Para se ligar, '
         id: 'utilize a palavra passe e utilizador que definiu: %{login}.'
         link: Ligação
+      preheader: Pode registrar-se agora à sua conta.
     footer:
       first_step: 'Passo 1: Defina a sua password'
       second_step: 'Passo 2: Entre na aplicação'
@@ -1520,6 +1586,7 @@ pt:
         tags: Apresentação das etiquetas
         zonage: Criação de zoneamento
         zonage_update: Alteração de zoneamento
+      preheader: Veja a segunda parte dos recursos para começar.
     advanced_options:
       header: Poderemos ajudá-lo a esclarecer alguns aspetos?
       main_content: 'Está a utilizar o %{name} nos últimos 3 dias. Descobriu diversas
@@ -1540,11 +1607,30 @@ pt:
         img_src: https://www.mapotempo.com/wp-content/uploads/2015/10/calendar.png
       panel_two:
         title: TomTom WEBFLEET (opcional)
+        content: Utiliza TomTom WEBFLEET? Veja como ligar %{name} com TomTom WEBFLEET.
+          Como o planeador pode fazer a ligação e como os operàrios podem usà-lo diariamente.
+        time: ⏱9min.
+        doc_link: Doc - TomTom WEBFLEET
+        doc_href: /manual/07-tomtom_webfleet.html
+      preheader: Descubra a terceira parte dos recursos para começar.
+      panel_three:
+        title: 'Opções avançadas:'
+        content: 'utilize opções avançadas : crie multiplas visitas ao mesmo ponto
+          com configurações diferentes etc.'
+        time: ⏱4min.
+        doc_link: Doc - Opções avançadas
+      footer: Recebeu este email na qualidade de utilizador de %{name}
+      adds:
+        videos: Vídeos
+    accompanying:
+      title: A nossa equipa està aqui para o apoiar.
+      link: Contatar supporte
   plannings:
     menu:
       plannings: Planos
       plannings_limit:
-        menu_message: Numero máximo sugerido de planos atingidos
+        menu_message: Têm demasiados planos. Encontre todos os seus planos selecionando
+          List.
     index:
       title: Lista de planos de rotas
       new: Novo plano
@@ -1663,7 +1749,7 @@ pt:
       stops_help: Paragens planeadas / total
       duration_help: Soma da duração das rotas
       distance_help: Soma das distancias das rotas
-      emission_help: Emissão
+      emission_help: Emissão total
       out_of_route: Não afetado(a)
       toggle_help: Alternar visualização das paragens, no mapa
       locked_unplanned_help: Bloquear os não planeados no plano de operações global
@@ -1671,7 +1757,8 @@ pt:
       vehicle_help: Parâmetros do veículo
       export_help: Exportar a rota
       route_stops_active_help: Selecionar paragens ativas
-      route_duration_help: Duração da rota / Janela de tempo do veículo
+      route_duration_help: Duração da rota / Janela temporal do veículo ou tempo de
+        trabalho
       route_distance_help: Distancia da rota
       route_quantity_help: Quantidade / Capacidade do veículo
       drag_help: Arrastar para ordenar as paragens nas rotas
@@ -1679,9 +1766,10 @@ pt:
       edit_store_help: Modificar as informações do armazém
       edit_visit_help: Modificar as informações da visita/cliente
       marker_help: Visualizar na carta
-      automatic_insert_help: Encontrar uma rota e inserir esta paragem
-      automatic_insert_help_multiple: Encontrar rotas e inserir paragens ( os resultados
-        já não serão otimizados)
+      automatic_insert_help: Encontrar a melhor posição numa das rotas para inserir
+        esta paragem (os resultados jà não poderão ser otimizados)
+      automatic_insert_help_multiple: Encontrar uma boa posição nas rotas para inserir
+        paragens (os resultados já não serão otimizados)
       automatic_insert_confirm: Fazer corresponder a rotas todas as paragens não planeadas?
         O resultado já não será otimizado. Os zoneamentos são recomendados para fazer
         corresponder as paragens às rotas de forma mais precisa (Ok para continuar
@@ -1736,7 +1824,7 @@ pt:
         optimizer:
           title: Otimização
           in_progress: Em processamento. Por favor aguarde.
-          matrix: Matriz de distanciamentos
+          matrix: Matriz de distancias
           optimize: Otimização
           routes: Atualização do plano
           attempts: 'Tentativas:'
@@ -1750,7 +1838,7 @@ pt:
           title: Troca de veículo
           in_progress: Aplicando novo veículo. Por favor aguarde
         automatic_insert:
-          title: Estabelecer rotas para paragens não planificadas
+          title: Encontrar as melhores posições para as paragens
           in_progress: Por favor aguarde
         spreadsheet:
           title: Exportar para folha de cálculo
@@ -1810,16 +1898,16 @@ pt:
       tags_visit: etiquetas da visita
       out_of_window: fora do período da visita
       out_of_capacity: para além da capacidade do veículo
-      out_of_drive_time: fora do período do veículo
+      out_of_drive_time: fora do período temporal do veículo
       status: estado
       eta: eta
     form:
       ref_help: Referência livre
       begin_end_date: Período de validade
       begin_end_date_help: Período durante o qual o plano é válido
-      tags_help: Visitas / destinos limitados no plano (as visitas/destinos deverão
-        possuir todas estas etiquetas (TODAS), ou uma das etiquetas selecionadas (OU),
-        para que sejam incluídas no plano).
+      tags_help: Autorizar filtro das visitas do plano consoante seus marcadores.
+        Se “todos” for selecionado, todos os clientes/visitas devem possuir  todos
+        os marcadores selecionados. Se ”ou” for selecionado, um marcador é suficiente.
       order_array: Encomendas
       zonings_help: Permite fazer corresponder automáticamente veículos a visitas/destinos
         de acordo com zonas geográficas pré definidas.
@@ -1858,12 +1946,12 @@ pt:
       code_help: Código curto, algumas letras
   tags:
     edit:
-      title: Alterar etiqueta
+      title: Alterar marcador
     index:
       title: Lista etiquetas
-      new: Nova etiqueta
+      new: Novo marcador
     new:
-      title: Nova etiqueta
+      title: Novo marcador
     form:
       color_default: Por defeito
       color_help: Forçar utilização desta cor
@@ -1909,7 +1997,7 @@ pt:
       contact_email: email
       contact_email_desc: email do dispositivo do motorista
       emission: emissão
-      emission_desc: emissão do veículo
+      emission_desc: tipo de combustível
       consumption: consumo
       consumption_desc: consumo do veículo
       capacities: capacidades
@@ -1917,7 +2005,7 @@ pt:
       router_mode: calculador de itinerário
       router_mode_desc: forçar a utilização de um calculador de itinerário
       router_dimension: objetivo do calculador
-      router_dimension_desc: forçar a utilização de um calculador de objetivo do cálculo
+      router_dimension_desc: forçar a utilização de um calculador de objetivo especifico
       router_options: opções do calculador
       router_options_desc: forçar a utilização de opções específicas do calculador
         de itinerário
@@ -2004,7 +2092,7 @@ pt:
         default: '%{n} (defeito)'
       open_close_days:
         default: '%{n}'
-      open_close: Horas
+      open_close: Periodo temporal
       open_close_help: Horário de trabalho do estafeta
       stores: Partida / Chegada
       store:
@@ -2020,7 +2108,7 @@ pt:
       rest_start_stop_help: Sem ter em conta a duração da pausa
       rest_duration:
         default: '%{n} (valor por defeito)'
-        help: Requer período para repouso se preenchido
+        help: Requer período para repouso se especificado
       store_rest:
         default: Defeito
         none: Nenhum
@@ -2042,7 +2130,9 @@ pt:
         importação/exportação
       quantities:
         default: '%{n} (valor por defeito))'
-        help: Quantidades a despachar
+        help: Quantidades a despachar. Em caso de preenchimento/esvaziamento, o motor
+          de otimização decidirà as quantidades. Se um valor for especificado, serà
+          utilizado como quantidade mínima a preencher/esvaziar.
       take_over_default: defeito
       take_over_help: Se em branco, utiliza o valor por defeito
       open_close1: Período horário 1
@@ -2141,7 +2231,7 @@ pt:
   all:
     datepicker: dd-mm-yyyy
     map_attribution:
-      osm: Carta et dados &copy; contribuintes <a href="http://openstreetmap.org"
+      osm: Carta de dados &copy; contribuintes <a href="http://openstreetmap.org"
         target="_blank">OpenStreetMap</a>, %{attribution}
       here: Aqui
     verb:
