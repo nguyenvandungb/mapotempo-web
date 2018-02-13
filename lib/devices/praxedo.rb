@@ -120,7 +120,7 @@ class Praxedo < DeviceBase
     }.compact
   end
 
-  def send_route(customer, route, options = {})
+  def send_route(customer, route, _options = {})
     events = []
     code_route_id = encode_order_id('', route.id, planning_date(route.planning))
 

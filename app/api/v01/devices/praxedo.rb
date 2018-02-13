@@ -32,6 +32,16 @@ class V01::Devices::Praxedo < Grape::API
       rescue_from DeviceServiceError do |e|
         error! e.message, 200
       end
+
+      desc 'Send Planning Routes',
+           detail: 'Send Planning Routes',
+           nickname: 'devicePraxedoSendMultiple'
+      params do
+        requires :planning_id, type: Integer, desc: 'Planning ID'
+      end
+      post '/send_multiple' do
+        device_send_routes device_id: :praxedo_agent_id
+      end
     end
   end
 end

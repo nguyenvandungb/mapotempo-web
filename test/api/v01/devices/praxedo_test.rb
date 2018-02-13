@@ -35,14 +35,14 @@ class V01::Devices::PraxedoTest < ActiveSupport::TestCase
     "/api/0.1/plannings#{part}.json?api_key=testkey1&" + param.collect { |k, v| "#{k}=" + URI.escape(v.to_s) }.join('&')
   end
 
-  test 'authenticate' do
+  test 'should authenticate' do
     with_stubs [:get_events_wsdl, :get_events] do
       get api("devices/praxedo/auth/#{@customer.id}", params_for(:praxedo, @customer))
       assert_equal 204, last_response.status
     end
   end
 
-  test 'send route' do
+  test 'should send route' do
     with_stubs [:create_events_wsdl, :create_events] do
       set_route
       post api('devices/praxedo/send', { customer_id: @customer.id, route_id: @route.id })
@@ -61,7 +61,21 @@ class V01::Devices::PraxedoTest < ActiveSupport::TestCase
     end
   end
 
-  test 'fetch stops then update quantities and out of capacity' do
+  test 'should send multiple routes' do
+    set_route
+    with_stubs [:create_events_wsdl, :create_events] do
+      planning = plannings(:planning_one)
+      post api('devices/praxedo/send_multiple', { customer_id: @customer.id, planning_id: planning.id })
+      assert_equal 201, last_response.status, last_response.body
+      routes = planning.routes.select(&:vehicle_usage_id)
+      routes.each(&:reload)
+      routes.each { |route|
+        assert_equal([{ 'id' => route.id, 'last_sent_to' => 'Praxedo', 'last_sent_at' => route.last_sent_at.iso8601(3), 'last_sent_at_formatted' => I18n.l(route.last_sent_at) }], JSON.parse(last_response.body)) if route.ref == 'route_one'
+      }
+    end
+  end
+
+  test 'should fetch stops then update quantities and out of capacity' do
     customers(:customer_one).update(job_optimizer_id: nil)
     # All 3 stops in route are completed
     # with following quantities from Praxedo:
