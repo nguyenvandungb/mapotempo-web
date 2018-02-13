@@ -22,7 +22,6 @@ class Fleet < DeviceBase
   TIMEOUT_VALUE ||= 600 # Only for post and delete
 
   USER_DEFAULT_ROLES = %w(mission.creating mission.updating mission.deleting user_current_location.creating user_current_location.updating user_track.updating user_track.updating)
-  USER_DEFAULT_PASSWORD = '123456'
 
   def definition
     {
@@ -118,33 +117,40 @@ class Fleet < DeviceBase
     end
   end
 
-  def create_drivers(customer)
+  def create_drivers(customer, current_admin)
     api_key = customer.devices[:fleet][:api_key]
+    user = customer.users.first
     raise DeviceServiceError.new("Fleet: #{I18n.t('errors.fleet.create_drivers.no_api_key')}") unless api_key
 
     vehicles_with_email = customer.vehicles.select(&:contact_email)
 
-    users = vehicles_with_email.map do |vehicle|
+    drivers = vehicles_with_email.map do |vehicle|
+      driver_password = Digest::MD5.hexdigest([vehicle.name, vehicle.contact_email].join(','))[0..3]
+
       driver_params = {
         name: vehicle.name,
         email: vehicle.contact_email,
-        password: USER_DEFAULT_PASSWORD,
+        password: driver_password,
         roles: USER_DEFAULT_ROLES,
       }
 
       begin
         response = rest_client_post(set_user_url, api_key, driver_params)
-        vehicle.update! devices: {fleet_user: JSON.parse(response)['user']['sync_user']}
-        response
+        driver = JSON.parse(response)['user']
+        vehicle.update!(devices: {fleet_user: driver['sync_user']})
+        driver.merge('password' => driver_password)
       rescue RestClient::UnprocessableEntity
         nil
       end
     end.compact
 
-    if users.empty? && !vehicles_with_email.empty?
+    if drivers.empty? && !vehicles_with_email.empty?
       raise DeviceServiceError.new("Fleet: #{I18n.t('errors.fleet.create_drivers.already_created')}")
     else
-      users
+      # Temporary send email to customer to get drivers with password
+      UserMailer.send_fleet_drivers(user, I18n.locale, drivers, current_admin).deliver_now
+
+      drivers
     end
   end
 

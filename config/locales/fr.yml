@@ -1248,6 +1248,13 @@ fr:
           mot de passe :'
         test: ' de test'
         link: Définir mot de passe
+    fleet_drivers:
+      hello: Bonjour
+      subject: Comptes mobiles
+      preheader: Comptes mobiles
+      content: "Les utilisateurs mobiles suivant ont été créés et sont maintenant disponibles pour se connecter sur le mobile (email comme login et password)"
+      login: "email: %{email} / password: %{password}"
+      footer: Comptes mobiles
     connection:
       subject: Connexion à votre compte %{name}
       title: Connexion à votre compte

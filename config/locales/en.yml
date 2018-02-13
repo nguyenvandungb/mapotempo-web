@@ -1215,6 +1215,13 @@ en:
         content: "To log in, "
         id: "please use the password you defined and your username: %{login}."
         link: "Connection"
+    fleet_drivers:
+      hello: Hello
+      subject: Mobiles account
+      preheader: Mobiles account
+      content: "The following mobiles users have been created and are now available to connect with a mobile (email as login and password)"
+      login: "email: %{email} / password: %{password}"
+      footer: Mobiles account
     accompanying_team:
       header: "Our team supports you"
       main_content: "In order to offer you the best experience, you can rely on our team to support you. So that, "

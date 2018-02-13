@@ -80,6 +80,17 @@ class UserMailer < ApplicationMailer
     end
   end
 
+  def send_fleet_drivers(user, locale, drivers, current_admin = nil)
+    I18n.with_locale(locale) do
+      @user = user
+      @name, @application_name = names(user) # To deprecate
+      @template = 'fleet_drivers'
+      mail to: [user.email, current_admin && current_admin.email], subject: I18n.t('user_mailer.fleet_drivers.subject') do |format|
+        format.html { render 'user_mailer/fleet_drivers', locals: { user: user, drivers: drivers } }
+      end
+    end
+  end
+
   private
 
   def links_parameters(name, locale = :fr)

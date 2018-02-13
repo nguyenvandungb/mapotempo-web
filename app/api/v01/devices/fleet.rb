@@ -84,14 +84,14 @@ class V01::Devices::Fleet < Grape::API
            nickname: 'deviceFleetCreateCompanyAndDrivers'
       get '/create_company' do
         service.create_company
-        service.create_drivers
+        service.create_drivers(@current_user)
       end
 
       desc 'Create drivers',
            detail: 'Create driver by vehicle',
            nickname: 'deviceFleetCreateDrivers'
       get '/create_drivers' do
-        service.create_drivers
+        service.create_drivers(@current_user)
       end
     end
   end

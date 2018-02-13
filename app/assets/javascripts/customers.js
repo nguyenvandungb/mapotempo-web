@@ -360,8 +360,7 @@ var devicesObserveCustomer = (function() {
 
           var drivers = [I18n.t('customers.form.devices.fleet.drivers_created')];
           data.map(function (driver) {
-            driver = JSON.parse(driver);
-            drivers.push(driver.user.email);
+            drivers.push(driver.email + ' : ' + driver.password);
           });
 
           notice(drivers.join('\r\n'));

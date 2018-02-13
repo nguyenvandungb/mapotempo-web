@@ -50,9 +50,9 @@ class FleetService < DeviceService
     end
   end
 
-  def create_drivers
+  def create_drivers(current_admin)
     if customer.devices[service_name] && customer.devices[:fleet][:user]
-      service.create_drivers(customer)
+      service.create_drivers(customer, current_admin)
     end
   end
 end
