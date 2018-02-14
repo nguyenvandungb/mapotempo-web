@@ -496,8 +496,8 @@ pt:
         tag_ids: Especificidades de veículo
       vehicle_usages:
         vehicle_id: veículo
-        open: Abrir
-        close: Fechar
+        open: Horário de abertura
+        close: Horário de fecho
         store_start: Armazém de início
         store_start_id: Armazém de início
         rest_start: Janela temporal para pausa
@@ -509,6 +509,9 @@ pt:
         service_time_end: Tempo de serviço posterior
         work_time: Tempo de trabalho
         vehicle: Veículo
+        store_stop: Armazém chegada
+        store_stop_id: Armazém chegada
+        tag_ids: Competências
     successful:
       messages:
         created: '%{model} foi criado com sucesso'
@@ -671,6 +674,8 @@ pt:
         title: Alterar revendedor
         help_urls: Centro de ajuda e contactos URL
         social_urls: URL das redes sociais
+        logo: Logos & Favicon
+        analysis_urls: Ligações a "dashboards" analíticos
       form:
         host_help: Hostname e porta de URL web utilizados para deteção deste revendedor
         name_help: Marca do revendedor
