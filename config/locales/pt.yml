@@ -1392,6 +1392,9 @@ pt:
       priority: prioridade
       priority_desc: prioridade de inclusão durante otimização, de -4 (mínimo) até
         4 (màximo).
+      quantity_operation: operação
+      quantity_operation_desc: especifique se é necessàrio preencher ou esvaziar o
+        veículo.
     reverse_geocoding:
       apply: Aplicar novo endereço
   index:
@@ -1542,6 +1545,7 @@ pt:
         doc_href: /manual/02-global_settings_users.html
         img_src: https://www.mapotempo.com/wp-content/uploads/2015/10/user.png
       footer: Recebe este email como utilizador de %{name}
+      preheader: Descubra a primeira parte dos recursos para começar.
     features:
       header: Tem questões? A nossa equipa responde!
       main_content: 'A nossa equipa está disponível para responder a todas as suas
@@ -1580,7 +1584,7 @@ pt:
         img_src: https://www.mapotempo.com/wp-content/uploads/2015/10/ungroup.png
       footer: Recebe este email como utilizador de %{name}
       adds:
-        video: Videos
+        video: Vídeos
         vehicules_params: Parametrização dos veículos
         destination_params: Parametrização dos destinos
         tags: Apresentação das etiquetas
@@ -1619,11 +1623,12 @@ pt:
           com configurações diferentes etc.'
         time: ⏱4min.
         doc_link: Doc - Opções avançadas
+        img_src: https://www.mapotempo.com/wp-content/uploads/2015/10/cog.png
       footer: Recebeu este email na qualidade de utilizador de %{name}
       adds:
         videos: Vídeos
     accompanying:
-      title: A nossa equipa està aqui para o apoiar.
+      title: A nossa equipa està aqui para o ajudar
       link: Contatar supporte
   plannings:
     menu:
