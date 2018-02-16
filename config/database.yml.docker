@@ -3,8 +3,8 @@ default: &default
   pool: 5
   timeout: 5000
   username: <%= ENV['POSTGRES_USERNAME'] || 'mapotempo' %>
-  password: <%= ENV['POSTGRES_PASSWORD'] || 'mapotempo' %>
-  host: db
+  # password: <%= ENV['POSTGRES_PASSWORD'] || 'mapotempo' %>
+  # host: db
 
 development:
   <<: *default

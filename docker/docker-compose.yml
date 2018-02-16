@@ -10,6 +10,7 @@ services:
     volumes:
       - ./mapotempo.rb:/srv/app/config/initializers/mapotempo.rb
       - ./uploads:/srv/app/public/uploads
+      - ./postgres-run:/var/run/postgresql/
     links:
       - db
       - redis-cache
@@ -27,6 +28,7 @@ services:
         - PGDATA=/var/lib/postgresql/data/pgdata
     volumes:
       - ./postgres:/var/lib/postgresql/data/pgdata
+      - ./postgres-run:/var/run/postgresql/
     restart: always
 
   redis-cache:
@@ -42,7 +44,8 @@ services:
     ports: []
     volumes:
       - ./mapotempo.rb:/srv/app/config/initializers/mapotempo.rb
-      - /tmp:/srv/app/public/uploads
+      - /tmp:/srv/app/public/uploads # Dummy dir
+      - ./postgres-run:/var/run/postgresql/
     links:
       - db
       - redis-cache
