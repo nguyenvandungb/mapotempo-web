@@ -1,6 +1,6 @@
 class AlterTableCustomerEnableMultiVehicleUsageSets < ActiveRecord::Migration
   def up
-    add_column :customers, :enable_multi_vehicle_usage_sets, :boolean, default: true, null: false
+    add_column :customers, :enable_multi_vehicle_usage_sets, :boolean, default: false, null: false
   end
 
   def down

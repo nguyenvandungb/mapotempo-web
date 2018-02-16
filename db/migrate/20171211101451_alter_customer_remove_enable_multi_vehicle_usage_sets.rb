@@ -10,7 +10,7 @@ class AlterCustomerRemoveEnableMultiVehicleUsageSets < ActiveRecord::Migration
   end
 
   def down
-    add_column :customers, :enable_multi_vehicle_usage_sets, :boolean, default: true, null: false
+    add_column :customers, :enable_multi_vehicle_usage_sets, :boolean, default: false, null: false
 
     Customer.find_each do |customer|
       customer.enable_multi_vehicle_usage_sets = true if customer.default_max_vehicle_usage_sets > 1
