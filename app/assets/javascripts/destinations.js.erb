@@ -781,6 +781,7 @@ var destinations_index = function(params, api) {
       });
       $(row).replaceWith(SMT['destinations/edit'](destination));
       row = $('[data-destination_id=' + destination_id + ']');
+      setInputTitles(row);
       wire(row);
       $('.destinations').trigger('update');
 
@@ -981,6 +982,12 @@ var destinations_index = function(params, api) {
 
   var sortList = undefined;
 
+  var setInputTitles = function(row) {
+    $(row).find('input:not([type=checkbox])').each(function(i, element) {
+      $(element).tooltip({title: element.value, placement: 'bottom'});
+    });
+  };
+
   var displayDestinations = function(data) {
 
     var errorCallback = function() {
@@ -1013,6 +1020,7 @@ var destinations_index = function(params, api) {
     count();
 
     $('tr', table).each(function(index, element) {
+      setInputTitles(element);
       wire(element);
     });
 
