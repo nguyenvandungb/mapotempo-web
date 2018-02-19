@@ -47,10 +47,10 @@ class Fleet < DeviceBase
 
   # Available status in Mapotempo: Planned / Started / Finished / Rejected
   @@order_status = {
-    'To do' => 'Planned',
-    'In progress' => 'Started',
-    'Completed' => 'Finished',
-    'Uncompleted' => 'Rejected',
+    'to_do' => 'Planned',
+    'in_progress' => 'Started',
+    'completed' => 'Finished',
+    'uncompleted' => 'Rejected',
   }
 
   def check_auth(params)
@@ -190,7 +190,7 @@ class Fleet < DeviceBase
 
         {
           order_id: order_id,
-          status: @@order_status[mission['status_type_label']],
+          status: @@order_status[mission['status_type_reference']],
           color: mission['status_type_color'],
           eta: nil
         }
