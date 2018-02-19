@@ -420,4 +420,9 @@ class CustomerTest < ActiveSupport::TestCase
       end
     end
   end
+
+  test "should outdate all customer's routes" do
+    @customer.update(optimization_force_start: true)
+    assert_equal [[true, true, true], [true, true, true]], @customer.plannings.collect{ |p| p.routes.collect(&:outdated) }
+  end
 end

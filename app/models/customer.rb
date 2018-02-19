@@ -367,7 +367,7 @@ class Customer < ApplicationRecord
   end
 
   def update_outdated
-    if take_over_changed? || router_id_changed? || router_dimension_changed? || router_options_changed? || speed_multiplicator_changed? || @deliverable_units_updated
+    if optimization_force_start_changed? || take_over_changed? || router_id_changed? || router_dimension_changed? || router_options_changed? || speed_multiplicator_changed? || @deliverable_units_updated
       plannings.each { |planning|
         planning.routes.each { |route|
           route.outdated = true
