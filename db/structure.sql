@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 9.6.6
--- Dumped by pg_dump version 9.6.6
+-- Dumped from database version 9.6.7
+-- Dumped by pg_dump version 9.6.7
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -43,6 +43,30 @@ COMMENT ON EXTENSION hstore IS 'data type for storing sets of (key, value) pairs
 
 
 SET search_path = public, pg_catalog;
+
+--
+-- Name: jsonb_to_hstore(json); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION jsonb_to_hstore(json) RETURNS hstore
+    LANGUAGE sql IMMUTABLE STRICT
+    AS $_$
+        SELECT hstore(array_agg(key), array_agg(value))
+        FROM json_each_text($1)
+      $_$;
+
+
+--
+-- Name: jsonb_to_hstore(jsonb); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION jsonb_to_hstore(jsonb) RETURNS hstore
+    LANGUAGE sql IMMUTABLE STRICT
+    AS $_$
+        SELECT hstore(array_agg(key), array_agg(value))
+        FROM jsonb_each_text($1)
+      $_$;
+
 
 SET default_tablespace = '';
 
@@ -88,7 +112,7 @@ CREATE TABLE customers (
     optimization_vehicle_soft_upper_bound double precision,
     enable_vehicle_position boolean DEFAULT true NOT NULL,
     enable_stop_status boolean DEFAULT false NOT NULL,
-    router_options hstore DEFAULT ''::hstore NOT NULL,
+    router_options jsonb DEFAULT '{}'::jsonb NOT NULL,
     optimization_cost_waiting_time double precision,
     take_over integer,
     with_state boolean DEFAULT false,
@@ -578,7 +602,7 @@ CREATE TABLE routers (
     url_distance character varying,
     mode character varying NOT NULL,
     name_locale hstore DEFAULT ''::hstore NOT NULL,
-    options hstore DEFAULT ''::hstore NOT NULL
+    options jsonb DEFAULT '{}'::jsonb NOT NULL
 );
 
 
@@ -994,7 +1018,7 @@ CREATE TABLE vehicles (
     fuel_type character varying,
     router_dimension integer,
     capacities hstore,
-    router_options hstore DEFAULT ''::hstore NOT NULL,
+    router_options jsonb DEFAULT '{}'::jsonb NOT NULL,
     devices jsonb DEFAULT '{}'::jsonb NOT NULL
 );
 
@@ -2716,4 +2740,6 @@ INSERT INTO schema_migrations (version) VALUES ('20171211101451');
 INSERT INTO schema_migrations (version) VALUES ('20180103153701');
 
 INSERT INTO schema_migrations (version) VALUES ('20180123141615');
+
+INSERT INTO schema_migrations (version) VALUES ('20180219090520');
 

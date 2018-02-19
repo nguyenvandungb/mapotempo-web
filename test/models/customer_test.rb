@@ -173,7 +173,6 @@ class CustomerTest < ActiveSupport::TestCase
     assert_equal 'time', @customer.router_dimension
   end
 
-
   test 'should set hash options' do
     customer = customers(:customer_two)
     customer.router_options = {
@@ -224,16 +223,16 @@ class CustomerTest < ActiveSupport::TestCase
     assert_equal customer.toll, true
     assert_equal customer.toll?, true
 
-    assert_equal customer.trailers, '2'
-    assert_equal customer.weight, '10'
-    assert_equal customer.weight_per_axle, '5'
-    assert_equal customer.height, '5'
-    assert_equal customer.width, '6'
-    assert_equal customer.length, '30'
+    assert_equal customer.trailers, 2
+    assert_equal customer.weight, 10
+    assert_equal customer.weight_per_axle, 5
+    assert_equal customer.height, 5
+    assert_equal customer.width, 6
+    assert_equal customer.length, 30
     assert_equal customer.hazardous_goods, 'gas'
-    assert_equal customer.max_walk_distance, '200'
+    assert_equal customer.max_walk_distance, 200
     assert_equal customer.approach, 'curb'
-    assert_equal customer.snap, '50'
+    assert_equal customer.snap, 50
     assert_equal customer.strict_restriction, false
   end
 

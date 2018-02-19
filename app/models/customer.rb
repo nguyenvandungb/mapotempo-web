@@ -432,7 +432,7 @@ class Customer < ApplicationRecord
   end
 
   def nilify_router_options_blanks
-    true_options = router.options.select { |_, v| v == 'true' }.keys
+    true_options = router.options.select { |_, v| v == true }.keys
     write_attribute :router_options, self.router_options.delete_if { |k, v| v.to_s.empty? || true_options.exclude?(k) }
   end
 

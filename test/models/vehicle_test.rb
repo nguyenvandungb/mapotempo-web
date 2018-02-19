@@ -73,16 +73,16 @@ class VehicleTest < ActiveSupport::TestCase
     assert_equal vehicle.toll, true
     assert_equal vehicle.toll?, true
 
-    assert_equal vehicle.trailers, '2'
-    assert_equal vehicle.weight, '10'
-    assert_equal vehicle.weight_per_axle, '5'
-    assert_equal vehicle.height, '5'
-    assert_equal vehicle.width, '6'
-    assert_equal vehicle.length, '30'
+    assert_equal vehicle.trailers, 2
+    assert_equal vehicle.weight, 10
+    assert_equal vehicle.weight_per_axle, 5
+    assert_equal vehicle.height, 5
+    assert_equal vehicle.width, 6
+    assert_equal vehicle.length, 30
     assert_equal vehicle.hazardous_goods, 'gas'
-    assert_equal vehicle.max_walk_distance, '200'
+    assert_equal vehicle.max_walk_distance, 200
     assert_equal vehicle.approach, 'curb'
-    assert_equal vehicle.snap, '50'
+    assert_equal vehicle.snap, 50
     assert_equal vehicle.strict_restriction, false
   end
 
@@ -104,13 +104,13 @@ class VehicleTest < ActiveSupport::TestCase
     }
     vehicle.save!
 
-    assert_equal vehicle.default_router_options['motorway'], 'false'
-    assert_equal vehicle.default_router_options['trailers'], '2'
-    assert_equal vehicle.default_router_options['weight'], '10'
-    assert_equal vehicle.default_router_options['weight_per_axle'], '3'
-    assert_equal vehicle.default_router_options['length'], '30'
-    assert_equal vehicle.default_router_options['hazardous_goods'], 'gas'
-    assert_equal vehicle.default_router_options['max_walk_distance'], '200'
+    assert_equal false, vehicle.default_router_options['motorway']
+    assert_equal 2, vehicle.default_router_options['trailers']
+    assert_equal 10, vehicle.default_router_options['weight']
+    assert_equal 3, vehicle.default_router_options['weight_per_axle']
+    assert_equal 30, vehicle.default_router_options['length']
+    assert_equal 'gas', vehicle.default_router_options['hazardous_goods']
+    assert_equal 200, vehicle.default_router_options['max_walk_distance']
   end
 
   test 'should return error if capacity is invalid' do

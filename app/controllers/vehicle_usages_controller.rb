@@ -79,7 +79,7 @@ class VehicleUsagesController < ApplicationController
     if params[:vehicle_usage][:vehicle] && params[:vehicle_usage][:vehicle][:router]
       params[:vehicle_usage][:vehicle][:router_id], params[:vehicle_usage][:vehicle][:router_dimension] = params[:vehicle_usage][:vehicle][:router].split('_')
     end
-
+    parse_router_options(params[:vehicle_usage][:vehicle]) if params[:vehicle_usage].key?(:vehicle) && params[:vehicle_usage][:vehicle][:router_options]
     parameters = params.require(:vehicle_usage).permit(:open,
                                                        :close,
                                                        :store_start_id,

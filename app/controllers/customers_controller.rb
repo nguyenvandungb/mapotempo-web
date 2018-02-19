@@ -100,6 +100,7 @@ class CustomersController < ApplicationController
     if params[:customer][:router]
       params[:customer][:router_id], params[:customer][:router_dimension] = params[:customer][:router].split('_')
     end
+    parse_router_options(params[:customer]) if params[:customer][:router_options]
     # From customer form all keys are not present: need merge
     params[:customer][:devices] = @customer[:devices].deep_merge(params[:customer][:devices] || {}) if @customer && @customer[:devices].size > 0
     if current_user.admin?

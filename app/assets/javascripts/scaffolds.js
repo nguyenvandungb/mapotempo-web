@@ -301,7 +301,7 @@ var dropdownAutoDirection = function($updatedElement) {
 
 var routerOptionsSelect = function(selectId, params) {
   var checkInputFieldState = function($field, stateValue) {
-    if (stateValue === 'true') {
+    if (stateValue === true) {
       $field.fadeIn();
       $field.find('input').removeAttr('disabled');
     } else {

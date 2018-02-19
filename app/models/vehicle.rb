@@ -133,9 +133,13 @@ class Vehicle < ApplicationRecord
   end
 
   def default_router_options
-    default_router.options.select{ |_, v| ValueToBoolean.value_to_boolean(v) }.each do |key, value|
+    default_router.options.each do |key, value|
       @current_router_options ||= {}
-      @current_router_options[key.to_s] = router_options[key.to_s] || customer.router_options[key.to_s]
+      @current_router_options[key.to_s] = if router_options[key.to_s].nil?
+        customer.router_options[key.to_s]
+      else
+        router_options[key.to_s]
+      end
     end if !@current_router_options
 
     @current_router_options ||= {}
@@ -200,7 +204,7 @@ class Vehicle < ApplicationRecord
   end
 
   def nilify_router_options_blanks
-    true_options = default_router.options.select { |_, v| v == 'true' }.keys
+    true_options = default_router.options.select { |_, v| v == true }.keys
     write_attribute :router_options, self.router_options.delete_if { |k, v| v.to_s.empty? || true_options.exclude?(k) }
   end
 
