@@ -120,7 +120,7 @@ class ZoningsController < ApplicationController
 
   def isochrone
     respond_to do |format|
-      size = params.key?(:size) ? Integer(params[:size]) * 60 : 600
+      size = params.key?(:size) ? Integer(params[:size]) * 60 : 600 if params[:size].is_a? Integer
       vehicle_usage_set_id = Integer(params[:vehicle_usage_set_id])
       vehicle_usage_set = current_user.customer.vehicle_usage_sets.to_a.find{ |vehicle_usage_set| vehicle_usage_set.id == vehicle_usage_set_id }
       if size && vehicle_usage_set
@@ -133,7 +133,7 @@ class ZoningsController < ApplicationController
 
   def isodistance
     respond_to do |format|
-      size = params.key?(:size) ? Float(params[:size].tr(',', '.')) * 1000 : 1000
+      size = params.key?(:size) ? Float(params[:size].tr(',', '.')) * 1000 : 1000 if params[:size].is_a? Float
       vehicle_usage_set_id = Integer(params[:vehicle_usage_set_id])
       vehicle_usage_set = current_user.customer.vehicle_usage_sets.to_a.find{ |vehicle_usage_set| vehicle_usage_set.id == vehicle_usage_set_id }
       if size && vehicle_usage_set
