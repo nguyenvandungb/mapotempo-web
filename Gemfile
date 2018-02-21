@@ -181,6 +181,11 @@ gem 'premailer-rails'
 
 gem 'chronic_duration'
 
+# SMS
+gem 'iso_country_codes'
+gem 'phonelib'
+gem 'nexmo'
+
 group :production do
   gem 'rails_12factor'
 

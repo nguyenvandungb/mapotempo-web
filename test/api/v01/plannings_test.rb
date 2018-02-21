@@ -492,6 +492,17 @@ class V01::PlanningsTest < V01::PlanningsBaseTest
       end
     end
   end
+
+  test 'should send SMS for each stop visit' do
+    @planning.customer.reseller.update sms_api_key: :sms_api_key, sms_api_secret: :sms_api_secret
+    @planning.customer.update enable_sms: true
+
+    Notifications.stub_any_instance(:send_sms, 1) do
+      get api("#{@planning.id}/send_sms")
+      assert last_response.ok?, 'Bad response: ' + last_response.body
+      assert_equal '4', last_response.body
+    end
+  end
 end
 
 class V01::PlanningsErrorTest < V01::PlanningsBaseTest

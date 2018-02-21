@@ -868,6 +868,21 @@ var plannings_edit = function(params) {
     })
   });
 
+  var sendSMS = function() {
+    $.ajax({
+      type: 'GET',
+      url: this.href,
+      beforeSend: beforeSendWaiting,
+      success: function(data) {
+        notice(I18n.t('plannings.edit.send_sms_success', {c: data}));
+      },
+      complete: completeAjaxMap,
+      error: ajaxError
+    });
+    $(this).closest(".dropdown-menu").prev().dropdown("toggle");
+    return false;
+  };
+
   // called first during plan initialization (context: plan), and several times after a route need to be refreshed (context: route)
   var initRoutes = function(context, data, options) {
 
@@ -1047,18 +1062,17 @@ var plannings_edit = function(params) {
         .on('click', '.optimize', function() {
           $('#optimization-route_id').val($(this).closest('[data-route_id]').attr('data-route_id')).trigger('change');
         })
+        .on('click', '.send_sms', sendSMS)
         .on("click", ".active_all, .active_reverse, .active_none, .active_status, .reverse_order", function() {
-          var url = this.href;
           $.ajax({
             type: 'PATCH',
-            url: url,
+            url: this.href,
             beforeSend: beforeSendWaiting,
             success: updatePlanning,
             complete: completeAjaxMap,
             error: ajaxError
           });
-          if ($(this).hasClass('reverse_order'))
-            $(this).closest(".dropdown-menu").prev().dropdown("toggle");
+          $(this).closest(".dropdown-menu").prev().dropdown("toggle");
           return false;
         })
         .on("change", "[name=route\\\[ref\\\]]", function() {
@@ -1672,6 +1686,8 @@ var plannings_edit = function(params) {
       error: ajaxError
     });
   });
+
+  $('.send_sms').click(sendSMS);
 
   $('#isochrone_size').timeEntry({
     show24Hours: true,

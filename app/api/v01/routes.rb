@@ -18,6 +18,8 @@
 require 'coerce'
 require 'exceptions'
 
+include PlanningsHelperApi
+
 class V01::Routes < Grape::API
   helpers SharedParams
   helpers do
@@ -142,6 +144,22 @@ class V01::Routes < Grape::API
             get_route and get_route.reverse_order && get_route.compute!
             get_route.save!
             present get_route, with: V01::Entities::Route
+          end
+        end
+
+        desc 'Send SMS for each stop visit',
+          detail: 'Send SMS for each stop visit of the specified route.',
+          nickname: 'sendSMS'
+        params do
+          requires :id, type: String, desc: ID_DESC
+        end
+        get ':id/send_sms' do
+          if current_customer.enable_sms && current_customer.reseller.sms_api_key
+            Stop.includes_destinations.scoping do
+              send_sms_route get_route
+            end
+          else
+            status 403
           end
         end
       end

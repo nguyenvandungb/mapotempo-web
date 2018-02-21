@@ -30,6 +30,11 @@
     <p class="help-block"><%= t '.application_name_help' %></p>
   <% end %>
 
+  <%= f.text_field :sms_api_key do %>
+    <p class="help-block"><%= t '.sms_api_key_help' %></p>
+  <% end %>
+  <%= f.password_field :sms_api_secret, value: @reseller.sms_api_secret %>
+
   <%= render 'help_urls', f: f %>
 
   <%= render 'analysis_urls', f: f %>

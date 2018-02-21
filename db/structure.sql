@@ -110,7 +110,9 @@ CREATE TABLE customers (
     max_plannings integer,
     max_zonings integer,
     max_destinations integer,
-    max_vehicle_usage_sets integer
+    max_vehicle_usage_sets integer,
+    enable_sms boolean DEFAULT false NOT NULL,
+    sms_template character varying
 );
 
 
@@ -551,7 +553,9 @@ CREATE TABLE resellers (
     audience_url character varying,
     behavior_url character varying,
     customer_audience_url character varying,
-    customer_behavior_url character varying
+    customer_behavior_url character varying,
+    sms_api_key character varying,
+    sms_api_secret character varying
 );
 
 
@@ -2731,3 +2735,4 @@ INSERT INTO schema_migrations (version) VALUES ('20180123141615');
 
 INSERT INTO schema_migrations (version) VALUES ('20180219090520');
 
+INSERT INTO schema_migrations (version) VALUES ('20180226094910');

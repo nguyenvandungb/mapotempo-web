@@ -126,6 +126,8 @@ Rails.application.configure do
   config.display_javascript_errors_on_screen = false
 
   config.validate_during_duplication = true
+
+  config.logger_sms = nil
 end
 
 I18n.available_locales = [:fr]

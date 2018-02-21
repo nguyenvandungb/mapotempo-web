@@ -127,16 +127,43 @@ en:
         other: zonings
     attributes:
       customer:
-        enable_external_callback: Enable Callback URL
+        ref: Reference
+        ref_help: Reference must be unique
+        name: Name
+        description_title: Description
+        description_label: Specific account informations
+        description_help: Account and users details
         end_subscription: End subscription
+        test: Test
         max_vehicles: Number vehicles
         max_plannings: Max plans
         max_zonings: Max zonings
         max_destinations: Max destinations
         max_vehicle_usage_sets: Max vehicles base settings
         take_over: Visit duration
-        name: Name
-        destinations: Destinations
+        default_country: Default country
+        with_state: Add State field in addresses
+        optimization_max_split_size: Optimization split size
+        optimization_cluster_size: Optimization cluster size
+        optimization_time: Maximum optimization time by vehicle
+        optimization_stop_soft_upper_bound: Stops delay coefficient
+        optimization_vehicle_soft_upper_bound: Vehicles delay coefficient
+        optimization_cost_waiting_time: Waiting time coefficient
+        optimization_force_start: Force schedule start vehicle
+        enable_orders: Enable orders
+        enable_references: View references
+        enable_multi_visits: Enable more than one visit per destination
+        enable_global_optimization: Enable global optimization
+        enable_vehicle_position: Enable vehicles's position
+        enable_stop_status: Enable visits status
+        enable_sms: Enable SMS
+        sms_template: SMS template
+        enable_external_callback: Enable Callback URL
+        print_planning_annotating: Include plan annotating
+        print_header: Routes header
+        print_map: Include map
+        print_stop_time: Include stop time
+        speed_multiplicator: Speed multiplier
         router: Routing Engine
         router_id: Routing Engine
         router_dimension: Router objective
@@ -154,36 +181,11 @@ en:
         router_options_approach: Arrive/Leave in the traffic direction
         router_options_snap: Snap checkpoint to junction
         router_options_strict_restriction: Strict compliance with truck limitations
-        print_planning_annotating: Include plan annotating
-        print_header: Routes header
-        print_stop_time: Include stop time
-        print_map: Include map
+        destinations: Destinations
         stores: Stores
-        enable_orders: Enable orders
-        enable_references: View references
-        enable_multi_visits: Enable more than one visit per destination
-        enable_global_optimization: Enable global optimization
-        test: Test
         jobs: Jobs
-        optimization_max_split_size: Optimization split size
-        optimization_cluster_size: Optimization cluster size
-        optimization_time: Maximum optimization time by vehicle
-        optimization_stop_soft_upper_bound: Stops delay coefficient
-        optimization_vehicle_soft_upper_bound: Vehicles delay coefficient
-        optimization_cost_waiting_time: Waiting time coefficient
-        optimization_force_start: Force schedule start vehicle
         profile: Profile
         profile_id: Profile
-        speed_multiplicator: Speed multiplier
-        default_country: Default country
-        with_state: Add State field in addresses
-        ref: Reference
-        ref_help: Reference must be unique
-        description_title: Description
-        description_label: Specific account informations
-        description_help: Account and users details
-        enable_vehicle_position: Enable vehicles's position
-        enable_stop_status: Enable visits status
       deliverable_unit:
         label: Label
         ref: Reference
@@ -665,11 +667,12 @@ en:
         logo: Logos & Favicon
         help_urls: Help center and contact urls
         social_urls: Social networks urls
-        analysis_urls: Dashboard Analitics urls
+        analysis_urls: Dashboard Analytics urls
       form:
         host_help: Web URL hostname and port used to match this reseller
         name_help: Reseller brand name
         application_name_help: Reseller Website name
+        sms_api_key_help: Api key to be able to send SMS
         website_url_help: 'Website address. It''s possible to use "{LG}" which will
           be replaced by language like « en », « fr » (ie: https://www.mapotempo.com/{LG}/).'
         welcome_url_help: 'Web page address included as html as "iframe" on welcome
@@ -836,6 +839,11 @@ en:
       print_header_help: Block of text added before each route
       print:
         title: Printing
+      sms:
+        title: SMS
+      sms_template_help: "SMS template sent for your visits. {NAME} will be replaced by destination name filled in app.
+        Available replacement strings : {NAME} {REF} {VISIT_REF} {DATE} {TIME} {STREET} {CITY} {QUANTITIES} {COMMENT}.
+        Your text should be compliant with GSM 03.38 and should not exceed 160 characters (or 70 in case of multi bytes)."
       speed_multiplicator_default: '%{n} (default value)'
       speed_multiplicator_help: A value higher than 100% means higher speed.
       audience_url_help: Go to the customer dashboard Audience page
@@ -1487,6 +1495,8 @@ en:
       vehicle_speed: 'Speed:'
       vehicle_last_position_time: 'Last position:'
       route_change_color_help: Change route color
+      send_sms: Send a SMS to destinations
+      send_sms_success: Succeed to send %{c} SMS
       popup:
         outdated: Route trace outdated. Refresh your plan (Refresh button).
         open_close1: 'Time window 1:'
@@ -2233,6 +2243,9 @@ en:
         index:
           none_zones: No zones found
           without_vehicle: Without Vehicle
+  notifications:
+    sms:
+      alert_plan: Hello {NAME}. Your visit is planned {DATE} between {TIME-60} and {TIME+60} in {CITY}.
   all:
     datepicker: mm-dd-yyyy
     map_attribution:

@@ -141,4 +141,6 @@ Rails.application.configure do
   end
 
   config.validate_during_duplication = true
+
+  config.logger_sms = nil
 end

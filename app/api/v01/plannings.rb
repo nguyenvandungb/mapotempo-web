@@ -18,6 +18,8 @@
 require 'coerce'
 require 'exceptions'
 
+include PlanningsHelperApi
+
 class V01::Plannings < Grape::API
   helpers SharedParams
   helpers do
@@ -338,6 +340,22 @@ class V01::Plannings < Grape::API
             status 204
           end
         end
+      end
+    end
+
+    desc 'Send SMS for each stop visit',
+      detail: 'Send SMS for each stop visit of each routes',
+      nickname: 'sendSMS'
+    params do
+      requires :id, type: String, desc: ID_DESC
+    end
+    get ':id/send_sms' do
+      if current_customer.enable_sms && current_customer.reseller.sms_api_key
+        Route.includes_destinations.scoping do
+          send_sms_planning current_customer.plannings.where(ParseIdsRefs.read(params[:id])).first!
+        end
+      else
+        status 403
       end
     end
   end

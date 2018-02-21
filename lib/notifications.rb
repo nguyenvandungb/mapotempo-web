@@ -1,0 +1,95 @@
+# Copyright © Mapotempo, 2018
+#
+# This file is part of Mapotempo.
+#
+# Mapotempo is free software. You can redistribute it and/or
+# modify since you respect the terms of the GNU Affero General
+# Public License as published by the Free Software Foundation,
+# either version 3 of the License, or (at your option) any later version.
+#
+# Mapotempo is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+# or FITNESS FOR A PARTICULAR PURPOSE.  See the Licenses for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with Mapotempo. If not, see:
+# <http://www.gnu.org/licenses/agpl.html>
+#
+require 'active_support/core_ext/numeric'
+
+class CountryCodeNotFoundError < StandardError; end
+
+#
+# Usage:
+# notif = Notifications.new(service: :nexmo, api_key: XXX, api_secret: XXX, logger: XXX)
+# notif.send_sms(to, country, notif.content(template, name: XXX, time: XXX), message_id)
+#
+class Notifications
+
+  def initialize(options)
+    @options = options
+    @options[:service] ||= :nexmo
+  end
+
+  def content(template, replacements = {}, truncate = true)
+    # Display date only if key date is not present in template
+    format_time = template.include?('{DATE}') ? :hour_minute : :short
+
+    replacements.each{ |k, v|
+      if v.is_a?(Time)
+        # Shift time if {TIME+mn} or {TIME-mn} found in template
+        regexp = Regexp.new("{#{k}([\-\+]?[0-9]*)}".upcase)
+        template = template.gsub(regexp) { |s|
+          shift_time = 0
+          if m = regexp.match(s)
+            shift_time = Integer(m[1]).minutes unless m[1].blank?
+          end
+
+          # Round time to quarter before/after
+          seconds = 15.minutes
+          if shift_time > 0
+            shift_time = ((v + shift_time).to_f / seconds).ceil * seconds - v.to_i
+          elsif shift_time < 0
+            shift_time = ((v + shift_time).to_f / seconds).floor * seconds - v.to_i
+          end
+
+          I18n.l(v + shift_time, format: format_time)
+        }
+      else
+        template = template.gsub("{#{k}}".upcase, "#{v}")
+      end
+    }
+
+    truncate ? template[0..159] : template
+  end
+
+  def send_sms(to, country, content, message_id)
+    country_code = nil
+    unless to.start_with?('+', '00')
+      begin
+        country_code = IsoCountryCodes.search_by_name(country).first.alpha2
+      rescue IsoCountryCodes::UnknownCodeError => e
+      end
+    end
+    phone = Phonelib.parse(to, country_code)
+    if phone.country_code
+      to = phone.country_code + phone.raw_national
+
+      if @options[:service] == :nexmo
+        client = Nexmo::Client.new(api_key: @options[:api_key], api_secret: @options[:api_secret])
+        response = client.sms.send(from: @options[:from], to: to, text: content, message_id: message_id)
+
+        if response.messages.first.status == '0'
+          @options[:logger].info "Sent SMS\t#{message_id}\t#{response.messages.first.message_id}\t#{response.messages.first.message_price}" if @options[:logger]
+          true
+        else
+          @options[:logger].error "SMS error\t#{message_id}\t#{response.messages.first.error_text}" if @options[:logger]
+          false
+        end
+      end
+    else
+      raise CountryCodeNotFoundError('Country code could not be identified')
+    end
+  end
+
+end

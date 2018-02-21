@@ -278,6 +278,17 @@ class V01::RoutesTest < V01::RoutesBaseTest
     assert json['outdated']
     assert json['out_of_date']
   end
+
+  test 'should send SMS for each stop visit' do
+    @route.planning.customer.reseller.update sms_api_key: :sms_api_key, sms_api_secret: :sms_api_secret
+    @route.planning.customer.update enable_sms: true
+
+    Notifications.stub_any_instance(:send_sms, 1) do
+      get api(@route.planning_id, "#{@route.id}/send_sms")
+      assert last_response.ok?, 'Bad response: ' + last_response.body
+      assert_equal '3', last_response.body
+    end
+  end
 end
 
 class V01::RoutesErrorTest < V01::RoutesBaseTest

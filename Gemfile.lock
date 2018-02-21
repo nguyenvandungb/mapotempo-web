@@ -345,6 +345,7 @@ GEM
     ice_nine (0.11.2)
     iconv (1.0.4)
     io-like (0.3.0)
+    iso_country_codes (0.7.8)
     jbuilder (2.6.4)
       activesupport (>= 3.0.0)
       multi_json (>= 1.2)
@@ -362,6 +363,7 @@ GEM
     jquery-ui-rails (5.0.5)
       railties (>= 3.2.16)
     json (1.8.6)
+    jwt (2.1.0)
     launchy (2.4.3)
       addressable (~> 2.3)
     leaflet-rails (1.0.3)
@@ -418,6 +420,8 @@ GEM
       mustermann (= 0.4.0)
     nenv (0.3.0)
     netrc (0.11.0)
+    nexmo (5.0.0)
+      jwt
     nilify_blanks (1.2.1)
       activerecord (>= 3.0.0)
       activesupport (>= 3.0.0)
@@ -434,6 +438,7 @@ GEM
     parser (2.4.0.0)
       ast (~> 2.2)
     pg (0.20.0)
+    phonelib (0.6.18)
     polyglot (0.3.5)
     polylines (0.3.0)
     powerpack (0.1.1)
@@ -714,6 +719,7 @@ DEPENDENCIES
   i18n-tasks
   icalendar
   iconv
+  iso_country_codes
   jbuilder
   jquery-rails
   jquery-simplecolorpicker-rails
@@ -741,10 +747,12 @@ DEPENDENCIES
   minitest-focus
   minitest-stub_any_instance
   mustache
+  nexmo
   nilify_blanks
   nokogiri
   paloma!
   pg
+  phonelib
   pnotify-rails!
   polylines
   premailer-rails
@@ -789,4 +797,4 @@ DEPENDENCIES
   webmock
 
 BUNDLED WITH
-   1.15.3
+   1.16.0

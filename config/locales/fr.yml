@@ -127,16 +127,43 @@ fr:
         other: zonages
     attributes:
       customer:
-        enable_external_callback: Activer URL de rappel
+        ref: Référence
+        ref_help: La référence doit être unique
+        name: Nom
+        description_title: Description
+        description_label: Informations du compte
+        description_help: Détails sur le compte et les utilisateurs courants
         end_subscription: Fin de souscription
+        test: Test
         max_vehicles: Nombre véhicules
         max_plannings: Max plans
         max_zonings: Max zonages
         max_destinations: Max clients
         max_vehicle_usage_sets: Max configurations des véhicules
         take_over: Durée de visite des clients
-        name: Nom
-        destinations: Clients
+        default_country: Pays par défaut
+        with_state: Ajouter champ État dans les adresses
+        optimization_max_split_size: Découper le problème
+        optimization_cluster_size: Taille des clusters d'optimisation
+        optimization_time: Temps d'optimisation maximum par véhicule
+        optimization_stop_soft_upper_bound: Coefficient retards / arrêts
+        optimization_vehicle_soft_upper_bound: Coefficient retards / véhicules
+        optimization_cost_waiting_time: Coefficient de temps d'attente
+        optimization_force_start: Forcer l'heure de départ du véhicule
+        enable_orders: Activer les commandes
+        enable_references: Montrer les références
+        enable_multi_visits: Autoriser les visites multiples
+        enable_global_optimization: Activer l'optimisation globale
+        enable_vehicle_position: Activer la position des véhicules
+        enable_stop_status: Activer les statuts des visites
+        enable_sms: Activer l'envoi de SMS
+        sms_template: Modèle SMS
+        enable_external_callback: Activer URL de rappel
+        print_planning_annotating: Inclure un émargement client
+        print_header: Entête des tournées
+        print_map: Inclure la carte
+        print_stop_time: Inclure les horaires de passage
+        speed_multiplicator: Ajustement de la vitesse
         router: Calculateur d'itinéraire
         router_id: Calculateur d'itinéraire
         router_dimension: Objectif du calculateur
@@ -154,36 +181,11 @@ fr:
         router_options_approach: Arriver/Partir dans le sens de circulation
         router_options_snap: Reporter l'arrêt au carrefour
         router_options_strict_restriction: Respect strict des limitations poids lourd
-        print_planning_annotating: Inclure un émargement client
-        print_header: Entête des tournées
-        print_stop_time: Inclure les horaires de passage
-        print_map: Inclure la carte
+        destinations: Clients
         stores: Dépôts
-        enable_orders: Activer les commandes
-        enable_references: Montrer les références
-        enable_multi_visits: Autoriser les visites multiples
-        enable_global_optimization: Activer l'optimisation globale
-        test: Test
         jobs: Tâches
-        optimization_max_split_size: Découper le problème
-        optimization_cluster_size: Taille des clusters d'optimisation
-        optimization_time: Temps d'optimisation maximum par véhicule
-        optimization_stop_soft_upper_bound: Coefficient retards / arrêts
-        optimization_vehicle_soft_upper_bound: Coefficient retards / véhicules
-        optimization_cost_waiting_time: Coefficient de temps d'attente
-        optimization_force_start: Forcer l'heure de départ du véhicule
         profile: Profil
         profile_id: Profil
-        speed_multiplicator: Ajustement de la vitesse
-        default_country: Pays par défaut
-        with_state: Ajouter champ État dans les adresses
-        ref: Référence
-        ref_help: La référence doit être unique
-        description_title: Description
-        description_label: Informations du compte
-        description_help: Détails sur le compte et les utilisateurs courants
-        enable_vehicle_position: Activer la position des véhicules
-        enable_stop_status: Activer les statuts des visites
       deliverable_unit:
         label: Libellé
         ref: Référence
@@ -673,6 +675,7 @@ fr:
         host_help: Nom d'hôte et port de l'URL web utilisés pour détecter ce revendeur
         name_help: Marque du revendeur
         application_name_help: Nom du site Web du revendeur
+        sms_api_key_help: Clé d'API pour envoi de SMS
         website_url_help: 'Adresse du site web. Vous pouvez utiliser « {LG} » qui
           sera remplacé par la langue telle que « en », « fr » (par ex : https://www.mapotempo.com/{LG}/).'
         welcome_url_help: 'Adresse de la page web html incluse comme « iframe » dans
@@ -848,6 +851,11 @@ fr:
       print_header_help: Bloc de texte ajouté avant chaque tournée
       print:
         title: Impressions
+      sms:
+        title: SMS
+      sms_template_help: "Modèle de SMS envoyé à vos clients. {NAME} sera remplacé par le nom de votre client renseigné
+        sur l'application. Chaines de remplacements disponibles : {NAME} {REF} {VISIT_REF} {DATE} {TIME} {STREET} {CITY} {QUANTITIES} {COMMENT}.
+        Votre texte doit être compatible GSM 03.38 et ne devrait pas dépasser 160 caractères (ou 70 en cas de caractères spéciaux)."
       speed_multiplicator_default: '%{n} (valeur par défaut)'
       speed_multiplicator_help: Une valeur supérieure à 100% signifie une vitesse
         plus élevée.
@@ -1564,6 +1572,8 @@ fr:
       vehicle_speed: 'Vitesse :'
       vehicle_last_position_time: 'Dernier relevé :'
       route_change_color_help: Changer la couleur de la tournée
+      send_sms: Envoyer un SMS aux clients
+      send_sms_success: Envoi de %{c} SMS avec succès
       popup:
         outdated: Tracé de la tournée obsolète. Veuillez recalculer votre plan de
           tournées (bouton Actualiser).
@@ -2334,6 +2344,9 @@ fr:
         index:
           none_zones: Aucune zone n'a été chargée
           without_vehicle: Sans véhicule
+  notifications:
+    sms:
+      alert_plan: Bonjour {NAME}. Votre visite est planifiée le {DATE} entre {TIME-60} et {TIME+60} à {CITY}.
   all:
     datepicker: dd-mm-yyyy
     map_attribution:

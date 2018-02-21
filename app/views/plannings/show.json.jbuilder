@@ -12,6 +12,7 @@ else
   json.prefered_unit current_user.prefered_unit
   json.extract! @planning, :id, :ref
   json.customer_id @planning.customer.id
+  json.customer_enable_sms @planning.customer.enable_sms if @planning.customer.reseller.sms_api_key
   json.customer_enable_external_callback current_user.customer.enable_external_callback
   json.customer_external_callback_name current_user.customer.external_callback_name
   json.customer_external_callback_url current_user.customer.external_callback_url

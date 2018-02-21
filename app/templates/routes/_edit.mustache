@@ -200,6 +200,12 @@
             {{#contact_email}}
               <li class="icalendar_email" data-email="true"><a href="{{calendar_url}}"><i class="fa fa-envelope fa-fw"></i> {{#i18n}}plannings.edit.export.icalendar.action_email{{/i18n}}</a></li>
             {{/contact_email}}
+            {{#customer_enable_sms}}
+              <li role="separator" class="divider"></li>
+              <li>
+                <a class="send_sms" href="/api/0.1/plannings/{{planning_id}}/routes/{{route_id}}/send_sms"><i class="fa fa-mobile fa-fw"></i> {{#i18n}}plannings.edit.send_sms{{/i18n}}</a>
+              </li>
+            {{/customer_enable_sms}}
           </ul>
         </div>
         {{/manage_export}}
