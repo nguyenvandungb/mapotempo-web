@@ -40,7 +40,7 @@ class Planning < ApplicationRecord
   include Consistency
   validate_consistency :vehicle_usage_set, :order_array, :zonings, :tags
 
-  before_create :update_zonings, -> (m) { !m.customer.too_many_plannings? || raise(Exceptions::OverMaxLimitError.new(I18n.t('activerecord.errors.models.customer.attributes.plannings.over_max_limit'))) }
+  before_create :update_zonings, :check_max_planning
   before_save :update_zonings
   before_save :update_vehicle_usage_set
 
@@ -749,6 +749,10 @@ class Planning < ApplicationRecord
 
   def update_zonings
     self.zoning_outdated = true if @zoning_ids_changed
+  end
+
+  def check_max_planning
+    !self.customer.too_many_plannings? || raise(Exceptions::OverMaxLimitError.new(I18n.t('activerecord.errors.models.customer.attributes.plannings.over_max_limit')))
   end
 
   def update_vehicle_usage_set

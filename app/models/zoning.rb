@@ -26,7 +26,7 @@ class Zoning < ApplicationRecord
   auto_strip_attributes :name
   validates :name, presence: true
 
-  before_create :update_outdated, -> (m) { !m.customer.too_many_zonings? || raise(Exceptions::OverMaxLimitError.new(I18n.t('activerecord.errors.models.customer.attributes.zonings.over_max_limit'))) }
+  before_create :update_outdated, :check_max_zoning
   before_save :update_outdated
 
   attr_accessor :prefered_unit
@@ -146,6 +146,10 @@ class Zoning < ApplicationRecord
 
   def update_outdated
     flag_outdated if @collection_touched
+  end
+
+  def check_max_zoning
+    !self.customer.too_many_zonings? || raise(Exceptions::OverMaxLimitError.new(I18n.t('activerecord.errors.models.customer.attributes.zonings.over_max_limit')))
   end
 
   def touch_zones(_zone)

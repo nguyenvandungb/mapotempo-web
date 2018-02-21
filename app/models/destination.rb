@@ -27,7 +27,7 @@ class Destination < Location
   include Consistency
   validate_consistency :tags
 
-  before_create -> (m) { !m.customer.too_many_destinations? || raise(Exceptions::OverMaxLimitError.new(I18n.t('activerecord.errors.models.customer.attributes.destinations.over_max_limit'))) }
+  before_create :check_max_destination
   before_save :update_tags
   after_save -> { @tag_ids_changed = false }
 
@@ -87,6 +87,10 @@ class Destination < Location
 
   def tag_ids_changed?
     @tag_ids_changed
+  end
+
+  def check_max_destination
+    !self.customer.too_many_destinations? || raise(Exceptions::OverMaxLimitError.new(I18n.t('activerecord.errors.models.customer.attributes.destinations.over_max_limit')))
   end
 
   def update_tags

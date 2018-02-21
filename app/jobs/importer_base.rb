@@ -38,51 +38,55 @@ class ImporterBase
     dests = false
     refs = []
 
-    Customer.transaction do
-      before_import(name, data, options)
+    Destination.without_callback(:save, :check_max_destination) do
+      VehicleUsageSet.without_callback(:save, :check_max_vehicle_usage_set) do
+        Customer.transaction do
+          before_import(name, data, options)
 
-      dests = data.each_with_index.collect{ |row, line|
-        # Switch from locale or custom to internal column name in case of csv
-        row = yield(row, line + 1 + (options[:line_shift] || 0))
+          dests = data.each_with_index.collect{ |row, line|
+            # Switch from locale or custom to internal column name in case of csv
+            row = yield(row, line + 1 + (options[:line_shift] || 0))
 
-        if row.empty?
-          next # Skip empty line
-        end
-
-        begin
-          if (ref = uniq_ref(row))
-            if refs.include?(ref)
-              raise ImportInvalidRef.new(I18n.t("destinations.import_file.#{ref.is_a?(Array) && ref[0].nil? ? 'refs_visit_duplicate' : 'refs_duplicate'}", refs: ref.is_a?(Array) ? ref.compact.join(' | ') : ref))
-            else
-              refs.push(ref)
+            if row.empty?
+              next # Skip empty line
             end
-          end
 
-          dest = import_row(name, row, options)
-          if dest.nil?
-            next
-          end
+            begin
+              if (ref = uniq_ref(row))
+                if refs.include?(ref)
+                  raise ImportInvalidRef.new(I18n.t("destinations.import_file.#{ref.is_a?(Array) && ref[0].nil? ? 'refs_visit_duplicate' : 'refs_duplicate'}", refs: ref.is_a?(Array) ? ref.compact.join(' | ') : ref))
+                else
+                  refs.push(ref)
+                end
+              end
 
-          if !@synchronous && Mapotempo::Application.config.delayed_job_use && dest.respond_to?(:delay_geocode)
-            dest.delay_geocode
-          end
-          dest
-        rescue ImportBaseError => e
-          if options[:ignore_errors]
-            @warnings << e unless @warnings.include?(e)
-          else
-            raise
-          end
+              dest = import_row(name, row, options)
+              if dest.nil?
+                next
+              end
+
+              if !@synchronous && Mapotempo::Application.config.delayed_job_use && dest.respond_to?(:delay_geocode)
+                dest.delay_geocode
+              end
+              dest
+            rescue ImportBaseError => e
+              if options[:ignore_errors]
+                @warnings << e unless @warnings.include?(e)
+              else
+                raise
+              end
+            end
+          }
+          raise ImportEmpty.new I18n.t('import.empty') if dests.all?(&:nil?)
+          yield(nil)
+
+          options[:dests] = dests
+
+          after_import(name, options)
+
+          finalize_import(name, options)
         end
-      }
-      raise ImportEmpty.new I18n.t('import.empty') if dests.all?(&:nil?)
-      yield(nil)
-
-      options[:dests] = dests
-
-      after_import(name, options)
-
-      finalize_import(name, options)
+      end
     end
 
     dests

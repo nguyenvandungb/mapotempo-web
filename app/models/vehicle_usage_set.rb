@@ -54,7 +54,7 @@ class VehicleUsageSet < ApplicationRecord
   validates :rest_duration, presence: {if: :rest_start?, message: ->(*_) { I18n.t('activerecord.errors.models.vehicle_usage_set.missing_rest_duration') }}
 
   after_initialize :assign_defaults, if: :new_record?
-  before_create -> (m) { !m.customer.too_many_vehicle_usage_sets? || raise(Exceptions::OverMaxLimitError.new(I18n.t('activerecord.errors.models.customer.attributes.vehicle_usage_sets.over_max_limit'))) }
+  before_create :check_max_vehicle_usage_set
   before_update :update_outdated
 
   amoeba do
@@ -94,6 +94,10 @@ class VehicleUsageSet < ApplicationRecord
     self.open ||= 8 * 3600 unless open
     self.close ||= 18 * 3600 unless close
     create_vehicle_usages
+  end
+
+  def check_max_vehicle_usage_set
+    !self.customer.too_many_vehicle_usage_sets? || raise(Exceptions::OverMaxLimitError.new(I18n.t('activerecord.errors.models.customer.attributes.vehicle_usage_sets.over_max_limit')))
   end
 
   def update_outdated

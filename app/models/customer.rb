@@ -270,7 +270,7 @@ class Customer < ApplicationRecord
   end
 
   def too_many_plannings?
-    default_max_plannings && default_max_plannings <= self.plannings.where('id IS NOT NULL').length
+    default_max_plannings && default_max_plannings <= self.plannings.count
   end
 
   def default_max_zonings
@@ -278,7 +278,7 @@ class Customer < ApplicationRecord
   end
 
   def too_many_zonings?
-    default_max_zonings && default_max_zonings <= self.zonings.where('id IS NOT NULL').length
+    default_max_zonings && default_max_zonings <= self.zonings.count
   end
 
   def default_max_destinations
@@ -286,7 +286,7 @@ class Customer < ApplicationRecord
   end
 
   def too_many_destinations?
-    default_max_destinations && default_max_destinations <= self.destinations.where('id IS NOT NULL').length
+    default_max_destinations && default_max_destinations <= self.destinations.count
   end
 
   def default_max_vehicle_usage_sets
@@ -294,7 +294,7 @@ class Customer < ApplicationRecord
   end
 
   def too_many_vehicle_usage_sets?
-    default_max_vehicle_usage_sets && default_max_vehicle_usage_sets <= self.vehicle_usage_sets.where('id IS NOT NULL').length
+    default_max_vehicle_usage_sets && default_max_vehicle_usage_sets <= self.vehicle_usage_sets.count
   end
 
   private
