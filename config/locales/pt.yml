@@ -182,7 +182,7 @@ pt:
           de pesados
         router_options_strict_restriction: Conformidade estrita com as limitações
           do camião
-        router_options_track: Utilizar vias
+        router_options_track: Utilizar caminhos
         optimization_max_split_size: Dimensão da divisão de otimização
         max_plannings: Max planos
         max_zonings: Max zoneamentos
@@ -1152,9 +1152,9 @@ pt:
       optimization_overload_multiplier_yes_help: Durante a otimização, se indicar
         uma capacidade para os seus veículos, o excesso de carga será autorizado.
         Quanto maior for o numero menor será o excesso de carga permitido pela otimização.
-      optimization_overload_multiplier_ignore: Ignrado
+      optimization_overload_multiplier_ignore: Ignorar
       optimization_overload_multiplier_ignore_help: Durante a otimização, as quantidades
-        e capacidades dos seus veículos não serão tidas en conta.
+        e capacidades dos seus veículos não serão tidas em conta.
       optimization_overload_multiplier_help: O excesso de carga será ou não autorizado
         durante a otimização (valido apenas se uma capacidade é especificada para
         um veículo) Se o excesso de carga for autorizado, quanto maior for o número
