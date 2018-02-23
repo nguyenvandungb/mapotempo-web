@@ -163,6 +163,7 @@ fr:
         print_header: Entête des tournées
         print_map: Inclure la carte
         print_stop_time: Inclure les horaires de passage
+        print_barcode: Code barre
         speed_multiplicator: Ajustement de la vitesse
         router: Calculateur d'itinéraire
         router_id: Calculateur d'itinéraire
@@ -851,6 +852,9 @@ fr:
       print_header_help: Bloc de texte ajouté avant chaque tournée
       print:
         title: Impressions
+        barcode:
+          code128: Code 128
+        barcode_help: Inclure la référence sous forme de code barre.
       sms:
         title: SMS
       sms_template_help: "Modèle de SMS envoyé à vos clients. {NAME} sera remplacé par le nom de votre client renseigné

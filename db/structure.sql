@@ -112,7 +112,8 @@ CREATE TABLE customers (
     max_destinations integer,
     max_vehicle_usage_sets integer,
     enable_sms boolean DEFAULT false NOT NULL,
-    sms_template character varying
+    sms_template character varying,
+    print_barcode character varying
 );
 
 
@@ -2736,3 +2737,5 @@ INSERT INTO schema_migrations (version) VALUES ('20180123141615');
 INSERT INTO schema_migrations (version) VALUES ('20180219090520');
 
 INSERT INTO schema_migrations (version) VALUES ('20180226094910');
+
+INSERT INTO schema_migrations (version) VALUES ('20180223101253');

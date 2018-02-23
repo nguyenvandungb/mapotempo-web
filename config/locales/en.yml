@@ -163,6 +163,7 @@ en:
         print_header: Routes header
         print_map: Include map
         print_stop_time: Include stop time
+        print_barcode: Barcode
         speed_multiplicator: Speed multiplier
         router: Routing Engine
         router_id: Routing Engine
@@ -839,6 +840,9 @@ en:
       print_header_help: Block of text added before each route
       print:
         title: Printing
+        barcode:
+          code128: Code 128
+        barcode_help: Include the Reference as Barcode
       sms:
         title: SMS
       sms_template_help: "SMS template sent for your visits. {NAME} will be replaced by destination name filled in app.
