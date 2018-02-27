@@ -243,7 +243,8 @@ class Fleet < DeviceBase
           state: destination.state,
           street: destination.street
         },
-        time_windows: time_windows
+        time_windows: time_windows,
+        mission_type: 'mission'
       }
     end
 
