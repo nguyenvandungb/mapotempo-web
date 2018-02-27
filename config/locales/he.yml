@@ -689,9 +689,9 @@ he:
         יש לאפשר ניהול הפצה באמצעות רכבים. הערך הוא חשוב ביותר, ככל שיש יותר עיכובים
         כך הביצועים נפגמים (הקלד 0  כדי למנוע עיכובים ובמקרה זה אין לבטל אשכולות).
       optimization_cost_waiting_time_default: '%{n} (ערך ברירת מחדל)'
-      optimization_cost_waiting_time_help: הערכת שווי זמן ההמתנה. הערך הוא חשוב ביותר, ככל שיש
-        יותר עיכובים כך הביצועים נפגמים (הקלד 0  כדי למנוע עיכובים ובמקרה זה אין לבטל
-        אשכולות).
+      optimization_cost_waiting_time_help: הערכת שווי זמן ההמתנה. הערך הוא חשוב ביותר,
+        ככל שיש יותר עיכובים כך הביצועים נפגמים (הקלד 0  כדי למנוע עיכובים ובמקרה
+        זה אין לבטל אשכולות).
       print_header_help: טקסט שיוכנס לפני כל מסלול
       print:
         title: הדפסה
@@ -1024,6 +1024,28 @@ he:
         \ title=\"I log in %{s}\">%{a}<a> </p>\n \n <p>If you need to contact us,\
         \ please use the following link: <a href=\"%{c}\" target=\"_blank\" title=\"\
         I contact support\">%{c}</a> </p>\n \n <p>Best regards,</p>\n \n <p>%{s} team</p>"
+    footer:
+      first_step: 'שלב 1: הגדר את הסיסמא שלך'
+    password:
+      subject: הגדר סיסמא
+      title: הגדר סיסמא
+      detail:
+        link: הגדר סיסמא
+    connection:
+      subject: התחבר לחשבון שלך %{name}
+      title: התחבר לחשבון שלך
+      welcome: אתה יכול כעת להתחבר לחשבון שלך
+    accompanying_team:
+      header: הצוות שלנו תומך בך
+      preheader: גלה את החלק הראשון להתחלת פעילות
+      panels_header: החלק הראשון
+    features:
+      preheader: גלה את החלק השני לניהול המערכת
+      panels_header: חלק 2
+    accompanying:
+      title: הצוות שלנו תומך בך
+    subscribe:
+      title: האם תהיה מעוניין להמשיך בתהליך ביחד
   plannings:
     menu:
       plannings: תוכניות
@@ -1509,3 +1531,6 @@ he:
     sessions:
       new:
         remember_me: זכור אותי
+  users:
+    set_password:
+      action: הגדר סיסמא
