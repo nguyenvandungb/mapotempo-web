@@ -732,8 +732,8 @@ class PlanningTestException < ActiveSupport::TestCase
     ApplicationController.stub_any_instance(:server_error, lambda { |*a| raise }) do
       Routers::RouterWrapper.stub_any_instance(:compute_batch, lambda { |*a| raise }) do
         assert_no_difference('Stop.count') do
-          o.zoning_outdated = true
           assert_raises(RuntimeError) do
+            o.split_by_zones(nil)
             o.compute
           end
         end
