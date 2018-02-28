@@ -56,18 +56,6 @@ CREATE FUNCTION jsonb_to_hstore(json) RETURNS hstore
       $_$;
 
 
---
--- Name: jsonb_to_hstore(jsonb); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION jsonb_to_hstore(jsonb) RETURNS hstore
-    LANGUAGE sql IMMUTABLE STRICT
-    AS $_$
-        SELECT hstore(array_agg(key), array_agg(value))
-        FROM jsonb_each_text($1)
-      $_$;
-
-
 SET default_tablespace = '';
 
 SET default_with_oids = false;
