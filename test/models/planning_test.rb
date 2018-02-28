@@ -734,7 +734,7 @@ class PlanningTestError < ActiveSupport::TestCase
     o = plannings(:planning_one)
     Routers::RouterWrapper.stub_any_instance(:compute_batch, []) do
       assert_no_difference('Stop.count') do
-        o.zoning_outdated = true
+        o.split_by_zones(nil)
         o.compute
         o.save!
       end

@@ -54,7 +54,7 @@ class V01::Api < Grape::API
     def error!(*args)
       # Workaround for close transaction on error!
       if !ActiveRecord::Base.connection.transaction_manager.current_transaction.is_a?(ActiveRecord::ConnectionAdapters::NullTransaction)
-        ActiveRecord::Base.connection.transaction_open? and ActiveRecord::Base.connection.rollback_transaction
+        ActiveRecord::Base.connection.transaction_open? && ActiveRecord::Base.connection.rollback_transaction
       end
       super(*args)
     end
@@ -65,18 +65,18 @@ class V01::Api < Grape::API
     authorize!
     set_time_zone
     set_locale
-    ActiveRecord::Base.connection.transaction_open? and ActiveRecord::Base.connection.begin_transaction
+    ActiveRecord::Base.connection.begin_transaction
   end
 
   after do
     begin
       if @error
-        ActiveRecord::Base.connection.transaction_open? and ActiveRecord::Base.connection.rollback_transaction
+        ActiveRecord::Base.connection.transaction_open? && ActiveRecord::Base.connection.rollback_transaction
       else
-        ActiveRecord::Base.connection.transaction_open? and ActiveRecord::Base.connection.commit_transaction
+        ActiveRecord::Base.connection.transaction_open? && ActiveRecord::Base.connection.commit_transaction
       end
     rescue Exception
-      ActiveRecord::Base.connection.transaction_open? and ActiveRecord::Base.connection.rollback_transaction
+      ActiveRecord::Base.connection.transaction_open? && ActiveRecord::Base.connection.rollback_transaction
       raise
     end
   end
@@ -98,7 +98,7 @@ class V01::Api < Grape::API
   end
 
   rescue_from :all, backtrace: ENV['RAILS_ENV'] != 'production' do |e|
-    ActiveRecord::Base.connection.transaction_open? and ActiveRecord::Base.connection.rollback_transaction
+    ActiveRecord::Base.connection.transaction_open? && ActiveRecord::Base.connection.rollback_transaction
 
     @error = e
     Rails.logger.error "\n\n#{e.class} (#{e.message}):\n    " + e.backtrace.join("\n    ") + "\n\n"
