@@ -42,7 +42,7 @@ var isWindowVisible = (function() {
   return function(callback) {
     if (callback) document.addEventListener(eventKey, callback);
     return !document[stateKey];
-  }
+  };
 })();
 
 (function() {

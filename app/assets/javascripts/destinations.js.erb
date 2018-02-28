@@ -38,7 +38,7 @@ var destinations_form = function(params, api) {
       options: {
         position: 'bottomright'
       },
-      onAdd: function(map) {
+      onAdd: function() {
         var container = form_popup;
         L.DomEvent.disableClickPropagation(container);
         return container;
@@ -93,7 +93,7 @@ var destinations_form = function(params, api) {
             url: '/api/0.1/' + api + '/geocode_complete.json',
             beforeSend: beforeSendWaiting,
             success: function(data) {
-              add($.map(data, function(val, i) {
+              add($.map(data, function(val) {
                 return {
                   label: val.street + ' ' + val.postalcode + ' ' + val.city + ' ' + val.country,
                   value: val.street
@@ -159,13 +159,13 @@ var destinations_form = function(params, api) {
         error: ajaxError
       });
     })
-    .on("click", ".pointing + span", function(event) {
-      pointing = id;
-      $('body').css('cursor', 'crosshair');
-      $('.leaflet-container').css('cursor', 'crosshair');
-    });
+      .on("click", ".pointing + span", function() {
+        pointing = id;
+        $('body').css('cursor', 'crosshair');
+        $('.leaflet-container').css('cursor', 'crosshair');
+      });
 
-    $('a.pointing').click(function(event) {
+    $('a.pointing').click(function() {
       pointing = id;
       $('body').css('cursor', 'crosshair');
       $('.leaflet-container').css('cursor', 'crosshair');
@@ -307,10 +307,7 @@ var destinations_form = function(params, api) {
             $("#reverse-geocode").html('');
           }
         },
-        error: function(jqxhr, textStatus, error) {
-          var err = textStatus + ", " + error;
-          console.log("Request Failed: " + err);
-        }
+        error: ajaxError
       });
     }
   };
@@ -427,7 +424,7 @@ var destinations_form = function(params, api) {
   initVisits($('form[data-destination_id]'));
 
   if (window.location.hash) {
-    $('#visits').find('.collapse.in').each(function(index) {
+    $('#visits').find('.collapse.in').each(function() {
       var $this = $(this);
       if (window.location.hash != '#' + $this.attr('id'))
         $this.removeClass('in');
@@ -464,10 +461,10 @@ var destinations_import = function(params, api) {
     $('input[id$=replace_1]', $(this)).is(':checked') && confirmChecks.push('replace');
     $('input[name$=\\[delete_plannings\\]]', $(this)).is(':checked') && confirmChecks.push('delete_plannings');
     if (confirmChecks.length > 0 && !confirm(confirmChecks.map(function(c) {
-        var store_import_translation = 'stores.import.' + c + '_confirm';
-        var destination_import_translation = 'destinations.import.' + c + '_confirm';
-        return (api == 'stores') ? I18n.t(store_import_translation) : I18n.t(destination_import_translation);
-      }).join(" \n"))) {
+      var store_import_translation = 'stores.import.' + c + '_confirm';
+      var destination_import_translation = 'destinations.import.' + c + '_confirm';
+      return (api == 'stores') ? I18n.t(store_import_translation) : I18n.t(destination_import_translation);
+    }).join(" \n"))) {
       return false;
     }
     dialog_upload.modal(modal_options());
@@ -484,7 +481,7 @@ var destinations_import = function(params, api) {
     $('[name=columns-save]').show();
   });
 
-  $('[name=columns-save]').click(function(evt) {
+  $('[name=columns-save]').click(function() {
     var columnsDef = $('.column-def')
       .filter(function(i, e) {
         return $(e).val();
@@ -532,7 +529,7 @@ var destinations_index = function(params, api) {
     };
 
     map.on('moveend animationend', queueDeleteFn);
-  }
+  };
 
   var markers       = {};
   var markersLayers = new L.MarkerClusterGroup({
@@ -548,17 +545,17 @@ var destinations_index = function(params, api) {
   var pointing = false;
 
   // Only use our Icon or chrome crashes
-  var pointsH     = L.point(24, 40), pointsV = L.point(12, pointsH.y),
-      iconDefault = new L.Icon({
-        iconUrl: '/images/marker-428BCA.svg',
-        iconSize: pointsH,
-        iconAnchor: pointsV
-      }),
-      iconOver = new L.Icon({
-          iconUrl: '/images/marker-FFBB00.svg',
-          iconSize: pointsH,
-          iconAnchor: pointsV
-        });
+  var pointsH = L.point(24, 40), pointsV = L.point(12, pointsH.y),
+    iconDefault = new L.Icon({
+      iconUrl: '/images/marker-428BCA.svg',
+      iconSize: pointsH,
+      iconAnchor: pointsV
+    }),
+    iconOver = new L.Icon({
+      iconUrl: '/images/marker-FFBB00.svg',
+      iconSize: pointsH,
+      iconAnchor: pointsV
+    });
   var iconOverStack = [];
 
   var prepare_display_destination = function(destination) {
@@ -653,7 +650,7 @@ var destinations_index = function(params, api) {
               url: '/api/0.1/' + api + '/geocode_complete.json',
               beforeSend: beforeSendWaiting,
               success: function(data) {
-                add($.map(data, function(val, i) {
+                add($.map(data, function(val) {
                   return {
                     label: val.street + ' ' + val.postalcode + ' ' + val.city + ' ' + val.country,
                     value: val.street
@@ -706,11 +703,11 @@ var destinations_index = function(params, api) {
           }
         });
       })
-      .on("click", ".pointing + span", function(event) {
-        pointing = id;
-        $('body').css('cursor', 'crosshair');
-        $('.leaflet-container').css('cursor', 'crosshair');
-      });
+        .on("click", ".pointing + span", function() {
+          pointing = id;
+          $('body').css('cursor', 'crosshair');
+          $('.leaflet-container').css('cursor', 'crosshair');
+        });
 
       var formatNoMatches = I18n.t('web.select2.empty_result');
       fake_select2($('select[name$=\\[tag_ids\\]\\[\\]]', $row), function(select) {
@@ -751,7 +748,7 @@ var destinations_index = function(params, api) {
               if (last)
                 over(last, true);
             }
-            count_dec();
+            countDec();
           },
           complete: completeWaiting,
           error: function(request, status, error) {
@@ -766,39 +763,39 @@ var destinations_index = function(params, api) {
   // Unbind / bind events according to the current operation. (Prevents deleting non existing objects issue)
   var toogleClickForRow = function(row, id, addOrRemove) {
     if (addOrRemove) {
-      row.click(function(){ over(id, true); });
+      row.click(function() { over(id, true); });
       ajaxCallForRow(row, id);
     } else {
       row.off('click');
     }
   };
 
-  var update = function(destination_id, destination, move) {
+  var update = function(id, destination, move) {
     if (isEditable) {
-      var row = $('[data-destination_id=' + destination_id + ']'),
+      var row = $('[data-destination_id=' + id + ']'),
         destination = prepare_display_destination(destination);
       $('select[name$=\\[tag_ids\\]\\[\\]]', row).each(function() {
         $(this).data('select2') && $(this).select2('close');
       });
       $(row).replaceWith(SMT['destinations/edit'](destination));
-      row = $('[data-destination_id=' + destination_id + ']');
+      row = $('[data-destination_id=' + id + ']');
       setInputTitles(row);
       wire(row);
       $('.destinations').trigger('update');
 
       if ($.isNumeric(destination.lat) && $.isNumeric(destination.lng)) {
-        if (destination_id in markers) {
-          markers[destination_id].setLatLng(new L.LatLng(destination.lat, destination.lng));
+        if (id in markers) {
+          markers[id].setLatLng(new L.LatLng(destination.lat, destination.lng));
         } else {
-          addMarker(destination_id, destination.lat, destination.lng);
+          addMarker(id, destination.lat, destination.lng);
         }
         if (move) {
-          if (map.getZoom() != 16 || !map.getBounds().contains(markers[destination_id].getLatLng())) {
-            map.setView(markers[destination_id].getLatLng(), 16);
+          if (map.getZoom() != 16 || !map.getBounds().contains(markers[id].getLatLng())) {
+            map.setView(markers[id].getLatLng(), 16);
           }
         }
-      } else if (destination_id in markers) {
-        deleteMarkerOnMapRelease(destination_id);
+      } else if (id in markers) {
+        deleteMarkerOnMapRelease(id);
       }
     }
   };
@@ -815,7 +812,7 @@ var destinations_index = function(params, api) {
     $("#count-visits").html(parseInt($("#count-visits").text()) + 1);
   };
 
-  var count_dec = function() {
+  var countDec = function() {
     $("#count").html(parseInt($("#count").text()) - 1);
     var v = $('.destinations tr:visible [role="visit"]').length;
     $("#count-visits").html(v);
@@ -854,8 +851,7 @@ var destinations_index = function(params, api) {
     }
     if (id in markers) {
       spiderfyCluster(null, id, move, function(id) {
-        markers[id].setIcon(iconOver)
-                   .setZIndexOffset(100);
+        markers[id].setIcon(iconOver).setZIndexOffset(100);
 
         markersLayers.refreshClusters();
       });
@@ -887,7 +883,7 @@ var destinations_index = function(params, api) {
     } else {
       callback(id);
     }
-  }
+  };
 
   var addMarker = function(id, lat, lng) {
     var marker = L.marker(new L.LatLng(lat, lng), {
@@ -907,7 +903,7 @@ var destinations_index = function(params, api) {
   };
 
   if (isEditable) {
-    $("#add").click(function(event) {
+    $("#add").click(function() {
       var id = 0;
       var center = map.getCenter();
       var destination = {
@@ -941,15 +937,15 @@ var destinations_index = function(params, api) {
     $('#add').hide();
   }
 
-  var filter_text = function(exactText, normalizedValue, filter, index) {
+  var filter_text = function(exactText, normalizedValue, filter) {
     return !!String(exactText).match(new RegExp(filter.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&"), 'i'));
   };
 
-  var filter_number = function(exactText, normalizedValue, filter, index) {
+  var filter_number = function(exactText, normalizedValue, filter) {
     return normalizedValue == filter;
   };
 
-  var filter_phone = function(exactText, normalizedValue, filter, index) {
+  var filter_phone = function(exactText, normalizedValue, filter) {
     return !!String(normalizedValue).match(new RegExp(simply_phone(filter).replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&"), 'i'));
   };
 
@@ -993,7 +989,7 @@ var destinations_index = function(params, api) {
 
     var errorCallback = function() {
       stickyError(I18n.t('destinations.index.dialog.geocoding.error'));
-    }
+    };
 
     if (!progressDialog(data.geocoding, dialog_geocoding, '/destinations.json', checkForDisplayDestinations, {error: errorCallback})) {
       return;
@@ -1051,7 +1047,6 @@ var destinations_index = function(params, api) {
           if ($table[0].ignoreChange) {
             return;
           }
-          var col, $this = $(this);
           // uncheck header if any checkboxes are unchecked
           if (!this.checked) {
             $table.add($sticky).find('thead input[type=checkbox]').prop('checked', false);
@@ -1093,19 +1088,19 @@ var destinations_index = function(params, api) {
           if ($node.hasClass('phone')) {
             return simply_phone($("[name$=\\[phone_number\\]]", node).val());
           } else if ($node.hasClass('tags')) {
-            return $.map($("[name$=\\[tag_ids\\]\\[\\]] :selected", node), function(e, i) {
+            return $.map($("[name$=\\[tag_ids\\]\\[\\]] :selected", node), function(e) {
               return e.text;
             }).sort().join(',');
           } else if ($node.hasClass('geocoding')) {
             return globalGeocodingScore($("[name$=\\[geocoding_level\\]]", node).val(), $("[name$=\\[geocoding_accuracy\\]]", node).val(), $("[name$=\\[lat\\]]", node).val(), $("[name$=\\[lng\\]]", node).val());
           } else if ($node.hasClass('visit')) {
-            return $.map($("input[type!=hidden]", node), function(e, i) {
+            return $.map($("input[type!=hidden]", node), function(e) {
               return e.value;
-            }).sort().join(',') + ',' + $.map($("[name$=\\[tag_ids\\]\\[\\]] :selected", node), function(e, i) {
+            }).sort().join(',') + ',' + $.map($("[name$=\\[tag_ids\\]\\[\\]] :selected", node), function(e) {
               return e.text;
             }).sort().join(',');
           } else {
-            return $.map($(":input", node), function(e, i) {
+            return $.map($(":input", node), function(e) {
               return e.value;
             }).join(",");
           }
@@ -1154,7 +1149,7 @@ var destinations_index = function(params, api) {
         columnSelector_layout: '<li role="presentation"><label><input type="checkbox">{name}</label></li>'
       }
     };
-    $("#destination_box").find("table").tablesorter(tableOptions).bind('filterEnd', function(e, filter) {
+    $("#destination_box").find("table").tablesorter(tableOptions).bind('filterEnd', function() {
       count();
 
       markersLayers.clearLayers();
@@ -1167,9 +1162,9 @@ var destinations_index = function(params, api) {
     });
     $(".tablesorter-filter").addClass("form-control input-sm"); // filter_cssFilter not support setting multiple class at once
 
-    $("#multiple-delete").on("click", function(event) {
+    $("#multiple-delete").on("click", function() {
       if (confirm(I18n.t('all.verb.destroy_confirm'))) {
-        var destination_ids = $.map($('table tbody :checkbox:checked').closest('tr'), function(val, i) {
+        var destination_ids = $.map($('table tbody :checkbox:checked').closest('tr'), function(val) {
           return $(val).data('destination_id');
         });
 
@@ -1179,15 +1174,15 @@ var destinations_index = function(params, api) {
             ids: destination_ids.join()
           }),
           beforeSend: beforeSendWaiting,
-          success: function(data) {
-            $.map($('table tbody :checkbox:checked').closest('tr'), function(row, i) {
-              var row = $(row);
-              var id = row.data('destination_id');
-              row.remove();
+          success: function() {
+            $.map($('table tbody :checkbox:checked').closest('tr'), function(row) {
+              var $row = $(row);
+              var id = $row.data('destination_id');
+              $row.remove();
               if (markers[id]) {
                 deleteMarkerOnMapRelease(id);
               }
-              count_dec();
+              countDec();
             });
           },
           complete: completeWaiting,
@@ -1226,7 +1221,7 @@ var destinations_index = function(params, api) {
         keyboard: true,
         show: true
       });
-      $("#sort-geocoding").click(function(event, ui) {
+      $("#sort-geocoding").click(function() {
         $('#geocoding-danger-modal').off('hidden.bs.modal', displayDestinationsAfterModal);
         $('#geocoding-danger-modal').modal('hide');
         sortList = [

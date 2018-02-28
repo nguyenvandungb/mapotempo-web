@@ -24,7 +24,7 @@ var vehicle_usage_sets_index = function(params) {
   $('a.accordion-toggle').click(function() {
     var id = $(this).attr('href');
     window.location.hash = id;
-    $('.accordion-body.collapse.in').each(function(index) {
+    $('.accordion-body.collapse.in').each(function() {
       var $this = $(this);
       if (id !== '#' + $this.attr('id')) {
         $this.collapse('hide');
@@ -33,7 +33,7 @@ var vehicle_usage_sets_index = function(params) {
   });
 
   if (window.location.hash) {
-    $('.accordion-body.collapse.in').each(function(index) {
+    $('.accordion-body.collapse.in').each(function() {
       var $this = $(this);
       if (window.location.hash !== '#' + $this.attr('id')) {
         $this.removeClass('in');
@@ -70,13 +70,13 @@ var vehicle_usage_sets_import = function(params) {
     buttonText: I18n.t('web.choose_file')
   });
 
-  $('form#new_import_csv').submit(function () {
+  $('form#new_import_csv').submit(function() {
     var confirmChecks = [];
     $('#import_csv_replace_vehicles', $(this)).is(':checked') && confirmChecks.push('replace_vehicles');
-    if (confirmChecks.length > 0 && !confirm(confirmChecks.map(function (c) {
-        var vehicle_usage_set_import_translation = 'vehicle_usage_sets.import.dialog.' + c + '_confirm';
-        return I18n.t(vehicle_usage_set_import_translation);
-      }).join(" \n"))) {
+    if (confirmChecks.length > 0 && !confirm(confirmChecks.map(function(c) {
+      var vehicle_usage_set_import_translation = 'vehicle_usage_sets.import.dialog.' + c + '_confirm';
+      return I18n.t(vehicle_usage_set_import_translation);
+    }).join(" \n"))) {
       return false;
     }
 

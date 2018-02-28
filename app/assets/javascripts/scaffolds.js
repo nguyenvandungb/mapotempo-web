@@ -176,7 +176,7 @@ var initializeMapHash = function(map, initOnly) {
   // FIXME when turbolinks get updated to work with Edge
   else if (navigator.userAgent.indexOf('Edge') === -1) {
     map.addHash();
-    var removeHash = function () {
+    var removeHash = function() {
       map.removeHash();
       $(document).off('page:before-change', removeHash);
     };
@@ -227,7 +227,7 @@ function decimalAdjust(type, value, exp) {
 }
 
 var dropdownAutoDirection = function($updatedElement) {
-  $updatedElement.parent().on('show.bs.dropdown', function(e) {
+  $updatedElement.parent().on('show.bs.dropdown', function() {
     $(this).find('.dropdown-menu').first().stop(true, true).slideDown({
       duration: 200
     });
@@ -292,7 +292,7 @@ var dropdownAutoDirection = function($updatedElement) {
     }
   });
 
-  $updatedElement.parent().on('hide.bs.dropdown', function(e) {
+  $updatedElement.parent().on('hide.bs.dropdown', function() {
     $(this).find('.dropdown-menu').first().stop(true, true).slideUp({
       duration: 200
     });
@@ -388,9 +388,9 @@ L.controlTouchScreenCompliance = function() {
    Chrome | Safari | Edge | IE respond to any-pointer:fine
    Firefox doesn't respond at all
    */
-  if (L.Browser.WebKit || L.Browser.chrome || L.Browser.ie) {
+  if (L.Browser.WebKit || L.Browser.chrome || L.Browser.ie) {
     var removeTouchStyle;
-    if (('maxTouchPoints' in navigator) || ('msMaxTouchPoints' in navigator)) {
+    if (('maxTouchPoints' in navigator) || ('msMaxTouchPoints' in navigator)) {
       removeTouchStyle = (navigator.maxTouchPoints === 0) || (navigator.msMaxTouchPoints === 0);
     } else if (window.matchMedia && window.matchMedia('(any-pointer:coarse),(any-pointer:fine)').matches) {
       removeTouchStyle = !window.matchMedia('(any-pointer:coarse)').matches;
@@ -400,13 +400,13 @@ L.controlTouchScreenCompliance = function() {
 };
 
 // Button to disable clusters
-L.disableClustersControl = function (map, routesLayer) {
+L.disableClustersControl = function(map, routesLayer) {
   var disableClustersControl = L.Control.extend({
     options: {
       position: 'topleft'
     },
 
-    onAdd: function () {
+    onAdd: function() {
       var container = L.DomUtil.create('div', 'leaflet-bar leaflet-control leaflet-control-disable-clusters');
       container.style.backgroundColor = 'white';
       container.style.width = '26px';
@@ -418,7 +418,7 @@ L.disableClustersControl = function (map, routesLayer) {
       var icon = L.DomUtil.create('i', 'cluster-icon fa fa-certificate fa-lg', button);
       icon.style.marginLeft = '2px';
 
-      container.onclick = function () {
+      container.onclick = function() {
         routesLayer.switchMarkerClusters();
 
         $('.cluster-icon').toggleClass('fa-certificate fa-circle-o');

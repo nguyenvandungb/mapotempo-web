@@ -102,7 +102,7 @@ var popupModule = (function() {
         }).addTo(map).getPopup();
 
         data.i18n = mustache_i18n;
-        data.routes = _context.options.routes.filter(function(route) { return route.vehicle_usage_id; } ); // unnecessary to load all for each stop
+        data.routes = _context.options.routes.filter(function(route) { return route.vehicle_usage_id; }); // unnecessary to load all for each stop
         data.out_of_route_id = _context.options.outOfRouteId;
         data.number = marker.properties.number;
         if (marker.properties.tomtom) {
@@ -477,7 +477,7 @@ var RoutesLayer = L.FeatureGroup.extend({
 
         return false;
       }.bind(this))
-      .on('popupopen', function(e) {
+      .on('popupopen', function() {
         // Silence is golden
       }.bind(this))
       .on('popupclose', function(e) {
@@ -561,7 +561,7 @@ var RoutesLayer = L.FeatureGroup.extend({
         this.markerOptions.disableClusteringAtZoom = this.options.disableClusters ? 0 : 19;
         newClustersByRoute[routeId] = L.markerClusterGroup(this.markerOptions);
 
-        this.clustersByRoute[routeId].getLayers().forEach(function (routeId, marker) {
+        this.clustersByRoute[routeId].getLayers().forEach(function(routeId, marker) {
           newClustersByRoute[routeId].addLayer(marker);
         }.bind(this, routeId));
 

@@ -203,7 +203,7 @@ var plannings_new = function(params) {
     })
   });
 
-  $('#new_planning').off('submit').on('submit', function(event) {
+  $('#new_planning').off('submit').on('submit', function() {
     onPlanningCreateModal.modal("show");
   });
 
@@ -410,7 +410,7 @@ var plannings_edit = function(params) {
     };
 
     var updateRouteQuantities = function(content, route) {
-      route.quantities.forEach(function (quantity) {
+      route.quantities.forEach(function(quantity) {
         var $quantity = content.find("[data-quantity_id='" + quantity.deliverable_unit_id + "']");
         if ($quantity.length > 0) {
           var label = $quantity.text().split(/\s{1}/)[1];
@@ -418,7 +418,7 @@ var plannings_edit = function(params) {
             $quantity.text(quantity.quantity + ' ' + label);
           }
         }
-      })
+      });
     };
 
     if (data) {
@@ -766,9 +766,9 @@ var plannings_edit = function(params) {
         }
       }
       $('div#optimization-active').css({display: allStopsActive ? 'none' : 'block'});
-      var dimensions = $.map(vehicles_usages_map, function(vehicle) { return vehicle.router_dimension; } )
+      var dimensions = $.map(vehicles_usages_map, function(vehicle) { return vehicle.router_dimension; })
         .filter(function(elt, idx, array) { return idx == array.indexOf(elt); });
-      $('#router-dimension-value').html(dimensions.map(function(dim) { dim = 'plannings.edit.dialog.optimization.vehicles.' + dim; return I18n.t(dim); } ).join(' / '));
+      $('#router-dimension-value').html(dimensions.map(function(dim) { dim = 'plannings.edit.dialog.optimization.vehicles.' + dim; return I18n.t(dim); }).join(' / '));
     }
     vehicleCostLate();
   });
@@ -980,7 +980,7 @@ var plannings_edit = function(params) {
     if (!options || !options.skipCallbacks) {
       externalCallbackUrl(context);
 
-      devicesObservePlanning.init(context, function(from) {
+      devicesObservePlanning.init(context, function() {
         if (availableStopStatus) {
           needUpdateStopStatus = true;
           requestUpdateStopsStatus();
@@ -1159,7 +1159,7 @@ var plannings_edit = function(params) {
   };
 
   var buildUrl = function(url, hash) {
-    $.each(hash, function(k, v) { url = url.replace('\{' + k.toUpperCase() + '\}', hash[k]) });
+    $.each(hash, function(k) { url = url.replace('\{' + k.toUpperCase() + '\}', hash[k]); });
     return url;
   };
 
@@ -1361,7 +1361,7 @@ var plannings_edit = function(params) {
       update: sortPlanning
     }).disableSelection();
 
-    var routesWithVehicle = routes.filter(function(route) { return route.vehicle_usage_id; } );
+    var routesWithVehicle = routes.filter(function(route) { return route.vehicle_usage_id; });
     $.each(data.routes, function(i, route) {
       var sortableUpdate = false;
       $(".route[data-route_id='" + route.route_id + "'] .stops.sortable").sortable({

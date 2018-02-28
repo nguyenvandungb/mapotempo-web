@@ -44,7 +44,7 @@ var order_arrays_edit = function(params) {
 
   order_arrays_form();
 
-  var filter_text = function(exactText, normalizedValue, filter, index) {
+  var filter_text = function(exactText, normalizedValue, filter) {
     return !!String(normalizedValue).match(new RegExp(filter.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&"), 'i'));
   };
 
@@ -90,7 +90,7 @@ var order_arrays_edit = function(params) {
       });
       select.next('.select2-container--bootstrap').addClass('input-sm');
 
-      select.change(function(e) {
+      select.change(function() {
         if (block_save_select_change) {
           return;
         }
@@ -99,7 +99,7 @@ var order_arrays_edit = function(params) {
         build_total(undefined, $('#order_array').find('table'), shift);
 
         var id = select.parent().data('id');
-        var product_ids = $.map(select.val() || [], function(val, i) {
+        var product_ids = $.map(select.val() || [], function(val) {
           return val.split('.')[0];
         });
         $.ajax({
@@ -140,7 +140,7 @@ var order_arrays_edit = function(params) {
         sum_row = {},
         total = 0;
       $('td[data-id] select', $tr).each(function(j, select) {
-        var vals = $.map($(select).val() || [], function(val, i) {
+        var vals = $.map($(select).val() || [], function(val) {
           return val.split('.')[0];
         });
         if (vals) {
@@ -165,7 +165,6 @@ var order_arrays_edit = function(params) {
     });
 
     // Columns
-    var product_length = $('tfoot tr').length - 1;
     var row_length = $('thead:not(.tablesorter-stickyHeader) tr:first .order', $table).length;
     grand_total[undefined] = 0;
     $('tfoot tr').each(function(i, tr) {
@@ -208,7 +207,7 @@ var order_arrays_edit = function(params) {
     data.i18n = mustache_i18n;
     $(container).html(SMT['order_arrays/edit'](data));
 
-    var false_formater = function($cell, indx) {
+    var false_formater = function() {
       return false;
     };
     var no_sorter = {
@@ -243,7 +242,7 @@ var order_arrays_edit = function(params) {
     }).tablesorter({
       textExtraction: function(node, table, cellIndex) {
         if (cellIndex >= 3 + shift && cellIndex < data.columns.length + 3 + shift) {
-          return $.map($("[name$=\\[product_ids\\]\\[\\]] :selected", node), function(e, i) {
+          return $.map($("[name$=\\[product_ids\\]\\[\\]] :selected", node), function(e) {
             return e.text;
           }).join(",");
         } else {
@@ -283,7 +282,7 @@ var order_arrays_edit = function(params) {
           $td = $select.parent();
         var val = [];
         if (add_product || remove_product) {
-          val = $.map($select.val() || [], function(v, i) {
+          val = $.map($select.val() || [], function(v) {
             return v.split('.')[0];
           });
           var index = val.indexOf(product_id);
@@ -295,7 +294,7 @@ var order_arrays_edit = function(params) {
             }
           }
         } else if (paste && copy) {
-          val = $.map(copy[i] || [], function(v, i) {
+          val = $.map(copy[i] || [], function(v) {
             return v.split('.')[0];
           });
         }
@@ -323,7 +322,7 @@ var order_arrays_edit = function(params) {
     };
 
     var copy_row;
-    $('.copy_row').click(function(e) {
+    $('.copy_row').click(function() {
       var tr = $(this).closest('tr');
       copy_row = [];
       $.each($('td[data-id] select', tr), function(i, select) {
@@ -333,7 +332,7 @@ var order_arrays_edit = function(params) {
       });
     });
 
-    $('.empty_row, .paste_row, .add_product_row, .remove_product_row').click(function(e) {
+    $('.empty_row, .paste_row, .add_product_row, .remove_product_row').click(function() {
       if (confirm(I18n.t('order_arrays.edit.confirm_ovewrite_row'))) {
         var tr = $(this).closest('tr'),
           add_product = $(this).hasClass('add_product_row'),
@@ -348,7 +347,7 @@ var order_arrays_edit = function(params) {
     });
 
     var copy_column;
-    $('.copy_column').click(function(e) {
+    $('.copy_column').click(function() {
       var td_index = $(this).closest('th').index('th') + 1;
       copy_column = [];
       $('tbody tr td:nth-child(' + td_index + ') select', $(this).closest('table')).each(function(i, select) {
@@ -358,7 +357,7 @@ var order_arrays_edit = function(params) {
       });
     });
 
-    $('.empty_column, .paste_column, .add_product_column, .remove_product_column').click(function(e) {
+    $('.empty_column, .paste_column, .add_product_column, .remove_product_column').click(function() {
       if (confirm(I18n.t('order_arrays.edit.confirm_ovewrite_column'))) {
         var $this = $(this),
           td_index = $this.closest('th').index('th') + 1,

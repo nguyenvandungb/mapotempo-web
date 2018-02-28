@@ -343,16 +343,16 @@ var zonings_edit = function(params) {
     $.each(params.manage_zoning, function(i, elt) {
       zone['manage_' + elt] = true;
     });
-    zone.vehicles = $.map(vehicles, function(val, i) {
+    zone.vehicles = $.map(vehicles, function(val) {
       return {
         id: val.id,
         selected: val.id == zone.vehicle_id,
         name: val.name
       };
     });
-    if (zone.vehicle_id && $.inArray(true, $.map(zone.vehicles, function(val, i) {
-        return val.selected;
-      })) < 0) {
+    if (zone.vehicle_id && $.inArray(true, $.map(zone.vehicles, function(val) {
+      return val.selected;
+    })) < 0) {
       zone.vehicles.unshift({
         id: vehiclesMap[zone.vehicle_id].id,
         selected: true,

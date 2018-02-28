@@ -90,7 +90,7 @@ var customers_index = function(params) {
 
   };
 
-  $('#accordion').on('show.bs.collapse', function(event, ui) {
+  $('#accordion').on('show.bs.collapse', function() {
     if (!is_map_init) {
       is_map_init = true;
       map_init();
@@ -133,7 +133,7 @@ var customers_edit = function(params) {
     spinnerImage: ''
   });
 
-  var getLocaleFromCurrentLocale = function () {
+  var getLocaleFromCurrentLocale = function() {
     for (var locale in $.fn.wysihtml5.locale) {
       if (locale.indexOf(I18n.currentLocale()) !== -1) {
         return locale;
@@ -180,7 +180,7 @@ var devicesObserveCustomer = (function() {
 
     function _userCredential() {
       var hash = {};
-      $.each(config.forms.settings, function(key, type) {
+      $.each(config.forms.settings, function(key) {
         hash[key] = $('#' + base_name + '_' + config.name + '_' + key).val() || void(0);
         if (key == 'password' && hash[key] == params.default_password)
           hash[key] = void(0);
@@ -208,17 +208,15 @@ var devicesObserveCustomer = (function() {
             check_only: 1
           }),
           dataType: 'json',
-          beforeSend: function(jqXHR, settings) {
+          beforeSend: function() {
             if (!all) hideNotices();
             beforeSendWaiting();
           },
-          complete: function(jqXHR, textStatus) {
-            completeWaiting();
-          },
-          success: function(data, textStatus, jqXHR) {
+          complete: completeWaiting,
+          success: function(data) {
             (data && data.error) ? errorCallback(data.error) : successCallback();
           },
-          error: function(jqXHR, textStatus, error) {
+          error: function(jqXHR, textStatus) {
             errorCallback(jqXHR.status === 400 && textStatus === 'error' ? I18n.t('customers.form.devices.sync.no_credentials') : textStatus);
           }
         }));
@@ -239,9 +237,9 @@ var devicesObserveCustomer = (function() {
       var checkCredentialsWithDelay = function() {
         if (timeout_id) clearTimeout(timeout_id);
         timeout_id = setTimeout(function() { _ajaxCall(false); }, 750);
-      }
+      };
 
-      $("#" + config.name + "_container").find("input").on('keyup', function(e) {
+      $("#" + config.name + "_container").find("input").on('keyup', function() {
         clearCallback();
         checkCredentialsWithDelay();
       });
@@ -256,7 +254,7 @@ var devicesObserveCustomer = (function() {
     }
 
     // Sync
-    $('.' + config.name + '-api-sync').on('click', function(e) {
+    $('.' + config.name + '-api-sync').on('click', function() {
       if (confirm(I18n.t('customers.form.devices.sync.confirm'))) {
         $.ajax({
           url: '/api/0.1/devices/' + config.name + '/sync.json',
@@ -264,13 +262,9 @@ var devicesObserveCustomer = (function() {
           data: $.extend(_userCredential(), {
             customer_id: params.customer_id
           }),
-          beforeSend: function(jqXHR, settings) {
-            beforeSendWaiting();
-          },
-          complete: function(jqXHR, textStatus) {
-            completeWaiting();
-          },
-          success: function(data, textStatus, jqXHR) {
+          beforeSend: beforeSendWaiting,
+          complete: completeWaiting,
+          success: function() {
             alert(I18n.t('customers.form.devices.sync.complete'));
           }
         });
@@ -359,7 +353,7 @@ var devicesObserveCustomer = (function() {
           }
 
           var drivers = [I18n.t('customers.form.devices.fleet.drivers_created')];
-          data.map(function (driver) {
+          data.map(function(driver) {
             drivers.push(driver.email + ' : ' + driver.password);
           });
 

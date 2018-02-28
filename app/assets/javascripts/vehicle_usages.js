@@ -53,15 +53,15 @@ var vehicle_usages_form = function(params) {
 
   routerOptionsSelect('#vehicle_usage_vehicle_router', params);
 
-  var NoResults = I18n.t('vehicles.form.tags_empty');
+  var noResults = I18n.t('vehicles.form.tags_empty');
   $('select[name$=\\[tag_ids\\]\\[\\]]', '#vehicle_usage_vehicle_tag_ids_input').select2({
     theme: 'bootstrap',
     minimumResultsForSearch: -1,
     templateSelection: templateTag,
     templateResult: templateTag,
     language: {
-      noResults: function () {
-        return NoResults;
+      noResults: function() {
+        return noResults;
       }
     },
     width: '100%'
@@ -72,8 +72,8 @@ var vehicle_usages_form = function(params) {
     templateSelection: templateTag,
     templateResult: templateTag,
     language: {
-      noResults: function () {
-        return NoResults;
+      noResults: function() {
+        return noResults;
       }
     },
     width: '100%'
@@ -114,7 +114,7 @@ var devicesObserveVehicle = (function() {
         customer_id: params.customer_id
       },
       dataType: 'json',
-      success: function(data, textStatus, jqXHR) {
+      success: function(data) {
         // Blank option
         if (data && data.error) stickyError(data.error);
         _addDataToSelect2(name, data, params.devices);
@@ -132,7 +132,7 @@ var devicesObserveVehicle = (function() {
     });
   };
 
-  return { init: init };
+  return { init: init };
 })();
 
 Paloma.controller('VehicleUsages', {
