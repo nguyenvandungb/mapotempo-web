@@ -598,7 +598,7 @@ class PlanningsControllerTest < ActionController::TestCase
 
   test 'should automatic insert with skills' do
     skill = Tag.first
-    route_with_skill = @planning.routes.last
+    route_with_skill = @planning.routes.select(&:vehicle_usage).last
     route_with_skill.vehicle_usage.update!(tags: [skill])
     unaffected_stop = stops(:stop_unaffected)
     unaffected_stop.visit.update!(tags: [skill])
@@ -610,8 +610,9 @@ class PlanningsControllerTest < ActionController::TestCase
   end
 
   test 'should not automatic insert without correct skills' do
+    Vehicle.all.each{ |v| v.update tags: [] }
     skill = Tag.first
-    route_with_skill = @planning.routes.last
+    route_with_skill = @planning.routes.select(&:vehicle_usage).last
     route_with_skill.vehicle_usage.update!(tags: [skill])
     route_with_skill.update!(locked: true)
     unaffected_stop = stops(:stop_unaffected)

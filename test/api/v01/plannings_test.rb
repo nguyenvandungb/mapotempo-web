@@ -245,6 +245,7 @@ class V01::PlanningsTest < V01::PlanningsBaseTest
 
   test 'should automatic insert taking into account only active or all stops' do
     customers(:customer_one).update(job_optimizer_id: nil)
+    Vehicle.all.each{ |v| v.update tags: [] }
 
     # 0. Init all stops inactive
     @planning.routes.each{ |r| r.stops.each{ |s| s.update! active: false } }

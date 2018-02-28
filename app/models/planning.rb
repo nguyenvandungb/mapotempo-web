@@ -233,7 +233,7 @@ class Planning < ApplicationRecord
       end
     end
 
-    # It still no route get all routes
+    # If still no route get all routes matching skills
     tags = stop.is_a?(StopVisit) ? (stop.visit.destination.tags | stop.visit.tags) : nil
     if available_routes.empty? && options[:out_of_zone]
       skill_tags = all_skills & tags
