@@ -349,14 +349,15 @@ var destinations_form = function(params, api) {
   }
 
   $('#visit-new').click(function() {
-    if (enable_multi_visits || $('#visits fieldset').length == 0) {
+    var $fieldsets = $('#visits').find('fieldset');
+    if (enable_multi_visits || $fieldsets.length == 0) {
       var fieldsetVisit = $('#visit-fieldset-template');
       $('#visits').append(fieldsetVisit.html()
-        .replace('#0', '#' + ($('#visits fieldset').length + 1))
-        .replace(/isit0/g, 'isit' + ($('#visits fieldset').length + 1))
-        .replace(/destination([\[_])visits([^0]+)0([\]_])/g, "destination$1visits$2" + ($('#visits fieldset').length + 1) + "$3")
+        .replace('#0', '#' + ($fieldsets.length + 1))
+        .replace(/isit0/g, 'isit' + ($fieldsets.length + 1))
+        .replace(/destination([\[_])visits([^0]+)0([\]_])/g, "destination$1visits$2" + ($fieldsets.length + 1) + "$3")
       );
-      initVisits($('#visits fieldset:last-child'));
+      initVisits($('#visits').find('fieldset:last-child'));
     }
   });
 
@@ -426,12 +427,12 @@ var destinations_form = function(params, api) {
   initVisits($('form[data-destination_id]'));
 
   if (window.location.hash) {
-    $('#visits .collapse.in').each(function(index) {
+    $('#visits').find('.collapse.in').each(function(index) {
       var $this = $(this);
       if (window.location.hash != '#' + $this.attr('id'))
         $this.removeClass('in');
     });
-    $("#visits .accordion-toggle[href!='" + window.location.hash + "']").addClass('collapsed');
+    $("#visits").find(".accordion-toggle[href!='" + window.location.hash + "']").addClass('collapsed');
   }
 };
 
@@ -1024,7 +1025,7 @@ var destinations_index = function(params, api) {
       wire(element);
     });
 
-    $('#destination_box table').on('tablesorter-initialized', function() {
+    $('#destination_box').find('table').on('tablesorter-initialized', function() {
       var
         $table = $(this),
         c = this.config,
@@ -1153,7 +1154,7 @@ var destinations_index = function(params, api) {
         columnSelector_layout: '<li role="presentation"><label><input type="checkbox">{name}</label></li>'
       }
     };
-    $("#destination_box table").tablesorter(tableOptions).bind('filterEnd', function(e, filter) {
+    $("#destination_box").find("table").tablesorter(tableOptions).bind('filterEnd', function(e, filter) {
       count();
 
       markersLayers.clearLayers();

@@ -96,7 +96,7 @@ var order_arrays_edit = function(params) {
         }
 
         table_neeed_update = true;
-        build_total(undefined, $('#order_array table'), shift);
+        build_total(undefined, $('#order_array').find('table'), shift);
 
         var id = select.parent().data('id');
         var product_ids = $.map(select.val() || [], function(val, i) {
@@ -186,14 +186,14 @@ var order_arrays_edit = function(params) {
   var table_trigger_update = function() {
     if (table_neeed_update) {
       table_neeed_update = false;
-      $("#order_array table").trigger("update");
+      $("#order_array").find("table").trigger("update");
     }
   };
 
   var products = {};
 
   var display_order_array = function(data) {
-    var container = $('#order_array div');
+    var container = $('#order_array').find("div");
     $.each(data.products, function(i, product) {
       products[product.id] = product;
     });
@@ -238,7 +238,7 @@ var order_arrays_edit = function(params) {
       filter_formatter[i + data.columns.length + 3 + shift] = false_formater;
     }
 
-    $("#order_array table").bind("tablesorter-initialized", function(e, table) {
+    $("#order_array").find("table").bind("tablesorter-initialized", function(e, table) {
       build_total(e, table, shift);
     }).tablesorter({
       textExtraction: function(node, table, cellIndex) {
@@ -270,8 +270,8 @@ var order_arrays_edit = function(params) {
       $('.tablesorter-filter-row td:last-child').remove();
     }
 
-    $('#order_array table thead input').focusin(table_trigger_update);
-    $('#order_array table thead .tablesorter-icon').click(table_trigger_update);
+    $('#order_array').find('table thead input').focusin(table_trigger_update);
+    $('#order_array').find('table thead .tablesorter-icon').click(table_trigger_update);
 
     set_fake_select2(products, $('td[data-id] select'), shift);
 
@@ -308,7 +308,7 @@ var order_arrays_edit = function(params) {
       set_fake_select2(products, selector_function(), shift);
       block_save_select_change = false;
       table_neeed_update = true;
-      build_total(undefined, $('#order_array table'), shift);
+      build_total(undefined, $('#order_array').find('table'), shift);
 
       $.ajax({
         url: '/api/0.1/order_arrays/' + order_array_id + '.json',

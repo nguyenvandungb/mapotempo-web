@@ -241,7 +241,7 @@ var devicesObserveCustomer = (function() {
         timeout_id = setTimeout(function() { _ajaxCall(false); }, 750);
       }
 
-      $("#" + config.name + "_container input").on('keyup', function(e) {
+      $("#" + config.name + "_container").find("input").on('keyup', function(e) {
         clearCallback();
         checkCredentialsWithDelay();
       });

@@ -17,7 +17,7 @@
 //
 'use strict';
 var getPlanningsId = function() {
-  return $.makeArray($('#plannings input[type=checkbox]:checked').map(function(index, id){ return $(id).val(); }));
+  return $.makeArray($('#plannings').find('input[type=checkbox]:checked').map(function(index, id) { return $(id).val(); }));
 };
 
 var iCalendarExport = function(planningId) {
@@ -102,7 +102,7 @@ var spreadsheetModalExport = function(columns, planningId) {
     if (columns.indexOf(c) >= 0)
       appendElement('#columns-skip', c);
   });
-  $('#columns-export a.remove').click(function(evt) {
+  $('#columns-export').find('a.remove').click(function(evt) {
     var $elem = $(evt.currentTarget).closest('li');
     if ($elem.parent()[0].id === 'columns-export') {
       var nextFocus = $elem.next();
@@ -111,7 +111,7 @@ var spreadsheetModalExport = function(columns, planningId) {
       if (nextFocus.length) $('a.remove', nextFocus).show();
     }
   });
-  $('#columns-export li').mouseenter(function(evt) {
+  $('#columns-export').find('li').mouseenter(function(evt) {
     if ($(evt.currentTarget).closest('#columns-export').length > 0)
       $('a.remove', evt.currentTarget).show();
   }).mouseleave(function(evt) {
@@ -130,10 +130,10 @@ var spreadsheetModalExport = function(columns, planningId) {
     var spreadsheetStops = localStorage.spreadsheetStops = $('.spreadsheet-stops:checked').map(function(i, e) {
       return $(e).val();
     }).get().join('|');
-    var spreadsheetColumnsExport = localStorage.spreadsheetColumnsExport = $('#columns-export li').map(function(i, e) {
+    var spreadsheetColumnsExport = localStorage.spreadsheetColumnsExport = $('#columns-export').find('li').map(function(i, e) {
       return $(e).attr('data-value');
     }).get().join('|');
-    var spreadsheetColumnsSkip = localStorage.spreadsheetColumnsSkip = $('#columns-skip li').map(function(i, e) {
+    var spreadsheetColumnsSkip = localStorage.spreadsheetColumnsSkip = $('#columns-skip').find('li').map(function(i, e) {
       return $(e).attr('data-value');
     }).get().join('|');
     var spreadsheetFormat = localStorage.spreadsheetFormat = $('[name=spreadsheet-format]:checked').val();
@@ -547,7 +547,7 @@ var plannings_edit = function(params) {
 
   sidebar.addTo(map);
 
-  $('#lock_routes_dropdown li a, #toggle_routes_dropdown li a').click(function() {
+  $('#lock_routes_dropdown, #toggle_routes_dropdown').find('li a').click(function() {
     if (routes.length == 0) return;
 
     var action = $(this).parent('li').parent('ul').attr('id') == 'lock_routes_dropdown' ? 'lock' : 'toggle';
@@ -773,14 +773,14 @@ var plannings_edit = function(params) {
     vehicleCostLate();
   });
   // FIXME: ortools is not able to support non null vehicle late multiplier for global optim
-  var originalVehicleCostLate = $('#optimization-vehicle-late label').text();
+  var originalVehicleCostLate = $('#optimization-vehicle-late').find('label').text();
   var vehicleCostLate = function() {
     if (!$('#optimization-route_id').val() && $('[name=sticky_vehicle]:checked').val() == 'false') {
-      if ($('#optimization-vehicle-late label').text().trim() == I18n.t('all.value._yes'))
-        $('#optimization-vehicle-late label').text('-');
+      if ($('#optimization-vehicle-late').find('label').text().trim() == I18n.t('all.value._yes'))
+        $('#optimization-vehicle-late').find('label').text('-');
     }
     else
-      $('#optimization-vehicle-late label').text(originalVehicleCostLate);
+      $('#optimization-vehicle-late').find('label').text(originalVehicleCostLate);
   };
   vehicleCostLate();
   $('[name=sticky_vehicle]').change(function() {
@@ -1356,7 +1356,7 @@ var plannings_edit = function(params) {
       $('.global_info').html(SMT['plannings/edit_head'](data));
     }
 
-    $("#out_of_route .sortable").sortable({
+    $("#out_of_route").find(".sortable").sortable({
       connectWith: ".sortable",
       update: sortPlanning
     }).disableSelection();

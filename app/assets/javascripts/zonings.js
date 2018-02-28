@@ -285,7 +285,7 @@ var zonings_edit = function(params) {
         if (!zone.id) {
           return;
         }
-        var z = $('#zones input[value=' + zone.id + ']').closest('.zone');
+        var z = $('#zones').find('input[value=' + zone.id + ']').closest('.zone');
         z.css('box-shadow', '#4D90FE 0px 0px 5px');
         setTimeout(function() {
           z.css('box-shadow', '');
@@ -371,7 +371,7 @@ var zonings_edit = function(params) {
 
     $('#zones').append(SMT['zones/show'](zone));
 
-    var ele = $('#zones .zone:last');
+    var ele = $('#zones').find('.zone:last');
 
     observeChanges(ele);
 
@@ -397,7 +397,7 @@ var zonings_edit = function(params) {
 
     $('select', ele).change(function(e) {
       if (e.added) {
-        $.each($('#zones .zone select option[value=' + e.added.id + ']'), function(index, option) {
+        $.each($('#zones').find('.zone select option[value=' + e.added.id + ']'), function(index, option) {
           option = $(option);
           var select = option.closest('select');
           var ee = option.closest('.zone');

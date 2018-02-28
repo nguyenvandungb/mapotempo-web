@@ -43,7 +43,7 @@ var vehicle_usages_form = function(params) {
 
   $('#capacity-unit-add').click(function(event) {
     $(this).hide();
-    $('#vehicle_usage_vehicle_capacity_input .input-group').show();
+    $('#vehicle_usage_vehicle_capacity_input').find('.input-group').show();
     event.preventDefault();
     return false;
   });
