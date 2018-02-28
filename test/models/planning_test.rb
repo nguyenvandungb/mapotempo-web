@@ -596,6 +596,23 @@ class PlanningTest < ActiveSupport::TestCase
     assert_equal planning.routes.map{ |r| r.stops.size }.reduce(&:+), optim.flatten.size
   end
 
+  test 'shoud set late_multiplier to nil when stop is a geolocalized rest during optimization' do
+    planning = plannings(:planning_one)
+    uri_template = Addressable::Template.new("#{Mapotempo::Application.config.optimize.url}/vrp/submit.json")
+    stub_request(:any, uri_template)
+      .with(body: /"late_multiplier":null/)
+      .to_return(File.new(File.expand_path('../../web_mocks/', __FILE__) + '/optimizer/optimize.json').read)
+
+    assert_equal ['Pause', 'store 1'], # It should have a Pause (geolocalized rest)
+      planning.routes.collect{ |r| r.stops.map{ |s| s.name if s.type == 'StopRest' } }.map(&:compact).flatten
+
+    planning.optimize(planning.routes, false,) do |positions, services, vehicles|
+      assert services.collect{ |s| s.key? :rest }.uniq.first # All Service should have a rest key
+      # Given parameters in OptimizerWrapper::optimize should contain late_multiplier:null
+      Mapotempo::Application.config.optimize.optimize(positions, services, vehicles, stop_soft_upper_bound: 0.3)
+    end
+  end
+
   test 'should return all or only active stops after optimization' do
     planning = plannings(:planning_one)
     inactive_stop = planning.routes.third.stops.second
