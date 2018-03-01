@@ -1512,14 +1512,14 @@ pt:
       first_step: 'Passo 1: Defina a sua password'
       second_step: 'Passo 2: Entre na aplicação'
     accompanying_team:
-      header: A nossa equipa acompanhá-lo-á
+      header: Nossa equipa o acompanha
       main_content: 'Afim de lhe oferecer a melhor experiência, poderá contar com
         a nossa equipa para o acompanhar. Assim, '
-      highlight: 'para qualquer pergunta, pode contactar-nos: '
+      highlight: 'para qualquer questão, pode nos contactar: '
       contact_support: Contactar o suporte
       panels_header: 'Recursos para iniciar: 1ª parte'
       documentation: documentação online
-      panels_subtitle: Conheça as três primeiras secções do nosso
+      panels_subtitle: Conheça as três primeiras secções da nossa
       goal: 'Objetivos:'
       panel_one:
         title: Antes de começar
@@ -1597,9 +1597,9 @@ pt:
         zonage_update: Alteração de zoneamento
       preheader: Veja a segunda parte dos recursos para começar.
     advanced_options:
-      header: Poderemos ajudá-lo a esclarecer alguns aspetos?
-      main_content: 'Está a utilizar o %{name} nos últimos 3 dias. Descobriu diversas
-        funcionalidades. Se tem questões relativas a alguma delas, poderá contactar
+      header: Podemos ajudá-lo a esclarecer alguns aspetos?
+      main_content: 'Está a utilizar o %{name} desde 2 dias jà. Descobriu diversas
+        funcionalidades. Se tiver questões relativas a alguma delas, pode contactar
         a nossa equipa. '
       contact_support: Contactar o suporte
       panels_header: 'Recursos para iniciar: 3ª parte'
@@ -1617,7 +1617,8 @@ pt:
       panel_two:
         title: TomTom WEBFLEET (opcional)
         content: Utiliza TomTom WEBFLEET? Veja como ligar %{name} com TomTom WEBFLEET.
-          Como o planeador pode fazer a ligação e como os operàrios podem usà-lo diariamente.
+          Como o planeador pode fazer a ligação, e como os operàrios podem utilizà-lo
+          diariamente.
         time: ⏱9min.
         doc_link: Doc - TomTom WEBFLEET
         doc_href: /manual/07-tomtom_webfleet.html
@@ -1632,9 +1633,23 @@ pt:
       footer: Recebeu este email na qualidade de utilizador de %{name}
       adds:
         videos: Vídeos
+        plans: Criar um plano (english sub.)
+        stops: Gestão das paragéns (english sub.)
+        optimize: Introdução à otimização (english sub.)
+        export: Exportação de rotas (english sub.)
+        gps: Exportação para dispositivo GPS e telemóvel (english sub.)
+        webfleet: Ligar ao Tomtom Webfleet (english sub.)
     accompanying:
       title: A nossa equipa està aqui para o ajudar
-      link: Contatar supporte
+      link: Contactar supporte
+    subscribe:
+      title: E se continuássemos essa aventura juntos?
+      try_period_over: O seu período de teste gratuito està a chegar ao fim. <b> Agradecemo-lo
+        pelo seu interesse no %{name} e esperamos que essa experiência tenha satisfeito
+        as suas expectativas. </b>
+      content: 'Se quiser continuar essa aventuara conosco <b> pode contactar a nossa
+        equipe de vendas preenchendo o formulàrio ou por telefone ao +33&nbsp;5&nbsp;64&nbsp;27&nbsp;04&nbsp;59&nbsp;:</b>:'
+      link: Quero subscrever ao %{name}
   plannings:
     menu:
       plannings: Planos
