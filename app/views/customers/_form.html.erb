@@ -319,7 +319,7 @@
         <%= f.check_box :enable_stop_status %>
       <% end %>
       <%= f.toggles t 'activerecord.attributes.customer.enable_sms' do %>
-        <%= f.check_box :enable_sms %>
+        <%= f.check_box :enable_sms, '', disabled: !@customer.reseller.sms_api_key %>
       <% end %>
     </fieldset>
     <fieldset>
@@ -402,6 +402,7 @@
         <div id="collapseSms" class="panel-collapse collapse">
           <div class="panel-body">
             <%= f.text_area :sms_template, placeholder: @customer.name + '. ' + t('notifications.sms.alert_plan') do %>
+              <div id="sms_character_count"></div>
               <p class="help-block"><%= t '.sms_template_help' %></p>
             <% end %>
           </div>

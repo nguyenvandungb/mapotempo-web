@@ -857,9 +857,12 @@ fr:
         barcode_help: Inclure la référence sous forme de code barre.
       sms:
         title: SMS
-      sms_template_help: "Modèle de SMS envoyé à vos clients. {NAME} sera remplacé par le nom de votre client renseigné
-        sur l'application. Chaines de remplacements disponibles : {NAME} {REF} {VISIT_REF} {DATE} {TIME} {STREET} {CITY} {QUANTITIES} {COMMENT}.
-        Votre texte doit être compatible GSM 03.38 et ne devrait pas dépasser 160 caractères (ou 70 en cas de caractères spéciaux)."
+      sms_template_help: "Modèle de SMS envoyé à vos clients. {NAME} sera remplacé par le nom de
+        votre client renseigné sur l'application. Chaines de remplacements disponibles : {NAME}
+        {REF} {VISIT_REF} {DATE} {TIME} {STREET} {CITY} {QUANTITIES} {COMMENT} {VEHICLE_NAME}.
+        Votre texte doit être compatible GSM 03.38 et ne devrait pas dépasser 160 caractères
+        (ou 70 en cas de caractères spéciaux)."
+      sms_character_count: Votre message comporte %{c} caractères
       speed_multiplicator_default: '%{n} (valeur par défaut)'
       speed_multiplicator_help: Une valeur supérieure à 100% signifie une vitesse
         plus élevée.

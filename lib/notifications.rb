@@ -45,12 +45,11 @@ class Notifications
             shift_time = Integer(m[1]).minutes unless m[1].blank?
           end
 
-          # Round time to quarter before/after
-          seconds = 15.minutes
-          if shift_time > 0
-            shift_time = ((v + shift_time).to_f / seconds).ceil * seconds - v.to_i
-          elsif shift_time < 0
-            shift_time = ((v + shift_time).to_f / seconds).floor * seconds - v.to_i
+          if shift_time != 0
+            # Round time to quarter
+            seconds = 15.minutes
+            shift_time = (shift_time / shift_time.abs) * seconds if shift_time.abs < seconds
+            shift_time = ((v + shift_time).to_f / seconds).round * seconds - v.to_i
           end
 
           I18n.l(v + shift_time, format: format_time)

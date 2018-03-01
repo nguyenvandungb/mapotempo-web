@@ -845,9 +845,11 @@ en:
         barcode_help: Include the Reference as Barcode
       sms:
         title: SMS
-      sms_template_help: "SMS template sent for your visits. {NAME} will be replaced by destination name filled in app.
-        Available replacement strings : {NAME} {REF} {VISIT_REF} {DATE} {TIME} {STREET} {CITY} {QUANTITIES} {COMMENT}.
-        Your text should be compliant with GSM 03.38 and should not exceed 160 characters (or 70 in case of multi bytes)."
+      sms_template_help: "SMS template sent for your visits. {NAME} will be replaced by destination
+        name filled in app. Available replacement strings: {NAME} {REF} {VISIT_REF} {DATE} {TIME}
+        {STREET} {CITY} {QUANTITIES} {COMMENT} {VEHICLE_NAME}. Your text should be compliant with
+        GSM 03.38 and should not exceed 160 characters (or 70 in case of special characters)."
+      sms_character_count: Your message contains %{c} characters
       speed_multiplicator_default: '%{n} (default value)'
       speed_multiplicator_help: A value higher than 100% means higher speed.
       audience_url_help: Go to the customer dashboard Audience page

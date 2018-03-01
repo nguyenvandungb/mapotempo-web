@@ -152,6 +152,15 @@ var customers_edit = function(params) {
     }
   });
 
+  var smsCharacterCount = function() {
+    var count = ($('#customer_sms_template').val() || $('#customer_sms_template').attr('placeholder')).length;
+    $('#sms_character_count').text(I18n.t('customers.form.sms_character_count', {c: count}));
+  };
+  if ($('#customer_sms_template').length) {
+    smsCharacterCount();
+    $('#customer_sms_template').on('keyup', smsCharacterCount);
+  }
+
   routerOptionsSelect('#customer_router', params);
 };
 

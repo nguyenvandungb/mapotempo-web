@@ -32,6 +32,11 @@
     display: none;
   }
 
+  #sms_character_count {
+    text-align: right;
+    font-size: smaller;
+  }
+
   #users {
     @media screen and (max-width: 767px) {
       tr th:nth-of-type(2), tr td:nth-of-type(2),
