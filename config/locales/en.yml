@@ -1356,7 +1356,7 @@ en:
     subscribe:
       title: "What if we continue the adventure together?"
       try_period_over: "You are at the end of your free trial period. <b>Thank you for your interest in %{name} and we hope that the experience has met your expectations.</b>"
-      content: "If you wish to continue the adventure with us <b>you can contact our sales team by this form or by phone at +33&nbsp;(0)5&nbsp;64&nbsp;27&nbsp;04&nbsp;59&nbsp;</b>:"
+      content: "If you wish to continue the adventure with us <b>you can contact our sales team by this form or by phone at +33&nbsp;5&nbsp;64&nbsp;27&nbsp;04&nbsp;59&nbsp;</b>:"
       link: "I request to subscribe to %{name}"
       preheader: "Your free trial period will end soon. We thank you for your interest in Mapotempo Web (web solution name) and we hope that the experience has met your expectations."
       footer: "You receive this email as a user of %{name}"
