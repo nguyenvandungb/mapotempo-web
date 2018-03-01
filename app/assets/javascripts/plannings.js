@@ -319,7 +319,7 @@ var plannings_edit = function(params) {
     data.forEach(function(pos) {
       if ($.isNumeric(pos.lat) && $.isNumeric(pos.lng)) {
         var route = routes.filter(function(route) {
-          return route.vehicle_usage_id === vehicles_usages_map[pos.vehicle_id].vehicle_usage_id;
+          return (pos.vehicle_id in vehicles_usages_map) && (route.vehicle_usage_id === vehicles_usages_map[pos.vehicle_id].vehicle_usage_id);
         })[0];
         var isMoving = pos.speed && (Date.parse(pos.time) > Date.now() - 600 * 1000);
         var direction_icon = pos.direction ? '<i class="fa fa-location-arrow fa-stack-1x vehicle-direction" style="transform: rotate(' + (parseInt(pos.direction) - 45) + 'deg);" />' : '';
