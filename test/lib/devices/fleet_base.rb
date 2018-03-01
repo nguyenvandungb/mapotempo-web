@@ -83,13 +83,13 @@ module FleetBase
               missions: [
                 {
                   external_ref: reference_ids[2],
-                  status_type_reference: 'to_do',
+                  status_type_reference: 'mission_to_do',
                   status_type_label: 'To do',
                   status_type_color: '#fff'
                 },
                 {
                   external_ref: reference_ids[3],
-                  status_type_reference: 'completed',
+                  status_type_reference: 'mission_completed',
                   status_type_label: 'Completed',
                   status_type_color: '#000'
                 }

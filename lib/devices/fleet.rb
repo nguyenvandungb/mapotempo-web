@@ -47,10 +47,19 @@ class Fleet < DeviceBase
 
   # Available status in Mapotempo: Planned / Started / Finished / Rejected
   @@order_status = {
-    'to_do' => 'Planned',
-    'in_progress' => 'Started',
-    'completed' => 'Finished',
-    'uncompleted' => 'Rejected',
+    'mission_to_do' => 'Planned',
+    'departure_to_do' => 'Planned',
+    'rest_to_do' => 'Planned',
+    'arrival_to_do' => 'Planned',
+    'mission_in_progress' => 'Started',
+    'departure_loading' => 'Started',
+    'rest_resting' => 'Started',
+    'arrival_unloading' => 'Started',
+    'mission_completed' => 'Finished',
+    'departure_gone' => 'Finished',
+    'rest_done' => 'Finished',
+    'arrival_arrived' => 'Finished',
+    'mission_uncompleted' => 'Rejected',
   }
 
   def check_auth(params)
@@ -95,12 +104,12 @@ class Fleet < DeviceBase
 
       # Associate to customer
       customer.update!(devices: customer.devices.merge({
-        fleet: {
-          enable: true,
-          user: user_email,
-          api_key: company['admin_user']['api_key']
-        }
-      }))
+                                                         fleet: {
+                                                           enable: true,
+                                                           user: user_email,
+                                                           api_key: company['admin_user']['api_key']
+                                                         }
+                                                       }))
 
       self.api_key = company['admin_user']['api_key']
 
@@ -205,20 +214,43 @@ class Fleet < DeviceBase
   def send_route(customer, route, _options = {})
     raise DeviceServiceError.new("Fleet: #{I18n.t('errors.fleet.past_missions')}") if route.planning.date && route.planning.date < Date.today
 
-    destinations = route.stops.select(&:active?).select(&:position?).select { |stop| stop.is_a?(StopVisit) }.sort_by(&:index).map do |destination|
-      labels = (destination.visit.tags + destination.visit.destination.tags).map(&:label).join(', ')
-      quantities = destination.is_a?(StopVisit) ? (customer.enable_orders ? (destination.order ? destination.order.products.collect(&:code).join(',') : '') : destination.visit.default_quantities ? VisitQuantities.normalize(destination.visit, route.vehicle_usage.try(&:vehicle)).map { |d| "\u2022 #{d[:quantity]}" }.join("\r\n") : '') : nil
+    destinations = []
+
+    departure = route.vehicle_usage.default_store_start
+    destinations << {
+      mission_type: 'departure',
+      external_ref: generate_store_id(departure, planning_date(route.planning), type: 'departure'),
+      name: departure.name,
+      date: p_time(route, route.start).strftime('%FT%T.%L%:z'),
+      location: {
+        lat: departure.lat,
+        lon: departure.lng
+      },
+      address: {
+        city: departure.city,
+        country: departure.country || customer.default_country,
+        postalcode: departure.postalcode,
+        state: departure.state,
+        street: departure.street
+      }
+    } if departure
+
+    destinations += route.stops.select(&:active?).sort_by(&:index).map do |destination|
+      visit = destination.is_a?(StopVisit)
+      labels = visit ? (destination.visit.tags + destination.visit.destination.tags).map(&:label).join(', ') : nil
+      quantities = visit ? destination.is_a?(StopVisit) ? (customer.enable_orders ? (destination.order ? destination.order.products.collect(&:code).join(',') : '') : destination.visit.default_quantities ? VisitQuantities.normalize(destination.visit, route.vehicle_usage.try(&:vehicle)).map { |d| "\u2022 #{d[:quantity]}" }.join("\r\n") : '') : nil : nil
       time_windows = []
       time_windows << {
         start: p_time(route, destination.open1).strftime('%FT%T.%L%:z'),
         end: p_time(route, destination.close1).strftime('%FT%T.%L%:z')
-      } if destination.open1 && destination.close1
+      } if visit && destination.open1 && destination.close1
       time_windows << {
         start: p_time(route, destination.open2).strftime('%FT%T.%L%:z'),
         end: p_time(route, destination.close2).strftime('%FT%T.%L%:z')
-      } if destination.open2 && destination.close2
+      } if visit && destination.open2 && destination.close2
 
       {
+        mission_type: visit ? 'mission' : 'rest',
         external_ref: generate_mission_id(destination, planning_date(route.planning)),
         name: destination.name,
         date: p_time(route, destination.time).strftime('%FT%T.%L%:z'),
@@ -226,14 +258,14 @@ class Fleet < DeviceBase
           lat: destination.lat,
           lon: destination.lng
         },
-        comment: [
+        comment: visit ? [
           destination.comment,
           destination.priority ? I18n.t('activerecord.attributes.visit.priority') + I18n.t('text.separator') + destination.priority_text : nil,
           labels.present? ? I18n.t('activerecord.attributes.visit.tags') + I18n.t('text.separator') + labels : nil,
           quantities.present? ? I18n.t('activerecord.attributes.visit.quantities') + I18n.t('text.separator') + "\r\n" + quantities : nil
-        ].compact.join("\r\n\r\n").strip,
-        phone: destination.phone_number,
-        reference: destination.visit.destination.ref,
+        ].compact.join("\r\n\r\n").strip : nil,
+        phone: visit ? destination.phone_number : nil,
+        reference: visit ? destination.visit.destination.ref : nil,
         duration: destination.duration,
         address: {
           city: destination.city,
@@ -243,10 +275,28 @@ class Fleet < DeviceBase
           state: destination.state,
           street: destination.street
         },
-        time_windows: time_windows,
-        mission_type: 'mission'
-      }
+        time_windows: visit ? time_windows : nil
+      }.compact
     end
+
+    arrival = route.vehicle_usage.default_store_stop
+    destinations << {
+      mission_type: 'arrival',
+      external_ref: generate_store_id(arrival, planning_date(route.planning), type: 'arrival'),
+      name: arrival.name,
+      date: p_time(route, route.end).strftime('%FT%T.%L%:z'),
+      location: {
+        lat: arrival.lat,
+        lon: arrival.lng
+      },
+      address: {
+        city: arrival.city,
+        country: arrival.country || customer.default_country,
+        postalcode: arrival.postalcode,
+        state: arrival.state,
+        street: arrival.street
+      }
+    } if arrival
 
     raise DeviceServiceError.new("Fleet: #{I18n.t('errors.fleet.no_missions')}") if destinations.empty?
 
@@ -356,6 +406,11 @@ class Fleet < DeviceBase
 
   def delete_missions_by_date_url(user, start_date, end_date)
     URI.encode("#{api_url}/api/0.1/users/#{convert_user(user)}/missions/destroy_multiples?start_date=#{start_date}&end_date=#{end_date}")
+  end
+
+  def generate_store_id(destination, date, options)
+    order_id = destination.id
+    "#{options[:type]}-#{order_id}-#{date.strftime('%Y_%m_%d')}"
   end
 
   def generate_mission_id(destination, date)
