@@ -52,6 +52,7 @@ class VehicleUsageSet < ApplicationRecord
   validates :rest_start, presence: {if: :rest_duration?, message: ->(*_) { I18n.t('activerecord.errors.models.vehicle_usage_set.missing_rest_window') }}
   validates :rest_stop, presence: {if: :rest_duration?, message: ->(*_) { I18n.t('activerecord.errors.models.vehicle_usage_set.missing_rest_window') }}
   validates :rest_duration, presence: {if: :rest_start?, message: ->(*_) { I18n.t('activerecord.errors.models.vehicle_usage_set.missing_rest_duration') }}
+  validates :max_distance, numericality: true, allow_nil: true
 
   after_initialize :assign_defaults, if: :new_record?
   before_create :check_max_vehicle_usage_set

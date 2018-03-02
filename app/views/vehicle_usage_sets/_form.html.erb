@@ -86,6 +86,21 @@
       <p class="help-block"><%= t '.work_time_help' %></p>
     </div>
   </div>
+  <div id="vehicle_usage_vehicle_max_distance" class="form-group">
+    <label class="sr-only" for="vehicle_usage_vehicle_max_distance"><%= t 'activerecord.attributes.vehicle.max_distance' %></label>
+    <label class="col-md-2 control-label"><%= t 'activerecord.attributes.vehicle.max_distance' %></label>
+    <div class="col-md-6">
+      <div class="input-group">
+        <%= number_field :vehicle_usage_set,
+                         :max_distance,
+                         value: distance_in_user_unit(@vehicle_usage_set.max_distance, @current_user.prefered_unit),
+                         step: 'any',
+                         class: 'form-control', min: 0 %>
+        <span class="input-group-addon"><%= current_user.prefered_unit == 'mi' ? t('all.unit.miles') : t('all.unit.kms') %></span>
+      </div>
+      <p class="help-block"><%= current_user.prefered_unit == 'mi' ? t('vehicles.form.max_distance.help_miles') : t('vehicles.form.max_distance.help') %></p>
+    </div>
+  </div>
   <div id="vehicle_usage_set_rest_input" class="form-group">
     <label class="sr-only" for="vehicle_usage_set_rest_duration"><%= t 'activerecord.attributes.vehicle_usage_set.rest_duration' %></label>
     <label class="sr-only" for="vehicle_usage_set_store_rest"><%= t 'activerecord.attributes.vehicle_usage_set.store_rest' %></label>

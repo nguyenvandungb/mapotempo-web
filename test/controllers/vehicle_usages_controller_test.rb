@@ -27,7 +27,7 @@ class VehicleUsagesControllerTest < ActionController::TestCase
   end
 
   test 'should update vehicle_usage' do
-    patch :update, id: @vehicle_usage, vehicle_usage: {vehicle: {capacities: {'1' => 123, '2' => 456}, color: @vehicle_usage.vehicle.color, consumption: @vehicle_usage.vehicle.consumption, emission: @vehicle_usage.vehicle.emission, name: @vehicle_usage.vehicle.name, router_options: {motorway: 'true', trailers: 2, weight: 10, width: '3,55', hazardous_goods: 'gas'}}, open: @vehicle_usage.open}
+    patch :update, id: @vehicle_usage, vehicle_usage: {vehicle: {capacities: {'1' => 123, '2' => 456}, color: @vehicle_usage.vehicle.color, consumption: @vehicle_usage.vehicle.consumption, emission: @vehicle_usage.vehicle.emission, name: @vehicle_usage.vehicle.name, max_distance: 200, router_options: {motorway: 'true', trailers: 2, weight: 10, width: '3,55', hazardous_goods: 'gas'}}, open: @vehicle_usage.open}
     assert_redirected_to edit_vehicle_usage_path(@vehicle_usage)
     assert_equal [123, 456], @vehicle_usage.vehicle.reload.capacities.values
     # FIXME: replace each assertion by one which checks if hash is included in another
@@ -36,6 +36,25 @@ class VehicleUsagesControllerTest < ActionController::TestCase
     assert @vehicle_usage.vehicle.router_options['trailers'] = '2'
     assert @vehicle_usage.vehicle.router_options['width'] = '3.55'
     assert @vehicle_usage.vehicle.router_options['hazardous_goods'] = 'gas'
+    assert @vehicle_usage.vehicle['max_distance'] = '200'
+  end
+
+  test 'should store max_distance as an integer by converting miles or kms into meters' do
+    [{ prefered_unit: 'mi', value: 59 }, { prefered_unit: 'km', value: 94.951 }].each do |obj|
+      users(:user_one).update(prefered_unit: obj[:prefered_unit])
+      sign_out users(:user_one)
+      sign_in users(:user_one)
+      patch :update, id: @vehicle_usage, vehicle_usage: { vehicle: {max_distance: obj[:value] || nil} }
+      assert_equal 94951, @vehicle_usage.vehicle.max_distance
+    end
+  end
+
+  test 'should not update max_distance if null or not given' do
+    [{ max_distance: nil }, {}].each do |max_distance_param|
+      @vehicle_usage.vehicle.update(max_distance_param)
+      patch :update, id: @vehicle_usage, vehicle_usage: { vehicle: max_distance_param }
+      assert_equal nil, @vehicle_usage.vehicle.max_distance
+    end
   end
 
   test 'should update vehicle_usage with default close' do

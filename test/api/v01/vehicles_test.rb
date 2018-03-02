@@ -48,6 +48,7 @@ class V01::VehiclesTest < ActiveSupport::TestCase
 
   test 'should update a vehicle' do
     @vehicle.name = 'new name'
+    @vehicle.max_distance = 60
     put api(@vehicle.id), @vehicle.attributes.merge({'capacities' => [{deliverable_unit_id: 1, quantity: 30}]}).to_json, 'CONTENT_TYPE' => 'application/json'
     assert last_response.ok?, last_response.body
 
@@ -104,7 +105,7 @@ class V01::VehiclesTest < ActiveSupport::TestCase
       assert_difference('Vehicle.count', 1) do
         assert_difference('VehicleUsage.count', customer.vehicle_usage_sets.length) do
           assert_difference('Route.count', customer.plannings.length) do
-            post api, { ref: 'new', name: 'Vh1', open: '10:00', store_start_id: stores(:store_zero).id, store_stop_id: stores(:store_zero).id, customer_id: customers(:customer_one).id, color: '#bebeef', capacities: [{deliverable_unit_id: 1, quantity: 30}] }, as: :json
+            post api, { ref: 'new', name: 'Vh1', open: '10:00', store_start_id: stores(:store_zero).id, store_stop_id: stores(:store_zero).id, customer_id: customers(:customer_one).id, color: '#bebeef', max_distance: 60, capacities: [{deliverable_unit_id: 1, quantity: 30}] }, as: :json
             assert last_response.created?, last_response.body
             vehicle = JSON.parse last_response.body
             assert_equal '#bebeef', vehicle['color']

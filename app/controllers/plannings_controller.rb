@@ -412,6 +412,7 @@ class PlanningsController < ApplicationController
       :out_of_capacity,
       :out_of_drive_time,
       :out_of_work_time,
+      :out_of_max_distance,
       :status,
       :eta,
 

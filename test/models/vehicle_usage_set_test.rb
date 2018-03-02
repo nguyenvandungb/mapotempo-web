@@ -14,7 +14,7 @@ class VehicleUsageSetTest < ActiveSupport::TestCase
   end
 
   test 'should save' do
-    vehicle_usage_set = customers(:customer_one).vehicle_usage_sets.build(name: '1')
+    vehicle_usage_set = customers(:customer_one).vehicle_usage_sets.build(name: '1', max_distance: 200000)
     vehicle_usage_set.save!
   end
 

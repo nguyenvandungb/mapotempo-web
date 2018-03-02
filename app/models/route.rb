@@ -100,6 +100,7 @@ class Route < ApplicationRecord
     self.stop_no_path = false
     self.stop_out_of_drive_time = nil
     self.stop_out_of_work_time = nil
+    self.stop_out_of_max_distance = nil
     self.emission = 0
     self.start = self.end = nil
     last_lat, last_lng = nil, nil
@@ -215,9 +216,11 @@ class Route < ApplicationRecord
 
             stop.out_of_drive_time = stop.time > vehicle_usage.default_close
             stop.out_of_work_time = vehicle_usage.outside_default_work_time?(self.start, stop.time)
+            max_distance = vehicle_usage.vehicle.max_distance || planning.vehicle_usage_set.max_distance
+            stop.out_of_max_distance = max_distance ? self.distance > max_distance : false
           end
         else
-          stop.active = stop.out_of_capacity = stop.out_of_drive_time = stop.out_of_window = stop.no_path = stop.out_of_work_time = false
+          stop.active = stop.out_of_capacity = stop.out_of_drive_time = stop.out_of_window = stop.no_path = stop.out_of_work_time = stop.out_of_max_distance = false
           stop.distance = stop.time = stop.wait_time = nil
         end
       }
@@ -257,6 +260,8 @@ class Route < ApplicationRecord
       self.geojson_tracks = geojson_tracks unless options[:no_geojson]
       self.stop_out_of_drive_time = self.end > vehicle_usage.default_close
       self.stop_out_of_work_time = vehicle_usage.outside_default_work_time?(self.start, self.end)
+      max_distance = vehicle_usage.vehicle.max_distance || planning.vehicle_usage_set.max_distance
+      self.stop_out_of_max_distance = max_distance ? self.distance > max_distance : false
       self.emission = vehicle_usage.vehicle.emission.nil? || vehicle_usage.vehicle.consumption.nil? ? nil : self.distance / 1000 * vehicle_usage.vehicle.emission * vehicle_usage.vehicle.consumption / 100
 
       [stops_sort, stops_drive_time, stops_time_windows]
@@ -442,7 +447,7 @@ class Route < ApplicationRecord
         stops.select(:no_path).where(type: 'StopVisit', no_path: true).count > 0))
   end
 
-  [:out_of_window, :out_of_capacity, :out_of_drive_time, :out_of_work_time].each do |s|
+  [:out_of_window, :out_of_capacity, :out_of_drive_time, :out_of_work_time, :out_of_max_distance].each do |s|
     define_method "#{s}" do
       vehicle_usage_id && (respond_to?("stop_#{s}") && send("stop_#{s}") ||
         if stops.loaded?

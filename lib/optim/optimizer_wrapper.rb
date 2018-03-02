@@ -83,6 +83,7 @@ class OptimizerWrapper
             speed_multiplier_area: vehicle[:speed_multiplier_areas] ? vehicle[:speed_multiplier_areas].map{ |a| a[:speed_multiplicator_area] }.join('|') : nil,
             timewindow: {start: vehicle[:open], end: vehicle[:close]},
             duration: vehicle[:work_time],
+            distance: vehicle[:max_distance],
             start_point_id: vehicle[:stores].include?(:start) ? "p#{shift_stores + services.size}" : nil,
             end_point_id: vehicle[:stores].include?(:stop) ? "p#{vehicle[:stores].size - 1 + shift_stores + services.size}" : nil,
             cost_fixed: 0,

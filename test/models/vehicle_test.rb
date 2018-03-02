@@ -19,7 +19,7 @@ class VehicleTest < ActiveSupport::TestCase
   end
 
   test 'should save' do
-    vehicle = customers(:customer_one).vehicles.build(name: '1')
+    vehicle = customers(:customer_one).vehicles.build(name: '1', max_distance: 200)
     vehicle.save!
   end
 
@@ -132,6 +132,15 @@ class VehicleTest < ActiveSupport::TestCase
     vehicle.reload
     assert vehicle.vehicle_usages[0].routes[-1].outdated
     assert_equal 12.3, Vehicle.where(name: :vehicle_one).first.capacities[customers(:customer_one).deliverable_units[0].id]
+  end
+
+  test 'should update outdated for max_distance' do
+    vehicle = vehicles(:vehicle_one)
+    assert_not vehicle.vehicle_usages[0].routes[-1].outdated
+    vehicle.max_distance = 3000
+    vehicle.save!
+    vehicle.reload
+    assert vehicle.vehicle_usages[0].routes[-1].outdated
   end
 
   test 'should update outdated for empty capacity' do

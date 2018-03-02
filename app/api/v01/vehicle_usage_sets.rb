@@ -24,7 +24,7 @@ class V01::VehicleUsageSets < Grape::API
     def vehicle_usage_set_params
       p = ActionController::Parameters.new(params)
       p = p[:vehicle_usage_set] if p.key?(:vehicle_usage_set)
-      p.permit(:name, :open, :close, :store_start_id, :store_stop_id, :service_time_start, :service_time_end, :work_time, :rest_start, :rest_stop, :rest_duration, :store_rest_id)
+      p.permit(:name, :open, :close, :store_start_id, :store_stop_id, :service_time_start, :service_time_end, :work_time, :rest_start, :rest_stop, :rest_duration, :store_rest_id, :max_distance)
     end
   end
 
@@ -85,6 +85,7 @@ class V01::VehicleUsageSets < Grape::API
       optional :rest_start, type: Integer, documentation: { type: 'string', desc: 'Schedule time (HH:MM)' }, coerce_with: ->(value) { ScheduleType.new.type_cast(value) }
       optional :rest_stop, type: Integer, documentation: { type: 'string', desc: 'Schedule time (HH:MM)' }, coerce_with: ->(value) { ScheduleType.new.type_cast(value) }
       optional :rest_duration, type: Integer, documentation: { type: 'string', desc: 'Schedule time (HH:MM)' }, coerce_with: ->(value) { ScheduleType.new.type_cast(value) }
+      optional :max_distance, type: Integer, documentation: { type: 'integer', desc: 'Maximum achievable distance in meters' }
     end
     post do
       vehicle_usage_set = current_customer.vehicle_usage_sets.build(vehicle_usage_set_params)
@@ -116,6 +117,7 @@ class V01::VehicleUsageSets < Grape::API
       optional :rest_start, type: Integer, documentation: { type: 'string', desc: 'Schedule time (HH:MM)' }, coerce_with: ->(value) { ScheduleType.new.type_cast(value) }
       optional :rest_stop, type: Integer, documentation: { type: 'string', desc: 'Schedule time (HH:MM)' }, coerce_with: ->(value) { ScheduleType.new.type_cast(value) }
       optional :rest_duration, type: Integer, documentation: { type: 'string', desc: 'Schedule time (HH:MM)' }, coerce_with: ->(value) { ScheduleType.new.type_cast(value) }
+      optional :max_distance, type: Integer, documentation: { type: 'integer', desc: 'Maximum achievable distance in meters' }
     end
     put ':id' do
       vehicle_usage_set = current_customer.vehicle_usage_sets.find(params[:id])

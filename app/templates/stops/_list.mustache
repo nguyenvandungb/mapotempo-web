@@ -114,6 +114,9 @@
           {{#route_out_of_work_time}}
             <li title="{{#i18n}}plannings.edit.error.out_of_work_time{{/i18n}}"><i class="fa fa-repeat fa-fw"></i> {{#i18n}}plannings.edit.error.out_of_work_time{{/i18n}}</li>
           {{/route_out_of_work_time}}
+          {{#route_out_of_max_distance}}
+            <li title="{{#i18n}}plannings.edit.error.out_of_max_distance{{/i18n}}"><i class="fa fa-truck fa-fw"></i> {{#i18n}}plannings.edit.error.out_of_max_distance{{/i18n}}</li>
+          {{/route_out_of_max_distance}}
           {{#route_no_path}}
             <li title="{{#i18n}}plannings.edit.error.no_path_help{{/i18n}}"><i class="fa fa-road fa-fw"></i> {{#i18n}}plannings.edit.error.no_path{{/i18n}}</li>
           {{/route_no_path}}
@@ -185,6 +188,9 @@
           {{#out_of_work_time}}
             <i class="fa fa-repeat fa-fw" title="{{#i18n}}plannings.edit.error.out_of_work_time_help{{/i18n}}"></i>
           {{/out_of_work_time}}
+          {{#out_of_max_distance}}
+            <i class="fa fa-truck fa-fw" title="{{#i18n}}plannings.edit.error.out_of_max_distance_help{{/i18n}}"></i>
+          {{/out_of_max_distance}}
           {{#no_path}}
             <i class="fa fa-road fa-fw" title="{{#i18n}}plannings.edit.error.no_path_help{{/i18n}}"></i>
           {{/no_path}}
@@ -256,6 +262,9 @@
           {{#stop_out_of_work_time}}
             <i class="fa fa-repeat fa-fw" title="{{#i18n}}plannings.edit.error.out_of_work_time_help{{/i18n}}"></i>
           {{/stop_out_of_work_time}}
+          {{#stop_out_of_max_distance}}
+            <i class="fa fa-truck fa-fw" title="{{#i18n}}plannings.edit.error.out_of_max_distance_help{{/i18n}}"></i>
+          {{/stop_out_of_max_distance}}
           {{#no_path}}
             <i class="fa fa-road fa-fw" title="{{#i18n}}plannings.edit.error.no_path_help{{/i18n}}"></i>
           {{/no_path}}

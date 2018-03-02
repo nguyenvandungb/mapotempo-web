@@ -47,6 +47,7 @@ class V01::Entities::VehicleWithoutVehicleUsage < Grape::Entity
   expose(:router_dimension, documentation: { type: String, values: ::Router::DIMENSION.keys })
   expose(:router_options, using: V01::Entities::RouterOptions, documentation: { type: V01::Entities::RouterOptions })
   expose(:speed_multiplicator, documentation: { type: Float })
+  expose(:max_distance, documentation: { type: Integer, desc: 'Maximum achievable distance in meters' })
 
   # Devices
   # add auth for : orange_id, teksat_id, tomtom_id

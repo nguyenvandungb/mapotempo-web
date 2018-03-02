@@ -102,6 +102,7 @@ class VehicleUsagesController < ApplicationController
                                                            :router_id,
                                                            :router_dimension,
                                                            :speed_multiplicator,
+                                                           :max_distance,
                                                            capacities: current_user.customer.deliverable_units.map { |du| du.id.to_s },
                                                            router_options: [
                                                                :time,
@@ -130,6 +131,7 @@ class VehicleUsagesController < ApplicationController
     if parameters.key?(:vehicle)
       parameters[:vehicle_attributes] = parameters[:vehicle]
       parameters[:vehicle_attributes][:devices] = {} unless parameters[:vehicle_attributes].key?(:devices)
+      parameters[:vehicle_attributes][:max_distance] = DistanceUnits.distance_to_meters(parameters[:vehicle_attributes][:max_distance], @current_user.prefered_unit) if parameters[:vehicle_attributes].key?(:max_distance)
       parameters.except(:vehicle)
     else
       parameters

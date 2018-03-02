@@ -46,6 +46,7 @@ class V01::VehicleUsageSetsTest < ActiveSupport::TestCase
   test 'should create a vehicle_usage_set' do
     assert_difference('VehicleUsageSet.count', 1) do
       @vehicle_usage_set.name = 'new name'
+      @vehicle_usage_set.max_distance = 60
       post api(), @vehicle_usage_set.attributes
       assert last_response.created?, last_response.body
     end
@@ -53,7 +54,7 @@ class V01::VehicleUsageSetsTest < ActiveSupport::TestCase
 
   test 'should update a vehicle_usage_set' do
     @vehicle_usage_set.name = 'new name'
-    put api(@vehicle_usage_set.id), name: 'riri'
+    put api(@vehicle_usage_set.id), name: 'riri', max_distance: 60
     assert last_response.ok?, last_response.body
 
     get api(@vehicle_usage_set.id)
@@ -62,7 +63,7 @@ class V01::VehicleUsageSetsTest < ActiveSupport::TestCase
   end
 
   test 'should update a vehicle_usage_set store with null value' do
-    put api(@vehicle_usage_set.id), store_start_id: nil, store_stop_id: nil, store_rest_id: nil
+    put api(@vehicle_usage_set.id), store_start_id: nil, store_stop_id: nil, store_rest_id: nil, max_distance: nil
     assert last_response.ok?, last_response.body
 
     get api(@vehicle_usage_set.id)

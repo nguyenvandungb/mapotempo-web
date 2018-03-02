@@ -33,6 +33,21 @@
             <p class="help-block"><%= t 'vehicles.form.emissions.help' %> - <%= current_user.prefered_unit == 'mi' ? t('vehicles.form.consumption.help_miles') : t('vehicles.form.consumption.help') %></p>
           </div>
         </div>
+        <div id="vehicle_usage_vehicle_max_distance" class="form-group">
+          <label class="sr-only" for="vehicle_usage_vehicle_max_distance"><%= t 'activerecord.attributes.vehicle.max_distance' %></label>
+          <label class="col-md-2 control-label"><%= t 'activerecord.attributes.vehicle.max_distance' %></label>
+          <div class="col-md-6">
+            <div class="input-group">
+              <%= number_field 'vehicle_usage[vehicle]',
+                :max_distance,
+                value: distance_in_user_unit(@vehicle_usage.vehicle.max_distance, @current_user.prefered_unit),
+                placeholder: @vehicle_usage.vehicle_usage_set.max_distance ? t('customers.form.max_distance_default', n: distance_in_user_unit(@vehicle_usage.vehicle_usage_set.max_distance, @current_user.prefered_unit)) : '',
+                step: 'any', class: 'form-control', min: 0 %>
+              <span class="input-group-addon"><%= current_user.prefered_unit == 'mi' ? t('all.unit.miles') : t('all.unit.kms') %></span>
+            </div>
+            <p class="help-block"><%= current_user.prefered_unit == 'mi' ? t('vehicles.form.max_distance.help_miles') : t('vehicles.form.max_distance.help') %></p>
+          </div>
+        </div>
         <%= twitter_bootstrap_fields_for 'vehicle_usage[vehicle][capacities]', @vehicle_usage.vehicle.capacities, layout: :horizontal do |capacity| %>
           <div id="vehicle_usage_vehicle_capacity_input" class="form-group <%= 'has-error' if @vehicle_usage.vehicle.errors.messages[:capacities].present? %>">
             <label class="col-md-2 control-label"><%= t 'vehicles.form.capacities.label' %></label>

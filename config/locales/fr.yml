@@ -381,6 +381,7 @@ fr:
         confirmed_at: Date de confirmation
         prefered_unit: Choix unité
       vehicle:
+        max_distance: Distance maximale
         name: Nom
         emission: Émission
         consumption: Consommation
@@ -774,6 +775,7 @@ fr:
     delete_vehicle:
       success: Véhicule supprimé avec succès
     form:
+      max_distance_default: '%{n} (valeur par défaut)'
       name: Compte
       default_value: Valeurs par défaut
       outputs: Diffusion des tournées
@@ -1616,6 +1618,8 @@ fr:
         out_of_drive_time_help: Planifié en dehors des amplitudes horaires du véhicule
         out_of_work_time: Hors durée de travail
         out_of_work_time_help: Planifié en dehors de la durée de travail du chauffeur (service compris)
+        out_of_max_distance: Distance maximale possible dépassée
+        out_of_max_distance_help: Distance maximale possible dépassée
         no_path: Destination inaccessible
         no_path_help: 'Destination inaccessible : pas de voie d''accès ou itinéraire
           pour aller ou partir de la destination'
@@ -1979,6 +1983,9 @@ fr:
         optionnal: optionnel
         deprecated: déprécié
     form:
+      max_distance:
+        help: Distance maximale réalisable en kilomètres
+        help_miles: Distance maximale réalisable en miles
       ref:
         help: Référence libre
       emissions:

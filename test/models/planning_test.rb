@@ -613,6 +613,20 @@ class PlanningTest < ActiveSupport::TestCase
     end
   end
 
+  test "shoud transfer vehicle's max_distance (distance) during optimization" do
+    planning = plannings(:planning_one)
+    uri_template = Addressable::Template.new("#{Mapotempo::Application.config.optimize.url}/vrp/submit.json")
+    stub_request(:any, uri_template)
+      .with(body: /distance/)
+      .to_return(File.new(File.expand_path('../../web_mocks/', __FILE__) + '/optimizer/optimize.json').read)
+
+    planning.optimize(planning.routes, false,) do |positions, services, vehicles|
+      assert vehicles.collect{ |s| s.key? :max_distance }.uniq.first # All Vehicles should have a max_distance key
+      # Given parameters in OptimizerWrapper::optimize should contain distance
+      Mapotempo::Application.config.optimize.optimize(positions, services, vehicles, stop_soft_upper_bound: 0.3)
+    end
+  end
+
   test 'should return all or only active stops after optimization' do
     planning = plannings(:planning_one)
     inactive_stop = planning.routes.third.stops.second

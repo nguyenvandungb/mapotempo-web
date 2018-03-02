@@ -44,18 +44,6 @@ COMMENT ON EXTENSION hstore IS 'data type for storing sets of (key, value) pairs
 
 SET search_path = public, pg_catalog;
 
---
--- Name: jsonb_to_hstore(json); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION jsonb_to_hstore(json) RETURNS hstore
-    LANGUAGE sql IMMUTABLE STRICT
-    AS $_$
-        SELECT hstore(array_agg(key), array_agg(value))
-        FROM json_each_text($1)
-      $_$;
-
-
 SET default_tablespace = '';
 
 SET default_with_oids = false;
@@ -651,7 +639,8 @@ CREATE TABLE routes (
     visits_duration integer,
     wait_time integer,
     drive_time integer,
-    stop_out_of_work_time boolean
+    stop_out_of_work_time boolean,
+    stop_out_of_max_distance boolean
 );
 
 
@@ -708,6 +697,7 @@ CREATE TABLE stops (
     "time" integer,
     no_path boolean,
     out_of_work_time boolean,
+    out_of_max_distance boolean,
     CONSTRAINT check_visit_id CHECK ((((type)::text <> 'StopVisit'::text) OR (visit_id IS NOT NULL)))
 );
 
@@ -924,7 +914,8 @@ CREATE TABLE vehicle_usage_sets (
     rest_duration integer,
     service_time_start integer,
     service_time_end integer,
-    work_time integer
+    work_time integer,
+    max_distance integer
 );
 
 
@@ -1012,7 +1003,8 @@ CREATE TABLE vehicles (
     router_dimension integer,
     capacities hstore,
     router_options jsonb DEFAULT '{}'::jsonb NOT NULL,
-    devices jsonb DEFAULT '{}'::jsonb NOT NULL
+    devices jsonb DEFAULT '{}'::jsonb NOT NULL,
+    max_distance integer
 );
 
 
@@ -2739,3 +2731,11 @@ INSERT INTO schema_migrations (version) VALUES ('20180219090520');
 INSERT INTO schema_migrations (version) VALUES ('20180226094910');
 
 INSERT INTO schema_migrations (version) VALUES ('20180223101253');
+
+INSERT INTO schema_migrations (version) VALUES ('20180302113103');
+
+INSERT INTO schema_migrations (version) VALUES ('20180306105541');
+
+INSERT INTO schema_migrations (version) VALUES ('20180306111703');
+
+INSERT INTO schema_migrations (version) VALUES ('20180306134209');

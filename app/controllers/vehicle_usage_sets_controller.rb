@@ -156,7 +156,7 @@ class VehicleUsageSetsController < ApplicationController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def vehicle_usage_set_params
-    params.require(:vehicle_usage_set).permit(:name,
+    parameters = params.require(:vehicle_usage_set).permit(:name,
                                               :open,
                                               :close,
                                               :store_start_id,
@@ -167,7 +167,10 @@ class VehicleUsageSetsController < ApplicationController
                                               :store_rest_id,
                                               :service_time_start,
                                               :service_time_end,
-                                              :work_time)
+                                              :work_time,
+                                              :max_distance)
+    parameters[:max_distance] = DistanceUnits.distance_to_meters(parameters[:max_distance], @current_user.prefered_unit) if parameters.key?(:max_distance)
+    parameters
   end
 
   def import_csv_params
