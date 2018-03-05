@@ -84,7 +84,7 @@
           <% if stop.ref %>
             (<span class="ref"><%= stop.ref %></span>)
             <% if route.planning.customer.print_barcode %>
-              <div class="ref barcode barcode_<%= route.planning.customer.print_barcode %>"><%= barcode(route.planning.customer.print_barcode, stop.ref) %></div>
+              <%= barcode(route.planning.customer.print_barcode, stop.ref) %>
             <% end %>
           <% end %>
           <br/>
