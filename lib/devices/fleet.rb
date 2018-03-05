@@ -96,6 +96,7 @@ class Fleet < DeviceBase
       user_email = customer.users.first.email.gsub(/@/, '+admin@')
       company_params = {
         name: customer.name,
+        default_language: I18n.locale,
         user_email: user_email
       }
 
