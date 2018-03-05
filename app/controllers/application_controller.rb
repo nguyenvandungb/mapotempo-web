@@ -213,7 +213,7 @@ class ApplicationController < ActionController::Base
     params[:router_options].each { |key, value|
       if value == 'true' || value == 'false'
         params[:router_options][key] = ValueToBoolean.value_to_boolean(value)
-      elsif (value.to_f != 0.0)
+      elsif (value.respond_to?(:to_f) && value.to_f != 0.0)
         params[:router_options][key] = value.to_f
       end
     }
