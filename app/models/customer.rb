@@ -52,7 +52,7 @@ class Customer < ApplicationRecord
   include LocalizedAttr # To use to_delocalized_decimal method
 
   nilify_blanks
-  auto_strip_attributes :name, :print_header, :default_country
+  auto_strip_attributes :name, :print_header, :default_country, :print_barcode
 
   include TimeAttr
   attribute :take_over, ScheduleType.new
@@ -90,7 +90,7 @@ class Customer < ApplicationRecord
   before_save :sanitize_print_header, :nilify_router_options_blanks
   before_save :devices_update_vehicles, prepend: true
   before_validation :check_router_options_format
-  validates :print_barcode, inclusion: { in: Customer::PRINT_BARCODE, allow_nil: true }
+  validates_inclusion_of :print_barcode, in: Customer::PRINT_BARCODE, allow_nil: true
 
   include RefSanitizer
 
