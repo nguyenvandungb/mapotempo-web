@@ -254,7 +254,7 @@ class Fleet < DeviceBase
         mission_type: visit ? 'mission' : 'rest',
         external_ref: generate_mission_id(destination, planning_date(route.planning)),
         name: destination.name,
-        date: p_time(route, destination.time).strftime('%FT%T.%L%:z'),
+        date: destination.time ? p_time(route, destination.time).strftime('%FT%T.%L%:z') : nil,
         location: {
           lat: destination.lat,
           lon: destination.lng
