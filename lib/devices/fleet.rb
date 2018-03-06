@@ -223,6 +223,7 @@ class Fleet < DeviceBase
       external_ref: generate_store_id(departure, planning_date(route.planning), type: 'departure'),
       name: departure.name,
       date: p_time(route, route.start).strftime('%FT%T.%L%:z'),
+      duration: route.vehicle_usage.default_service_time_start,
       location: {
         lat: departure.lat,
         lon: departure.lng
@@ -255,6 +256,7 @@ class Fleet < DeviceBase
         external_ref: generate_mission_id(destination, planning_date(route.planning)),
         name: destination.name,
         date: destination.time ? p_time(route, destination.time).strftime('%FT%T.%L%:z') : nil,
+        duration: destination.duration,
         location: {
           lat: destination.lat,
           lon: destination.lng
@@ -267,7 +269,6 @@ class Fleet < DeviceBase
         ].compact.join("\r\n\r\n").strip : nil,
         phone: visit ? destination.phone_number : nil,
         reference: visit ? destination.visit.destination.ref : nil,
-        duration: destination.duration,
         address: {
           city: destination.city,
           country: destination.country || customer.default_country,
@@ -286,6 +287,7 @@ class Fleet < DeviceBase
       external_ref: generate_store_id(arrival, planning_date(route.planning), type: 'arrival'),
       name: arrival.name,
       date: p_time(route, route.end).strftime('%FT%T.%L%:z'),
+      duration: route.vehicle_usage.default_service_time_end,
       location: {
         lat: arrival.lat,
         lon: arrival.lng
