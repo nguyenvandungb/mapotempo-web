@@ -2,23 +2,29 @@
 <%= twitter_bootstrap_form_for @planning, options do |f| %>
   <%= render 'shared/error_messages', model: @planning %>
 
-  <%= f.text_field :name, required: true %>
+  <div title="<%= t('activerecord.attributes.planning.name') %>">
+    <%= f.text_field :name, required: true %>
+  </div>
 
   <% if @planning.customer.vehicle_usage_sets.size > 1 %>
-    <%= f.collection_select :vehicle_usage_set_id, @planning.id ? t('activerecord.attributes.planning.vehicle_usage_set_small') : [], @planning.customer.vehicle_usage_sets, :id, :name, {}, {required: true} %>
+    <div title="<%= t('activerecord.attributes.planning.vehicle_usage_set') %>">
+      <%= f.collection_select :vehicle_usage_set_id, @planning.id ? t('activerecord.attributes.planning.vehicle_usage_set_small') : [], @planning.customer.vehicle_usage_sets, :id, :name, {}, {required: true} %>
+    </div>
   <% else %>
     <%= f.hidden_field :vehicle_usage_set_id, value: @planning.customer.vehicle_usage_sets[0].id %>
   <% end %>
 
-  <% if @planning.customer.enable_references %>
-    <% if @planning.id %>
-      <%= f.text_field :ref, t('activerecord.attributes.planning.ref_small') %>
-    <% else %>
-      <%= f.text_field :ref do %>
-        <p class="help-block"><%= t '.ref_help' %></p>
+  <div title="<%= t('activerecord.attributes.planning.ref') %>">
+    <% if @planning.customer.enable_references %>
+      <% if @planning.id %>
+        <%= f.text_field :ref, t('activerecord.attributes.planning.ref_small') %>
+      <% else %>
+        <%= f.text_field :ref do %>
+          <p class="help-block"><%= t '.ref_help' %></p>
+        <% end %>
       <% end %>
     <% end %>
-  <% end %>
+  </div>
 
   <% if @planning.customer.enable_orders && @planning.order_array %>
     <%= f.select :order_array_id, t('.order_array'), options_for_select(@planning.customer.order_arrays.map{ |oa| [oa.name, oa.id] }, @planning.order_array.id), {div_class: 'col-lg-8 col-md-8'}, {disabled: true} do %>
@@ -26,7 +32,9 @@
     <% end %>
   <% end %>
 
-  <%= f.text_field :date, { placeholder: t('.default_date'), value: @planning.date ? l(@planning.date.to_time, format: :datepicker) : nil, input_group: content_tag('i', '', {class: 'fa fa-calendar fa-fw'})} %>
+  <div title="<%= t('activerecord.attributes.planning.date') %>">
+    <%= f.text_field :date, { placeholder: t('.default_date'), value: @planning.date ? l(@planning.date.to_time, format: :datepicker) : nil, input_group: content_tag('i', '', {class: 'fa fa-calendar fa-fw'})} %>
+  </div>
 
   <!--<% unless @planning.id %>-->
     <!--<div class="form-group">-->

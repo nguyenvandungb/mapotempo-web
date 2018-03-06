@@ -4,7 +4,9 @@ options.merge!(default_div_class: 'col-lg-10 col-md-10') if @zoning.id %>
 <%= twitter_bootstrap_form_for @zoning, options do |f| %>
   <%= render 'shared/error_messages', model: @zoning %>
   <% if @manage_zoning.include? :edit %>
-    <%= f.text_field :name, required: true %>
+    <div title="<%= t('activerecord.attributes.zoning.name') %>">
+      <%= f.text_field :name, required: true %>
+    </div>
   <% end %>
   <% if @manage_zoning.include?(:edit) || @manage_zoning.include?(:organize) %>
     <% if @plannings && !@plannings.empty? %>
