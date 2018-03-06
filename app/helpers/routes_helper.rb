@@ -78,6 +78,6 @@ module RoutesHelper
     }.join('') +
     "</div>").html_safe
   rescue Exception => e
-    "<span class=\"ui-state-error\">#{I18n.t('errors.routes.bad_bercode_char')}</span>".html_safe
+    "<span class=\"ui-state-error\">#{I18n.t('errors.routes.bad_barcode_char')}</span>".html_safe
   end
 end

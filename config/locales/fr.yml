@@ -641,6 +641,8 @@ fr:
       automatic_insert_no_result: Affectation des arrêts impossible
       job_in_progress: Opération impossible pour le moment, une tâche de fond (optimisation)
         est en cours d'execution
+    routes:
+      bad_barcode_char: Les données du code barre contiennent un caractère non pris en charge
   import:
     csv:
       line: Ligne %{s}
