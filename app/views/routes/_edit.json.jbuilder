@@ -65,7 +65,7 @@ if route.vehicle_usage_id
         }
       }
     end
-    json.status_any status_uniq.size > 0 || (!route.vehicle_usage.vehicle.devices[:tomtom_id].blank? && route.planning.customer.device.configured?(:tomtom))
+    json.status_any status_uniq.size > 0 || route.planning.customer.device.available_stop_status?
   end
 end
 json.store_start do
