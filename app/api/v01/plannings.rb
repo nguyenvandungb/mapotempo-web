@@ -86,18 +86,14 @@ class V01::Plannings < Grape::API
     desc 'Delete multiple plannings.',
       nickname: 'deletePlannings'
     params do
-      optional :ids, type: Array[String], desc: 'Ids separated by comma. You can specify ref (not containing comma) instead of id, in this case you have to add "ref:" before each ref, e.g. ref:ref1,ref:ref2,ref:ref3. If no Id is provided, all objects are deleted.', coerce_with: CoerceArrayString
+      requires :ids, type: Array[String], desc: 'Ids separated by comma. You can specify ref (not containing comma) instead of id, in this case you have to add "ref:" before each ref, e.g. ref:ref1,ref:ref2,ref:ref3.', coerce_with: CoerceArrayString
     end
     delete do
       Route.includes_destinations.scoping do
         Planning.transaction do
-          if params[:ids]
-            current_customer.plannings.select{ |planning|
-              params[:ids].any?{ |s| ParseIdsRefs.match(s, planning) }
-            }.each(&:destroy)
-          else
-            current_customer.plannings.delete_all
-          end
+          current_customer.plannings.select{ |planning|
+            params[:ids].any?{ |s| ParseIdsRefs.match(s, planning) }
+          }.each(&:destroy)
           status 204
         end
       end

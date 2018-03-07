@@ -140,16 +140,9 @@ class V01::PlanningsTest < V01::PlanningsBaseTest
     end
   end
 
-  test 'should destroy multiple plannings with an id list' do
+  test 'should destroy multiple plannings' do
     assert_difference('Planning.count', -2) do
       delete api + "&ids=#{plannings(:planning_one).id},ref:#{plannings(:planning_two).ref}"
-      assert_equal 204, last_response.status, last_response.body
-    end
-  end
-
-  test 'should destroy multiple plannings without any id list' do
-    assert_difference('Planning.count', -2) do
-      delete api
       assert_equal 204, last_response.status, last_response.body
     end
   end

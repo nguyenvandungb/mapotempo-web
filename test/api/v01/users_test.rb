@@ -115,10 +115,5 @@ class V01::UsersTest < ActiveSupport::TestCase
       delete api_admin + "&ids=#{users(:user_one).id},ref:#{users(:user_two).ref}"
       assert_equal 204, last_response.status, last_response.body
     end
-
-    assert_difference('User.count', -2) do
-      delete api_admin
-      assert_equal 204, last_response.status, last_response.body
-    end
   end
 end
