@@ -544,7 +544,7 @@ class Route < ApplicationRecord
     stores_geojson = []
 
     if include_stores
-      stores_geojson = routes.select { |r| r.vehicle_usage? && (!respect_hidden || !r.hidden) }.map(&:vehicle_usage).flat_map { |vu| [vu.default_store_start, vu.default_store_stop, vu.default_store_rest] }.compact.uniq.select(&:position?).map do |store|
+      stores_geojson = routes.select { |r| r.vehicle_usage? }.map(&:vehicle_usage).flat_map { |vu| [vu.default_store_start, vu.default_store_stop, vu.default_store_rest] }.compact.uniq.select(&:position?).map do |store|
         coordinates = [store.lng, store.lat]
         {
           type: 'Feature',

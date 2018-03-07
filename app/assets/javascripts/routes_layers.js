@@ -503,11 +503,11 @@ var RoutesLayer = L.FeatureGroup.extend({
   },
 
   hideRoutes: function(routeIds) {
-    this._removeRoutes(routeIds);
+    this._removeRoutesByIds(routeIds);
   },
 
   refreshRoutes: function(routeIds, routes, geojson) {
-    this._removeRoutes(routeIds);
+    this._removeRoutesByIds(routeIds);
     this.options.routes = routes;
     // FIXME: callback could be used to avoid blink
     this.showRoutes(routeIds, geojson);
@@ -544,9 +544,7 @@ var RoutesLayer = L.FeatureGroup.extend({
         }
       }
     } else {
-      this.clearLayers();
-      this.layersByRoute = {};
-      this.clustersByRoute = {};
+      this._removeAllExceptStores();
     }
   },
 
@@ -799,7 +797,8 @@ var RoutesLayer = L.FeatureGroup.extend({
         marker.properties.route_color = this.options.colorsByRoute[geoJsonPoint.properties.route_id];
 
         if (storeId) {
-          this._removeStore(storeId).push(marker);
+          this._removeStore(storeId);
+          this.markerStores.push(marker);
         } else {
           if (!this.clustersByRoute[routeId]) {
             this.clustersByRoute[routeId] = L.markerClusterGroup(this.markerOptions);
@@ -827,7 +826,7 @@ var RoutesLayer = L.FeatureGroup.extend({
     }
   },
 
-  _removeRoutes: function(routeIds) {
+  _removeRoutesByIds: function(routeIds) {
     routeIds.forEach(function(routeId) {
       if (routeId in this.layersByRoute) {
         this.layersByRoute[routeId].forEach(function(layer) {
@@ -850,7 +849,17 @@ var RoutesLayer = L.FeatureGroup.extend({
       this.removeLayer(this.markerStores[i]);
       delete this.markerStores[i];
     }
+  },
 
-    return this.markerStores;
+  _removeAllExceptStores: function() {
+    var $layers = $(this.getLayers());
+
+    $layers.each(function(index, layer) {
+      if ('properties' in layer && layer.properties.store_id) { return; }
+      this.removeLayer(layer);
+    }.bind(this));
+
+    this.layersByRoute = {};
+    this.clustersByRoute = {};
   }
 });
