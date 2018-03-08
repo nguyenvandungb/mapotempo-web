@@ -13,23 +13,23 @@ class ChangeHstoreToJsonb < ActiveRecord::Migration
       Router.all.each { |router|
         next if router.options.blank? || router.options.empty?
         router = loop_and_assign_typed_values(router, :options)
-        router.save!
+        router.save!(validate: false)
       }
     end
 
-    Customer.without_callback(:save, :before, :update, :validate) do
+    Customer.without_callback(:update, :before, :update_outdated) do
       Customer.all.each { |customer|
         next if customer.router_options.blank? || customer.router_options.empty?
         customer = loop_and_assign_typed_values(customer)
-        customer.save!
+        customer.save!(validate: false)
       }
     end
 
-    Vehicle.without_callback(:save, :before, :update, :validate) do
+    Vehicle.without_callback(:update, :before, :update_outdated) do
       Vehicle.all.each { |vehicle|
         next if vehicle.router_options.blank? || vehicle.router_options.empty?
         vehicle = loop_and_assign_typed_values(vehicle)
-        vehicle.save!
+        vehicle.save!(validate: false)
       }
     end
   end
@@ -71,7 +71,7 @@ class ChangeHstoreToJsonb < ActiveRecord::Migration
   def loop_and_assign_typed_values(entity, method = :router_options)
     entity.send(method).each do |key, value|
       if (value == 'true' || value == 'false')
-        value = (value == 'true') 
+        value = (value == 'true')
       elsif (value.to_f != 0.0)
         value = value.to_f
       else
