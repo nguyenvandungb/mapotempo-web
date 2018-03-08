@@ -157,9 +157,11 @@
   }
 
   .barcode {
-    margin-right: 2em;
-    margin-left: 2em;
+    padding-right: 2em;
+    padding-left: 2em;
     white-space: nowrap;
+    background-color: white;
+    display: inline-block;
 
     .barcode_x {
       height: 4em;
