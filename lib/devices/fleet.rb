@@ -257,6 +257,8 @@ class Fleet < DeviceBase
         name: destination.name,
         date: destination.time ? p_time(route, destination.time).strftime('%FT%T.%L%:z') : nil,
         duration: destination.duration,
+        planned_travel_time: destination.drive_time,
+        planned_distance: destination.distance,
         location: {
           lat: destination.lat,
           lon: destination.lng
@@ -288,6 +290,8 @@ class Fleet < DeviceBase
       name: arrival.name,
       date: p_time(route, route.end).strftime('%FT%T.%L%:z'),
       duration: route.vehicle_usage.default_service_time_end,
+      planned_travel_time: route.stop_drive_time,
+      planned_distance: route.stop_distance,
       location: {
         lat: arrival.lat,
         lon: arrival.lng
