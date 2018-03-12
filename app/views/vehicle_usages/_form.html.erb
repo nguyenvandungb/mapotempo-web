@@ -15,6 +15,17 @@
             <p class="help-block"><%= t 'vehicles.form.ref.help' %></p>
           <% end %>
         <% end %>
+        <div class="form-group">
+          <label class="col-md-2 control-label" for="vehicle_usage_vehicle_color">
+            <%= t("activerecord.attributes.vehicle.color") %>
+          </label>
+          <div class="col-md-6 input-append">
+            <div class="input-group">
+              <%= select_tag 'vehicle_usage[vehicle][color]', options_for_select((COLORS_TABLE + [customised_color_verification(@vehicle_usage.vehicle[:color])]).compact.uniq, @vehicle_usage.vehicle[:color]), include_blank: '#000000' %> <i class="fa fa-paint-brush" id="customised_color_picker" title="<%= t('activerecord.attributes.vehicle.customised_color') %>"></i>
+              <%= color_field :vehicle, :color, option = { value: customised_color_verification(@vehicle_usage.vehicle[:color]), id: 'color_picker', name: 'fff' } %>
+            </div>
+          </div>
+        </div>
         <%= f.text_field :name, required: true %>
         <%= f.text_field :contact_email, {input_group: '@'} do %>
           <p class="help-block"><%= t 'vehicles.form.contact_email.help' %></p>
@@ -63,6 +74,11 @@
             </div>
           </div>
         <% end %>
+
+        <%= f.select :tag_ids, t('activerecord.attributes.vehicle.tag_ids'), options_for_select(@vehicle_usage.vehicle.customer.tags.map{ |tag| [tag.label, tag.id, {'data-color' => tag.color && tag.color[1..-1], 'data-icon' => tag.icon}]}, @vehicle_usage.vehicle.tags.collect(&:id)), {}, {multiple: true, input_group: content_tag('i', '', class: 'fa fa-tags fa-fw')} do %>
+          <p class="help-block"><%= t('vehicles.form.tags_help') %></p>
+        <% end %>
+
         <div id="vehicle_router_input" class="form-group">
           <label class="col-md-2 control-label" for="vehicle_router"><%= t 'activerecord.attributes.vehicle.router' %></label>
           <div class="col-md-6">
@@ -309,12 +325,6 @@
           </div>
         </div>
 
-        <div>
-          <%= f.select :tag_ids, t('activerecord.attributes.vehicle.tag_ids'), options_for_select(@vehicle_usage.vehicle.customer.tags.map{ |tag| [tag.label, tag.id, {'data-color' => tag.color && tag.color[1..-1], 'data-icon' => tag.icon}]}, @vehicle_usage.vehicle.tags.collect(&:id)), {}, {multiple: true, input_group: content_tag('i', '', class: 'fa fa-tags fa-fw')} do %>
-            <p class="help-block"><%= t('vehicles.form.tags_help') %></p>
-          <% end %>
-        </div>
-
         <%= twitter_bootstrap_fields_for 'vehicle_usage[vehicle][devices]', @vehicle_usage.vehicle, layout: :horizontal do |f| %>
           <% @vehicle_usage.vehicle.customer.device.configured_definitions.each do |key, definition| %>
             <% if definition[:forms].key?(:vehicle) %>
@@ -330,17 +340,6 @@
           <% end %>
         <% end %>
 
-        <div class="form-group">
-          <label class="col-md-2 control-label" for="vehicle_usage_vehicle_color">
-            <%= t("activerecord.attributes.vehicle.color") %>
-          </label>
-          <div class="col-md-6 input-append">
-            <div class="input-group">
-              <%= select_tag 'vehicle_usage[vehicle][color]', options_for_select((COLORS_TABLE + [customised_color_verification(@vehicle_usage.vehicle[:color])]).compact.uniq, @vehicle_usage.vehicle[:color]), include_blank: '#000000' %> <i class="fa fa-paint-brush" id="customised_color_picker" title="<%= t('activerecord.attributes.vehicle.customised_color') %>"></i>
-              <%= color_field :vehicle, :color, option = { value: customised_color_verification(@vehicle_usage.vehicle[:color]), id: 'color_picker', name: 'fff' } %>
-            </div>
-          </div>
-        </div>
       <% end %>
     </div>
   </fieldset>
