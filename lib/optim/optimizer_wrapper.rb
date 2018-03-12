@@ -140,11 +140,7 @@ class OptimizerWrapper
             skills: (use_skills && service[:skills]) ? (all_skills & service[:skills]) : nil
           }.delete_if{ |_, v| !v }
         },
-        relations: [{
-          id: :never_first,
-          type: :never_first,
-          linked_ids: services_with_negative_quantities
-        }],
+        relations: [],
         configuration: {
           preprocessing: {
             max_split_size: options[:max_split_size],
@@ -162,6 +158,11 @@ class OptimizerWrapper
           }
         }
       }
+      vrp[:relations] << {
+        id: :never_first,
+        type: :never_first,
+        linked_ids: services_with_negative_quantities
+      } unless services_with_negative_quantities.empty?
 
       resource_vrp = RestClient::Resource.new(@url + '/vrp/submit.json', timeout: nil)
       json = resource_vrp.post({api_key: @api_key, vrp: vrp}.to_json, content_type: :json, accept: :json) { |response, request, result, &block|
