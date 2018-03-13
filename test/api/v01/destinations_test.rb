@@ -510,6 +510,21 @@ class V01::DestinationsTest < ActiveSupport::TestCase
     end
   end
 
+  test 'should update bulk from json without visit' do
+    assert_no_difference('Destination.count') do
+      assert_difference('Visit.count', -1) do
+        assert_difference('StopVisit.count', -1) do
+          assert_no_difference('Planning.count') do
+            put api, {destinations: [ref: @customer.destinations.first.ref]}.to_json, 'CONTENT_TYPE' => 'application/json'
+            assert [true], @customer.plannings.flat_map(&:routes).map{ |r|
+              r.stops.collect(&:index).sum == (r.stops.length * (r.stops.length + 1)) / 2
+            }.uniq
+          end
+        end
+      end
+    end
+  end
+
   test 'should create bulk from json without empty route' do
     assert_difference('Destination.count', 1) do
       assert_difference('Visit.count', 1) do

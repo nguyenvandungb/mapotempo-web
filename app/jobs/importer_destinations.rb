@@ -272,7 +272,7 @@ class ImporterDestinations < ImporterBase
           @visits_by_ref["#{visit.destination.ref}/#{visit.ref}"] = visit if visit.ref
         end
       else
-        destination.visits = []
+        destination.visits.destroy_all
       end
     else
       if !row[:ref_visit].nil? && !row[:ref_visit].strip.empty?
