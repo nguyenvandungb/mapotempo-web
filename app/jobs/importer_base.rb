@@ -38,8 +38,8 @@ class ImporterBase
     dests = false
     refs = []
 
-    Destination.without_callback(:save, :check_max_destination) do
-      VehicleUsageSet.without_callback(:save, :check_max_vehicle_usage_set) do
+    Destination.without_callback(:create, :check_max_destination) do
+      VehicleUsageSet.without_callback(:create, :check_max_vehicle_usage_set) do
         Customer.transaction do
           before_import(name, data, options)
 

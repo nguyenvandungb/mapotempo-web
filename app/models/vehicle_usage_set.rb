@@ -18,7 +18,7 @@
 class VehicleUsageSet < ApplicationRecord
   default_scope { order(:id) }
 
-  belongs_to :customer
+  belongs_to :customer, inverse_of: :vehicle_usage_sets
   belongs_to :store_start, class_name: 'Store', inverse_of: :vehicle_usage_set_starts
   belongs_to :store_stop, class_name: 'Store', inverse_of: :vehicle_usage_set_stops
   belongs_to :store_rest, class_name: 'Store', inverse_of: :vehicle_usage_set_rests
