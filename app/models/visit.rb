@@ -85,12 +85,10 @@ class Visit < ApplicationRecord
   end
 
   def destroy
-    # Too late to do this in before_destroy callback, children already destroyed
-    Route.transaction do
-      stop_visits.each{ |stop|
-        stop.route.remove_stop(stop)
-        stop.route.save
-      }
+    # Do not use local collection stop_visits
+    destination.customer.plannings.each do |planning|
+      planning.visit_remove(self) if planning.visits.include?(self)
+      planning.save! # To shift index
     end
     super
   end

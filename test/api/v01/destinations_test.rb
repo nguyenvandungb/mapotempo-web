@@ -697,9 +697,13 @@ class V01::DestinationsTest < ActiveSupport::TestCase
   end
 
   test 'should destroy a destination' do
+    routes = @destination.visits.flat_map{ |v| v.stop_visits.map(&:route) }
     assert_difference('Destination.count', -1) do
       delete api(@destination.id)
       assert_equal 204, last_response.status, last_response.body
+      routes.each do |route|
+        assert route.stops.collect(&:index).sum == (route.stops.length * (route.stops.length + 1)) / 2
+      end
     end
   end
 
