@@ -170,7 +170,7 @@ class ZoningsControllerTest < ActionController::TestCase
       stub_table = stub_request(:post, uri_template)
         .with(:body => hash_including(dimension: (isowhat == :isochrone ? 'time' : 'distance'), loc: "#{store_one.lat},#{store_one.lng}", mode: 'car', size: isowhat == :isochrone ? '600' : '1000'))
         .to_return(File.new(File.expand_path('../../web_mocks/', __FILE__) + '/isochrone/isochrone-1.json').read)
-      patch isowhat, format: :json, vehicle_usage_set_id: vehicle_usage_sets(:vehicle_usage_set_one).id, zoning_id: @zoning, size: isowhat == :isochrone ? 10 : 1000
+      patch isowhat, format: :json, vehicle_usage_set_id: vehicle_usage_sets(:vehicle_usage_set_one).id, zoning_id: @zoning
       assert_response :success
       assert_equal 1, JSON.parse(response.body)['zoning'].length
       assert_not_nil JSON.parse(response.body)['zoning'][0]['polygon']
@@ -200,13 +200,9 @@ class ZoningsControllerTest < ActionController::TestCase
     end
   end
 
-  test 'should not crach when invalid integer is given for isochrone' do
-    patch :isochrone, format: :json, zoning_id: @zoning.id, planning_id: plannings(:planning_one).id, size: 'one', vehicle_usage_set_id: vehicle_usage_sets(:vehicle_usage_set_one).id
-    assert_response :success
-  end
-
-  test 'should not crach when invalid integer is given for isodistance' do
-    patch :isodistance, format: :json, zoning_id: @zoning.id, planning_id: plannings(:planning_one).id, size: 'one', vehicle_usage_set_id: vehicle_usage_sets(:vehicle_usage_set_one).id
-    assert_response :success
+  test 'should crach when invalid integer is given for isochrone/isodistance' do
+    %i[isochrone isodistance].each { |isowhat|
+      assert_raises(ArgumentError){ patch isowhat, format: :json, zoning_id: @zoning.id, planning_id: plannings(:planning_one).id, size: 'one', vehicle_usage_set_id: vehicle_usage_sets(:vehicle_usage_set_one).id }
+    }
   end
 end
