@@ -2285,8 +2285,8 @@ fr:
       zone_placeholder: Zone
       zone_vehicle: Véhicule
       avoid_zone: Ne pas circuler dans cette zone
-      isochrone: Isochrone / véhicule(s)
-      isodistance: Isodistance / véhicule(s)
+      isochrone: Isochrone par véhicule(s)
+      isodistance: Isodistance par véhicule(s)
       dialog:
         isochrone:
           title: Isochrone
