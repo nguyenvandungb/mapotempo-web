@@ -52,7 +52,7 @@ class Customer < ApplicationRecord
   include LocalizedAttr # To use to_delocalized_decimal method
 
   nilify_blanks
-  auto_strip_attributes :name, :print_header, :default_country, :print_barcode
+  auto_strip_attributes :name, :print_header, :default_country, :print_barcode, :sms_template
 
   include TimeAttr
   attribute :take_over, ScheduleType.new

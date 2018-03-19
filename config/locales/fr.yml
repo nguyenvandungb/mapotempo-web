@@ -158,6 +158,8 @@ fr:
         enable_stop_status: Activer les statuts des visites
         enable_sms: Activer l'envoi de SMS
         sms_template: Modèle SMS
+        sms_concat: SMS longs
+        sms_from_customer_name: Expéditeur SMS
         enable_external_callback: Activer URL de rappel
         print_planning_annotating: Inclure un émargement client
         print_header: Entête des tournées
@@ -861,12 +863,16 @@ fr:
         barcode_help: Inclure la référence sous forme de code barre.
       sms:
         title: SMS
-      sms_template_help: "Modèle de SMS envoyé à vos clients. {NAME} sera remplacé par le nom de
-        votre client renseigné sur l'application. Chaines de remplacements disponibles : {NAME}
-        {REF} {VISIT_REF} {DATE} {TIME} {STREET} {CITY} {QUANTITIES} {COMMENT} {VEHICLE_NAME}.
-        Votre texte doit être compatible GSM 03.38 et ne devrait pas dépasser 160 caractères
-        (ou 70 en cas de caractères spéciaux)."
       sms_character_count: Votre message comporte %{c} caractères
+      sms_template_help: Modèle de SMS envoyé à vos clients. {NAME} sera remplacé par le nom de
+        votre client renseigné sur l'application. Votre texte ne doit pas comporter de caractères
+        non standards (GSM 03.38) et ne devrait pas dépasser 160 caractères (ou 70 en cas de
+        caractères spéciaux).
+      sms_keys_help: "Chaines de remplacements disponibles : {NAME} {REF} {VISIT_REF} {DATE}
+        {TIME} {STREET} {CITY} {QUANTITIES} {COMMENT} {VEHICLE_NAME}"
+      sms_concat_help: Si coché vos SMS seront complets (mais facturés le prix de plusieurs SMS
+        en cas de dépassement), si non coché vos SMS seront tronqués en cas de dépassement.
+      sms_from_customer_name_help: Si coché « %{c} » sera utilisé comme nom d'expéditeur du SMS
       speed_multiplicator_default: '%{n} (valeur par défaut)'
       speed_multiplicator_help: Une valeur supérieure à 100% signifie une vitesse
         plus élevée.

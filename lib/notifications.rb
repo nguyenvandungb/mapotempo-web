@@ -87,7 +87,7 @@ class Notifications
         end
       end
     else
-      raise CountryCodeNotFoundError('Country code could not be identified')
+      raise CountryCodeNotFoundError("Country code could not be identified: #{to} #{country_code}")
     end
   end
 

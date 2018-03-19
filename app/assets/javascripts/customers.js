@@ -154,7 +154,8 @@ var customers_edit = function(params) {
 
   var smsCharacterCount = function() {
     var count = ($('#customer_sms_template').val() || $('#customer_sms_template').attr('placeholder')).length;
-    $('#sms_character_count').text(I18n.t('customers.form.sms_character_count', {c: count}));
+    var color = count > 160 ? 'red' : count > 140 ? 'darkorange' : 'black';
+    $('#sms_character_count').html('<span style="color: ' + color + '">' + I18n.t('customers.form.sms_character_count', {c: count}) + '</span>');
   };
   if ($('#customer_sms_template').length) {
     smsCharacterCount();

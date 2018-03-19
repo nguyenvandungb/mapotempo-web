@@ -404,6 +404,15 @@
             <%= f.text_area :sms_template, placeholder: @customer.name + '. ' + t('notifications.sms.alert_plan') do %>
               <div id="sms_character_count"></div>
               <p class="help-block"><%= t '.sms_template_help' %></p>
+              <p class="help-block"><%= t '.sms_keys_help' %></p>
+            <% end %>
+            <%= f.toggles t 'activerecord.attributes.customer.sms_concat' do %>
+              <%= f.check_box :sms_concat %>
+              <p class="help-block"><%= t '.sms_concat_help' %></p>
+            <% end %>
+            <%= f.toggles t 'activerecord.attributes.customer.sms_from_customer_name' do %>
+              <%= f.check_box :sms_from_customer_name %>
+              <p class="help-block"><%= t '.sms_from_customer_name_help', c: @customer.name %></p>
             <% end %>
           </div>
         </div>

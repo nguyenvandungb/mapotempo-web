@@ -24,7 +24,7 @@ module PlanningsHelperApi
     notif = Notifications.new(
       api_key: route.planning.customer.reseller.sms_api_key,
       api_secret: route.planning.customer.reseller.sms_api_secret,
-      from: route.planning.customer.name,
+      from: route.planning.customer.sms_from_customer_name ? route.planning.customer.name : nil,
       logger: Mapotempo::Application.config.logger_sms)
     route.stops.select{ |s| s.active && s.is_a?(StopVisit) && s.visit.destination.phone_number }.map{ |s|
       date = route.planning.date || Time.zone.today
@@ -40,7 +40,7 @@ module PlanningsHelperApi
       notif.send_sms(
         s.visit.destination.phone_number,
         s.visit.destination.country || route.planning.customer.default_country,
-        notif.content(template, repl, false),
+        notif.content(template, repl, !route.planning.customer.sms_concat),
         "SMc#{route.planning.customer_id}r#{route.id}t#{(date.beginning_of_day + s.time).to_i}"
       ) ? 1 : 0
     }.sum
