@@ -76,7 +76,7 @@ class Notifications
 
       if @options[:service] == :nexmo
         client = Nexmo::Client.new(api_key: @options[:api_key], api_secret: @options[:api_secret])
-        response = client.sms.send(from: @options[:from], to: to, text: content, message_id: message_id)
+        response = client.sms.send(from: @options[:from].gsub(/[^0-9a-z]+/i, '')[0..11], to: to, text: content, message_id: message_id)
 
         response.messages.map{ |message|
           if @options[:logger]
