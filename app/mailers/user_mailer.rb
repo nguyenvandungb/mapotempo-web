@@ -2,6 +2,8 @@ class UserMailer < ApplicationMailer
 
   attr_accessor :links
 
+  around_action :catch_smtp_error
+
   def password_message(user, locale)
     I18n.with_locale(locale) do
       @user = user
@@ -85,13 +87,27 @@ class UserMailer < ApplicationMailer
       @user = user
       @name, @application_name = names(user) # To deprecate
       @template = 'fleet_drivers'
-      mail to: [user.email, current_admin && current_admin.email], subject: I18n.t('user_mailer.fleet_drivers.subject') do |format|
-        format.html { render 'user_mailer/fleet_drivers', locals: { user: user, drivers: drivers } }
+      [user.email, current_admin && current_admin.email].compact.each do |to|
+        mail to: to, subject: I18n.t('user_mailer.fleet_drivers.subject') do |format|
+          format.html { render 'user_mailer/fleet_drivers', locals: { user: user, drivers: drivers } }
+        end
       end
     end
   end
 
   private
+
+  def catch_smtp_error
+    begin
+      yield
+    rescue Net::SMTPFatalError => e
+      if e.message.include?('User unknown in virtual mailbox table')
+        puts e.inspect
+      else
+        raise
+      end
+    end
+  end
 
   def links_parameters(name, locale = :fr)
     Rails.application.config.automation[:parameters][name.to_sym][locale.to_sym] || Rails.application.config.automation[:parameters][name.to_sym][:en]
