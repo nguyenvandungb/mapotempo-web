@@ -283,7 +283,7 @@ class V01::RoutesTest < V01::RoutesBaseTest
     @route.planning.customer.reseller.update sms_api_key: :sms_api_key, sms_api_secret: :sms_api_secret
     @route.planning.customer.update enable_sms: true
 
-    Notifications.stub_any_instance(:send_sms, 1) do
+    Notifications.stub_any_instance(:send_sms, [true]) do
       get api(@route.planning_id, "#{@route.id}/send_sms")
       assert last_response.ok?, 'Bad response: ' + last_response.body
       assert_equal '3', last_response.body

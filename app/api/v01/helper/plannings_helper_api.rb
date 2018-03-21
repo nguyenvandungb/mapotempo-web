@@ -42,7 +42,7 @@ module PlanningsHelperApi
         s.visit.destination.country || route.planning.customer.default_country,
         notif.content(template, repl, !route.planning.customer.sms_concat),
         "SMc#{route.planning.customer_id}r#{route.id}t#{(date.beginning_of_day + s.time).to_i}"
-      ) ? 1 : 0
+      ).count{ |v| v }
     }.sum
   end
 

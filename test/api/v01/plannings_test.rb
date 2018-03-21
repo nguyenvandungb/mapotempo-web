@@ -491,7 +491,7 @@ class V01::PlanningsTest < V01::PlanningsBaseTest
     @planning.customer.reseller.update sms_api_key: :sms_api_key, sms_api_secret: :sms_api_secret
     @planning.customer.update enable_sms: true
 
-    Notifications.stub_any_instance(:send_sms, 1) do
+    Notifications.stub_any_instance(:send_sms, [true]) do
       get api("#{@planning.id}/send_sms")
       assert last_response.ok?, 'Bad response: ' + last_response.body
       assert_equal '4', last_response.body

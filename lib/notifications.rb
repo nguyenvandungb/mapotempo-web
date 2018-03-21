@@ -78,13 +78,16 @@ class Notifications
         client = Nexmo::Client.new(api_key: @options[:api_key], api_secret: @options[:api_secret])
         response = client.sms.send(from: @options[:from], to: to, text: content, message_id: message_id)
 
-        if response.messages.first.status == '0'
-          @options[:logger].info "Sent SMS\t#{message_id}\t#{response.messages.first.message_id}\t#{response.messages.first.message_price}" if @options[:logger]
-          true
-        else
-          @options[:logger].error "SMS error\t#{message_id}\t#{response.messages.first.error_text}" if @options[:logger]
-          false
-        end
+        response.messages.map{ |message|
+          if @options[:logger]
+            if message.status == '0'
+              @options[:logger].info "Sent SMS\t#{message_id}\t#{message.message_id}\t#{message.message_price}"
+            else
+              @options[:logger].error "SMS error\t#{message_id}\t#{message.error_text}"
+            end
+          end
+          message.status == '0'
+        }
       end
     else
       raise CountryCodeNotFoundError("Country code could not be identified: #{to} #{country_code}")
