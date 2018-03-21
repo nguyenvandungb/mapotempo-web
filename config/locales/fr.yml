@@ -25,6 +25,9 @@ fr:
       complete: '%d-%m-%Y %H:%M:%S'
       date: '%d/%m/%Y'
       datepicker: '%d-%m-%Y'
+  date:
+    formats:
+      weekday: '%a %d %b'
   schedule_type:
     invalid: Format d'heure invalide
   default_time_zone: Paris

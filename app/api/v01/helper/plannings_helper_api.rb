@@ -30,7 +30,7 @@ module PlanningsHelperApi
       date = route.planning.date || Time.zone.today
       template = route.planning.customer.sms_template || route.planning.customer.name + '. ' + I18n.t('notifications.sms.alert_plan')
       repl = {
-        date: I18n.l(date),
+        date: I18n.l(date, format: :weekday),
         time: date.beginning_of_day + s.time,
         visit_ref: s.visit.ref,
         quantities: VisitQuantities.normalize(s.visit, nil).map{ |q| q[:quantity] }.join(' ').tr("\u202F", ' '),

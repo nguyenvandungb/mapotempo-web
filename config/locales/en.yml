@@ -25,6 +25,9 @@ en:
       complete: '%m-%d-%Y %H:%M:%S'
       date: '%Y-%m-%d'
       datepicker: '%m-%d-%Y'
+  date:
+    formats:
+      weekday: '%a %d %b'
   schedule_type:
     invalid: Invalid hour value
   default_time_zone: London
