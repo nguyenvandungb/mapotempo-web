@@ -152,7 +152,7 @@ class Praxedo < DeviceBase
     get(savon_client_events(customer), :create_events, events: events)
   end
 
-  def fetch_stops(customer, date)
+  def fetch_stops(customer, date, _planning)
     orders = []
 
     begin
@@ -217,6 +217,7 @@ class Praxedo < DeviceBase
         {
           order_id: decode_order_id(intervention[:id]),
           quantities: quantities
+          # Status are not sync (using TomTom's statuses)
         }
       end
     }.compact

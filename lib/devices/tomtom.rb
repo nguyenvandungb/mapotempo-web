@@ -257,7 +257,7 @@ class Tomtom < DeviceBase
     }
   end
 
-  def fetch_stops(customer, date)
+  def fetch_stops(customer, date, _planning)
     orders = get customer, savon_client_orders, :show_order_report, {
       queryFilter: {
         dateRange: {

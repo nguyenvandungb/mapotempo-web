@@ -194,7 +194,7 @@ en:
       fleet_send:
         action: Send to Mapotempo fleet
         success: Sent to Mapotempo fleet successfully
-        fail: Failed to Mapotempo fleet to Trimble
+        fail: Failed to send to Mapotempo fleet
       fleet_clear:
         action: Clear Mapotempo fleet
         success: Mapotempo fleet trip has been cleared successfully

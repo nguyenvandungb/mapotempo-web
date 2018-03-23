@@ -11,6 +11,7 @@ module PraxedoBase
         code_mat: 'LIST_BAC'
       }
     }
+    customer.enable_stop_status = true
     customer.save!
     customer
   end

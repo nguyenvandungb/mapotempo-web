@@ -75,10 +75,10 @@ $sidebar-margins: 10px;
     background: gray;
     display: inline-block;
     position: absolute;
-    left: 24px;
+    left: 23px;
     top: 4px;
-    width: 9px;
-    height: 9px;
+    width: 11px;
+    height: 11px;
     border: 1px solid #2C3539;
     border-radius: 1px;
   }
@@ -96,7 +96,7 @@ $sidebar-margins: 10px;
     background: #FBB117;
   }
   .stop-status-finished {
-    background: #41A317;
+    background: #58BE13;
   }
   .stop-status-rejected {
     background: red;

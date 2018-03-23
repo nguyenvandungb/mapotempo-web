@@ -478,15 +478,15 @@ class Planning < ApplicationRecord
   def fetch_stops_status
     Visit.transaction do
       if customer.enable_stop_status
-        stops_map = Hash[routes.select(&:vehicle_usage?).collect(&:stops).flatten.collect { |stop| [(stop.is_a?(StopVisit) ? "v#{stop.visit_id}" : "r#{stop.id}"), stop] }]
+        stops_map = Hash[routes.select(&:vehicle_usage?).flat_map(&:stops).map { |stop| [(stop.is_a?(StopVisit) ? "v#{stop.visit_id}" : "r#{stop.id}"), stop] }]
         stops_map.each { |ss| ss[1].assign_attributes status: nil, eta: nil }
         routes_quantities_changed = []
 
-        stops_status = Mapotempo::Application.config.devices.each_pair.collect { |key, device|
+        stops_status = Mapotempo::Application.config.devices.each_pair.flat_map { |key, device|
           if device.respond_to?(:fetch_stops) && customer.device.configured?(key)
-            device.fetch_stops(self.customer, device.planning_date(self))
+            device.fetch_stops(self.customer, device.planning_date(self), self)
           end
-        }.flatten.compact.select { |s|
+        }.compact.select { |s|
           # Remove stores
           s[:order_id].to_i == 0
         }.each { |s|
@@ -517,7 +517,7 @@ class Planning < ApplicationRecord
           route.compute_quantities
         end
 
-        return stops_status
+        stops_status
       end
     end
   end

@@ -720,26 +720,6 @@ class PlanningTest < ActiveSupport::TestCase
       assert route_ids_valid
     }
   end
-
-  require Rails.root.join('test/lib/devices/tomtom_base')
-  include TomtomBase
-
-  test 'should fetch_stops_status' do
-    o = plannings(:planning_one)
-    o.customer.enable_stop_status = true
-    add_tomtom_credentials(o.customer)
-    set_route
-    s = stops(:stop_one_one)
-    assert !s.status
-    with_stubs [:orders_service_wsdl, :show_order_report] do
-      Planning.transaction do
-        o.fetch_stops_status
-        o.save!
-      end
-    end
-    s.reload
-    assert s.status
-  end
 end
 
 class PlanningTestError < ActiveSupport::TestCase

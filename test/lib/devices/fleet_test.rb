@@ -60,7 +60,7 @@ class FleetTest < ActionController::TestCase
     end
   end
 
-  test 'should get stop status' do
+  test 'should update stop status' do
     with_stubs [:fetch_stops] do
       planning = plannings(:planning_one)
       planning.routes.select(&:vehicle_usage_id).each { |route|
@@ -69,12 +69,9 @@ class FleetTest < ActionController::TestCase
       planning.save
 
       planning.fetch_stops_status
-      planning.routes.select(&:vehicle_usage_id).each { |route|
-        if route.ref == 'route_one'
-          assert route.stops.select(&:active).any? { |stop| stop.status == 'Planned' }
-          assert route.stops.select(&:active).any? { |stop| stop.status == 'Finished' }
-        end
-      }
+      planning.save
+      planning.reload
+      assert_equal ['Planned', 'Finished'], planning.routes.find{ |r| r.ref == 'route_one' }.stops.map(&:status).compact
     end
   end
 

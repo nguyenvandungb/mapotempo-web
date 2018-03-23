@@ -9,6 +9,7 @@ module TomtomBase
         password: 'password'
       }
     }
+    customer.enable_stop_status = true
     customer.save!
     customer
   end

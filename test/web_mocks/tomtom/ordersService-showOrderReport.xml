@@ -23,7 +23,7 @@ HTTP/1.1 200 OK
               <mapcode>FRA BFJ.2V</mapcode>
             </geoPosition>
             <destination>Bordeaux</destination>
-            <orderState stateCode="Accepted">
+            <orderState stateCode="Finished">
               <time>2016-11-28T11:18:40.705Z</time>
               <positionText xsi:nil="true" />
               <geoPosition xsi:nil="true" />
@@ -64,7 +64,7 @@ HTTP/1.1 200 OK
               <mapcode>FRA BLD.CH</mapcode>
             </geoPosition>
             <destination>Bordeaux, Place Picard</destination>
-            <orderState stateCode="Accepted">
+            <orderState stateCode="Resumed">
               <time>2016-11-28T11:18:40.334Z</time>
               <positionText xsi:nil="true" />
               <geoPosition xsi:nil="true" />

@@ -88,4 +88,19 @@ class TomtomTest < ActionController::TestCase
     decode = @service.send(:decode_order_id, code)
     assert decode, id
   end
+
+  test 'should update stop status' do
+    with_stubs [:orders_service_wsdl, :show_order_report] do
+      planning = plannings(:planning_one)
+      planning.routes.select(&:vehicle_usage_id).each { |route|
+        route.last_sent_at = Time.now.utc
+      }
+      planning.save
+
+      planning.fetch_stops_status
+      planning.save
+      planning.reload
+      assert_equal 'Started', planning.routes.find{ |r| r.ref == 'route_one' }.stops.first.status
+    end
+  end
 end

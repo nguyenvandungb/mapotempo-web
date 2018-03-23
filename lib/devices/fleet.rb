@@ -187,7 +187,7 @@ class Fleet < DeviceBase
     raise DeviceServiceError.new("Fleet: #{I18n.t('errors.fleet.get_vehicles_pos')}")
   end
 
-  def fetch_stops(customer, _date)
+  def fetch_stops(customer, _date, _planning)
     response = get_missions(customer.devices[:fleet][:api_key])
     data = JSON.parse(response.body)
 

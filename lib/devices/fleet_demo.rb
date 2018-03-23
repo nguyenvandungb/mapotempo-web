@@ -43,11 +43,10 @@ class FleetDemo < DeviceBase
     true
   end
 
-  def fetch_stops(customer, date)
-    planning = customer.plannings.sort_by(&:updated_at).last
-    date = (planning.date || Time.now).at_midnight
+  def fetch_stops(customer, date, planning)
+    date = (planning.date || Time.zone.now).at_midnight
     planning.routes.select(&:vehicle_usage_id).flat_map{ |r|
-      if r.last_sent_at && r.last_sent_at.at_midnight == Time.now.utc.at_midnight
+      if r.last_sent_at && r.last_sent_at.utc.at_midnight == Time.now.utc.at_midnight
         started = false
         r.stops.select(&:active).each_with_index.map { |s, i|
           {
@@ -55,6 +54,14 @@ class FleetDemo < DeviceBase
             status: i < r.stops.size / 4 ? :finished : !started ? started = :started : :planned,
             # status: s.time && (date < Time.now - 60 ? :finished : date < Time.now ? :started : :planned),
             eta: s.time && (date + s.time + i * 60)
+          }
+        }
+      else
+        r.stops.select(&:status).map { |s|
+          {
+            order_id: (s.is_a?(StopVisit) ? "v#{s.visit_id}" : "r#{s.id}"),
+            status: s.status,
+            eta: s.eta
           }
         }
       end

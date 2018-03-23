@@ -41,7 +41,7 @@ class PraxedoTest < ActionController::TestCase
     with_stubs [:search_events_wsdl, :search_events] do
       set_route
       assert_nothing_raised do
-        stops_status = @service.fetch_stops(@customer, Time.new(2017, 10, 10, 0, 0, 0, '+02:00'))
+        stops_status = @service.fetch_stops(@customer, Time.new(2017, 10, 10, 0, 0, 0, '+02:00'), plannings(:planning_one))
         assert stops_status
         assert stops_status.size, 3
         assert stops_status.each do |status|
@@ -49,6 +49,28 @@ class PraxedoTest < ActionController::TestCase
           Float(status[:quantities].second[:quantity]) > 0
         end
       end
+    end
+  end
+
+  test 'should update stop status' do
+    # All 3 stops in route are completed
+    # with following quantities from Praxedo:
+    # 0 => 30kg / 1 => 10kg / 2 => 5kg
+    with_stubs [:search_events_wsdl, :search_events] do
+      planning = plannings(:planning_one)
+      planning.routes.select(&:vehicle_usage_id).each { |route|
+        route.last_sent_at = Time.now.utc
+      }
+      planning.save
+
+      planning.fetch_stops_status
+      planning.routes.select(&:vehicle_usage_id).each { |route|
+        if route.ref == 'route_one'
+          # Status are not sync (using TomTom's statuses)
+          # assert route.stops.select(&:active).all? { |stop| stop.status == 'Finished' }
+          assert_equal [5, 10, 30], route.stops.select{ |s| s.active && s.is_a?(StopVisit) }.map{ |s| s.visit.quantities[2] }
+        end
+      }
     end
   end
 
