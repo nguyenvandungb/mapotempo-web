@@ -48,7 +48,7 @@ public_transport = RouterWrapper.create!(
 profile_all = Profile.create!(name: "All", layers: [mapnik_fr, mapnik, mapbox, stamen_bw, here_layer], routers: [car, car_urban, bicycle, pedestrian, truck, public_transport])
 
 reseller = Reseller.create!(host: "localhost:3000", name: "Mapotempo")
-customer = Customer.create!(reseller: reseller, name: "Toto", default_country: "France", router: car, profile: profile_all, test: true, max_vehicles: 2)
+customer = Customer.create!(reseller: reseller, name: "Toto", default_country: "France", router: car, profile: profile_all, test: true, max_vehicles: 2, devices: {'fleet_demo' => {'enable' => '1'}})
 admin = User.create!(email: "admin@example.com", password: "123456789", reseller: reseller, layer: mapnik)
 test = User.create!(email: "test@example.com", password: "123456789", layer: mapnik, customer: customer)
 toto = User.create!(email: "toto@example.com", password: "123456789", layer: mapnik, customer: customer)
