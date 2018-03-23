@@ -945,7 +945,7 @@ es:
       lat_desc: latitud de la destinación (en grados decimales) entre -90° y 90°.
         Ej. 45, 91
       lat_format: numero de coma entre -90 y 90
-      lng: Ing
+      lng: lng
       lng_desc: longitud de la destinación (en grados decimales) entre -180° y 180°.
         Ej. -07,781
       lng_format: numero de coma entre -180 y 180

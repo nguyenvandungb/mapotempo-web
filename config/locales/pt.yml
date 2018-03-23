@@ -965,7 +965,7 @@ pt:
       lat: lat
       lat_desc: latitude do armazém (em graus decimais) entre -90º e 90º. Explo. 45,91
       lat_format: numero com virgula entre -90 e 90
-      lng: Ing
+      lng: lng
       lng_desc: longitude do armazém (em graus decimais) entre -180º e 180º. Explo.
         -0,781
       lng_format: numero com vírgula entre -180 e 180
@@ -1320,7 +1320,7 @@ pt:
       lat: lat
       lat_desc: latitude do destino (em graus decimais) entre -90º e 90º. Explo. 45,91
       lat_format: numero com vírgula entre -90 e 90
-      lng: Ing
+      lng: lng
       lng_desc: longitude do destino (em graus decimais) entre -180º e 180º. Explo.
         -0,781
       lng_format: numero com vírgula entre -180 e 180
@@ -1892,7 +1892,7 @@ pt:
       state: estado
       country: país
       lat: lat
-      lng: Ing
+      lng: lng
       comment: comentário
       tags: etiquetas
       phone_number: telefone
