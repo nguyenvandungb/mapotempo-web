@@ -155,6 +155,7 @@ layers = (@customer.profile.layers + [current_user.layer]).sort_by(&:id).uniq.co
 }
 controller.js(
   is_editable: @destinations.size <= Mapotempo::Application.config.max_destinations_editable,
+  reached_max_destinations: @destinations.size > @customer.default_max_destinations,
   map_layers: Hash[layers.map{ |l| l[:name] }.zip(layers)],
   map_lat: @customer.default_position[:lat],
   map_lng: @customer.default_position[:lng],
