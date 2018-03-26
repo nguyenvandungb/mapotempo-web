@@ -306,6 +306,14 @@ $sidebar-margins: 10px;
         display: none;
       }
 
+      .stop-popup-header {
+        .btn-group {
+          .marker_edit{
+            display: block;
+          }
+        }
+      }
+
       .btn.extend, .btn.sidebar-close {
         display: inline-block;
       }
