@@ -97,6 +97,29 @@
           </div>
         </div>
 
+        <div id="router_options_traffic_input" class="form-group <%= @vehicle_usage.vehicle.default_router.traffic? ? '' : 'router-option-disabled' %>">
+          <label class="col-md-2 control-label" for="vehicle_usage_vehicle_router_options_traffic">
+            <%= t('activerecord.attributes.customer.router_options_traffic') %>
+          </label>
+
+          <div class="col-md-6 input-append form-inline">
+            <label>
+              <input type="radio" name="vehicle_usage[vehicle][router_options][traffic]" id="vehicle_usage_vehicle_router_options_traffic_yes" value="true" <%= @vehicle_usage.vehicle.router_options['traffic'] == true ? 'checked' : '' %>/>
+              <%= t('customers.form.router_options_traffic_yes') %>
+            </label>
+
+            <label>
+              <input type="radio" name="vehicle_usage[vehicle][router_options][traffic]" id="vehicle_usage_vehicle_router_options_traffic_no" value="false" <%= @vehicle_usage.vehicle.router_options['traffic'] == false ? 'checked' : '' %>/>
+              <%= t('customers.form.router_options_traffic_no') %>
+            </label>
+
+            <label class="pull-right">
+              <input type="radio" name="vehicle_usage[vehicle][router_options][traffic]" id="vehicle_usage_vehicle_router_options_traffic_default" value="" <%= @vehicle_usage.vehicle.router_options['traffic'].nil? && 'checked' %>/>
+              <%= t('customers.form.router_options_traffic_default', value: @vehicle_usage.vehicle.customer.router_options['traffic'] == true ? t('customers.form.router_options_traffic_yes') : t('customers.form.router_options_traffic_no')) %>
+            </label>
+          </div>
+        </div>
+
         <div id="router_options_track_input" class="form-group <%= @vehicle_usage.vehicle.default_router.track? ? '' : 'router-option-disabled' %>">
           <label class="col-md-2 control-label" for="vehicle_usage_vehicle_router_options_track">
             <%= t('activerecord.attributes.customer.router_options_track') %>

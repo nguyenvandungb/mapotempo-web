@@ -75,7 +75,7 @@ class V01::Customers < Grape::API
           :router_id,
           :router_dimension,
           :speed_multiplicator,
-          router_options: [:time, :distance, :isochrone, :isodistance, :avoid_zones, :track, :motorway, :toll, :trailers, :weight, :weight_per_axle, :height, :width, :length, :hazardous_goods, :max_walk_distance, :approach, :snap, :strict_restriction],
+          router_options: [:time, :distance, :isochrone, :isodistance, :traffic, :avoid_zones, :track, :motorway, :toll, :trailers, :weight, :weight_per_axle, :height, :width, :length, :hazardous_goods, :max_walk_distance, :approach, :snap, :strict_restriction],
           devices: permit_recursive_params(p[:devices]))
       else
         p.permit(
@@ -103,7 +103,7 @@ class V01::Customers < Grape::API
           :router_id,
           :router_dimension,
           :speed_multiplicator,
-          router_options: [:time, :distance, :isochrone, :isodistance, :avoid_zones, :track, :motorway, :toll, :trailers, :weight, :weight_per_axle, :height, :width, :length, :hazardous_goods, :max_walk_distance, :approach, :snap, :strict_restriction],
+          router_options: [:time, :distance, :isochrone, :isodistance, :traffic, :avoid_zones, :track, :motorway, :toll, :trailers, :weight, :weight_per_axle, :height, :width, :length, :hazardous_goods, :max_walk_distance, :approach, :snap, :strict_restriction],
           devices: permit_recursive_params(p[:devices]))
       end
     end
@@ -176,6 +176,7 @@ class V01::Customers < Grape::API
       )
 
       optional :router_options, type: Hash do
+        # optional :traffic, type: Boolean
         optional :track, type: Boolean
         optional :motorway, type: Boolean
         optional :toll, type: Boolean
@@ -230,6 +231,7 @@ class V01::Customers < Grape::API
       )
 
       optional :router_options, type: Hash do
+        optional :traffic, type: Boolean
         optional :track, type: Boolean
         optional :motorway, type: Boolean
         optional :toll, type: Boolean

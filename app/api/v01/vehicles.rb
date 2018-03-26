@@ -50,7 +50,7 @@ class V01::Vehicles < Grape::API
         end
       end
 
-      p.permit(:contact_email, :ref, :name, :emission, :consumption, :color, :router_id, :router_dimension, :max_distance, :speed_multiplicator, router_options: [:time, :distance, :isochrone, :isodistance, :avoid_zones, :track, :motorway, :toll, :trailers, :weight, :weight_per_axle, :height, :width, :length, :hazardous_goods, :max_walk_distance, :approach, :snap, :strict_restriction], capacities: (current_customer || @current_user.reseller.customers.where(id: params[:customer_id]).first!).deliverable_units.map{ |du| du.id.to_s }, devices: permit_devices)
+      p.permit(:contact_email, :ref, :name, :emission, :consumption, :color, :router_id, :router_dimension, :max_distance, :speed_multiplicator, router_options: [:time, :distance, :isochrone, :isodistance, :traffic, :avoid_zones, :track, :motorway, :toll, :trailers, :weight, :weight_per_axle, :height, :width, :length, :hazardous_goods, :max_walk_distance, :approach, :snap, :strict_restriction], capacities: (current_customer || @current_user.reseller.customers.where(id: params[:customer_id]).first!).deliverable_units.map{ |du| du.id.to_s }, devices: permit_devices)
     end
 
     def permit_devices
@@ -170,6 +170,7 @@ class V01::Vehicles < Grape::API
       end
 
       optional :router_options, type: Hash do
+        # optional :traffic, type: Boolean
         optional :track, type: Boolean
         optional :motorway, type: Boolean
         optional :toll, type: Boolean
@@ -229,6 +230,7 @@ class V01::Vehicles < Grape::API
       end
 
       optional :router_options, type: Hash do
+        # optional :traffic, type: Boolean
         optional :track, type: Boolean
         optional :motorway, type: Boolean
         optional :toll, type: Boolean

@@ -173,6 +173,7 @@ en:
         router: Routing Engine
         router_id: Routing Engine
         router_dimension: Router objective
+        router_options_traffic: Take into account traffic
         router_options_track: Use tracks
         router_options_motorway: Use motorways
         router_options_toll: Authorize toll sections
@@ -783,6 +784,9 @@ en:
       optimization_parameters: Optimization settings
       router_help: Profile used by route plan by default
       router_options_default: '%{n} (default value)'
+      router_options_traffic_yes: 'Yes'
+      router_options_traffic_no: 'No'
+      router_options_traffic_default: By default (%{value})
       router_options_track_yes: 'Yes'
       router_options_track_no: 'No'
       router_options_track_default: By default (%{value})

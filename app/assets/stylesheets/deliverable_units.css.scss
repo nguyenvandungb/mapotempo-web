@@ -18,16 +18,3 @@
 // Place all the styles related to the Tags controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
-
-[data-controller='deliverable_units'] {
-  #deliverable_unit_optimization_overload_multiplier_input {
-    .form-inline {
-      label {
-        margin-left: 10px;
-      }
-      label:nth-of-type(1) {
-        margin-left: 0px;
-      }
-    }
-  }
-}
