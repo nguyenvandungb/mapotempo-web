@@ -134,22 +134,29 @@ class Fleet < DeviceBase
 
     vehicles_with_email = customer.vehicles.select(&:contact_email)
 
+    cache_drivers = {}
     drivers = vehicles_with_email.map do |vehicle|
-      driver_password = Digest::MD5.hexdigest([vehicle.name, vehicle.contact_email].join(','))[0..3]
+      if !cache_drivers.key? vehicle.contact_email
+        driver_password = Digest::MD5.hexdigest([vehicle.name, vehicle.contact_email].join(','))[0..3]
 
-      driver_params = {
-        name: vehicle.name,
-        email: vehicle.contact_email,
-        password: driver_password,
-        roles: USER_DEFAULT_ROLES,
-      }
+        driver_params = {
+          name: vehicle.name,
+          email: vehicle.contact_email,
+          password: driver_password,
+          roles: USER_DEFAULT_ROLES,
+        }
 
-      begin
-        response = rest_client_post(set_user_url, api_key, driver_params)
-        driver = JSON.parse(response)['user']
-        vehicle.update!(devices: {fleet_user: driver['sync_user']})
-        driver.merge('password' => driver_password)
-      rescue RestClient::UnprocessableEntity
+        begin
+          response = rest_client_post(set_user_url, api_key, driver_params)
+          driver = JSON.parse(response)['user']
+          cache_drivers[vehicle.contact_email] = {password: driver_password, fleet_user: driver}
+          vehicle.update!(devices: {fleet_user: driver['sync_user']})
+          driver.merge('password' => driver_password)
+        rescue RestClient::UnprocessableEntity
+          nil
+        end
+      else
+        vehicle.update!(devices: {fleet_user: cache_drivers[vehicle.contact_email][:fleet_user]['sync_user']})
         nil
       end
     end.compact
