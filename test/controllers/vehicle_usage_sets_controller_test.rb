@@ -114,6 +114,19 @@ class VehicleUsageSetsControllerTest < ActionController::TestCase
     assert_redirected_to vehicle_usage_sets_path
   end
 
+  test 'should disable/enable multiple vehicles' do
+    vehicle_usage_set = @vehicle_usage_set.customer.vehicle_usage_sets.first
+    vu_hash = {vehicle_usage_set.id.to_s => {}}
+    vehicle_usage_set.vehicle_usages.each{ |vu| vu_hash[vehicle_usage_set.id.to_s][vu.id] = 'on' }
+
+    [{action: 'disable_multiple', result: [false, false]}, {action: 'enable_multiple', result: [true, true]}].each do |obj|
+      delete :destroy_multiple, vehicle_usages: vu_hash, id: @vehicle_usage_set, obj[:action] => vehicle_usage_set.id
+      assert_equal obj[:result], VehicleUsage.where(vehicle_usage_set_id: vehicle_usage_set).map(&:active)
+    end
+
+    assert_redirected_to vehicle_usage_sets_path
+  end
+
   test 'should destroy multiple vehicle_usage_set' do
     assert_difference('VehicleUsageSet.count', -1) do
       delete :destroy_multiple, vehicle_usage_sets: { vehicle_usage_sets(:vehicle_usage_set_one).id => 1 }

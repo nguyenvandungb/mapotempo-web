@@ -1,4 +1,9 @@
-<table id="accordion" class="table table-striped table-hover">
+<table id="accordion-<%= vehicle_usage_set.id %>" class="table table-striped table-hover">
+  <caption>
+    <label>
+      <input type="checkbox" class="select-unselect-all" data-id="<%= vehicle_usage_set.id %>"> <%= t 'vehicle_usages.index.select_unselect_all' %>
+    </label>
+  </caption>
   <thead>
     <th><%= t 'activerecord.attributes.vehicle.name' %></th>
     <th><%= t 'activerecord.attributes.vehicle.router_id' %></th>
@@ -12,9 +17,12 @@
   <tbody>
     <% vehicle_usage_set.vehicle_usages.each do |vehicle_usage| %>
       <tr class="<%= 'disabled' if !vehicle_usage.active %>">
-        <td>
-          <div class="vehicle_color" style="background:<%= vehicle_usage.vehicle.color %>"></div>
-          <%= vehicle_usage.vehicle.name %>
+        <td >
+          <label for="vehicle_usage_vehicle_<%= vehicle_usage.id %>" >
+            <input type="checkbox" class="vehicle-select" id="vehicle_usage_vehicle_<%= vehicle_usage.id %>" name="vehicle_usages[<%=  vehicle_usage_set.id %>][<%=  vehicle_usage.id %>]">
+            <div class="vehicle_color" style="background:<%= vehicle_usage.vehicle.color %>"></div>
+            <%= vehicle_usage.vehicle.name %>
+          </label>
         </td>
         <td>
           <%= vehicle_usage_router vehicle_usage %>
@@ -54,3 +62,9 @@
     <% end %>
   </tbody>
 </table>
+
+<div id="multiple-actions-<%= vehicle_usage_set.id %>">
+  <%= button_tag type: :submit, class: 'btn btn-default btn-sm btn-disable', name: "disable_multiple", value: "#{vehicle_usage_set.id}", disabled: vehicle_usage_set.vehicle_usages.count == 1, data: { confirm: t('vehicle_usages.index.multiple_disable_confirm'), id: vehicle_usage_set.id } do %><i class="fa fa-power-off fa-fw"></i> <%= t('vehicle_usages.index.multiple_disable') %><% end %>
+
+  <%= button_tag type: :submit, class: 'btn btn-default btn-sm btn-enable', name: "enable_multiple", value: "#{vehicle_usage_set.id}", disabled: vehicle_usage_set.vehicle_usages.count == 1, data: { id: vehicle_usage_set.id } do %><i class="fa fa-truck fa-fw"></i> <%= t('vehicle_usages.index.multiple_enable') %><% end %>
+</div>

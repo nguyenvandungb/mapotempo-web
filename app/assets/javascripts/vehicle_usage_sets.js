@@ -20,15 +20,43 @@
 var vehicle_usage_sets_index = function(params) {
   'use strict';
 
+  var show_accordion_check_elements = function(show) {
+    ['[id^=vehicle_usage_sets_]', '#add', '.btn-destroy'].map(function(str) {
+      show ? $(str).removeClass('invisible') : $(str).addClass('invisible');
+    });
+  };
+
   // override accordion collapse bootstrap code
   $('a.accordion-toggle').click(function() {
     var id = $(this).attr('href');
     window.location.hash = id;
+    var all_collapsed = $('.accordion-body.collapse.in').size() ? true : false;
     $('.accordion-body.collapse.in').each(function() {
       var $this = $(this);
       if (id !== '#' + $this.attr('id')) {
+        all_collapsed = false;
         $this.collapse('hide');
       }
+    });
+    show_accordion_check_elements(all_collapsed);
+  });
+
+  $('#add').click(function() {
+    $('.deleter-check').prop('checked', !$('.deleter-check').is(':checked'));
+  });
+
+  $('.select-unselect-all').click(function() {
+    var vehicle_usage_sets_id = $(this).attr('data-id');
+    var is_checked = $(this).is(':checked');
+
+    if (is_checked) {
+      $('html, body').animate({
+        scrollTop: $('#multiple-actions-' + vehicle_usage_sets_id).offset().top
+      }, 1000);
+    }
+
+    $('#accordion-' + vehicle_usage_sets_id + ' tr .vehicle-select').each(function() {
+      $(this).prop('checked', is_checked);
     });
   });
 
@@ -42,6 +70,7 @@ var vehicle_usage_sets_index = function(params) {
     $(".accordion-toggle[href!='" + window.location.hash + "']").addClass('collapsed');
     $(window.location.hash).addClass('in');
     $(".accordion-toggle[href='" + window.location.hash + "']").removeClass('collapsed');
+    show_accordion_check_elements(false);
   }
 };
 

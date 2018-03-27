@@ -1,3 +1,4 @@
+<% invisible_class = current_user.customer.vehicle_usage_sets.size > 1 ? '' : 'invisible' %>
 <% content_for :title, t('.title') %>
 <h1><%= t '.title' %></h1>
 
@@ -29,7 +30,7 @@
   <thead>
     <tr>
       <% if current_user.customer.default_max_vehicle_usage_sets > 1 %>
-        <th><button id="add" type="button" class="btn btn-default btn-xs index_toggle_selection" title="<%= t 'all.verb.toggle_selection' %>"><i class="fa fa-check fa-fw"></i></button></th>
+        <th><button id="add" type="button" class="btn btn-default btn-xs <%= invisible_class %>" title="<%= t 'all.verb.toggle_selection' %>"><i class="fa fa-check fa-fw"></i></button></th>
       <% end %>
       <th><%= t 'activerecord.attributes.vehicle_usage_set.name' %></th>
       <th><%= t 'vehicle_usage_sets.index.stores' %></th>
@@ -42,7 +43,7 @@
     <% @vehicle_usage_sets.each_index do |i| vehicle_usage_set = @vehicle_usage_sets[i] %>
       <tr class="accordion-heading">
         <% if current_user.customer.default_max_vehicle_usage_sets > 1 %>
-          <td><%= check_box_tag("vehicle_usage_sets[#{vehicle_usage_set.id}]") %></td>
+          <td><%= check_box_tag("vehicle_usage_sets[#{vehicle_usage_set.id}]", nil, nil, class: "#{invisible_class} deleter-check") %></td>
         <% end %>
         <td>
           <% if @vehicle_usage_sets.count > 1 %>
@@ -109,6 +110,6 @@
 </table>
 
 <% if current_user.customer.default_max_vehicle_usage_sets > 1 %>
-  <%= button_tag type: :submit, class: 'btn btn-danger btn-sm', disabled: @vehicle_usage_sets.count == 1, data: { confirm: t('all.verb.destroy_confirm') } do %><i class="fa fa-trash-o fa-fw"></i> <%= t('all.verb.destroy_selection') %><% end %>
+  <%= button_tag type: :submit, class: "btn btn-danger btn-sm btn-destroy #{invisible_class}", data: { confirm: t('all.verb.destroy_confirm') } do %><i class="fa fa-trash-o fa-fw"></i> <%= t('all.verb.destroy_selection') %><% end %>
   <% end %>
 <% end %>

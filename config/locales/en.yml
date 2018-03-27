@@ -1948,6 +1948,7 @@ en:
     index:
       title: Listing vehicle configurations
       capacities: Capacities
+      select_unselect_all: Select/Unselect all vehicles
       stores: Start - End
       store:
         no_start: No start store
@@ -1956,7 +1957,11 @@ en:
       time: Open - Close
       devices: Devices
       disable: Disable
+      multiple_disable: Disable selected vehicles
+      multiple_enable: Enable selected vehicles
       disable_confirm: Are you sure? All routes using this vehicle and configuration
+        will be lost.
+      multiple_disable_confirm: Are you sure? All routes using these vehicles and configuration
         will be lost.
       enable: Enable
     new:

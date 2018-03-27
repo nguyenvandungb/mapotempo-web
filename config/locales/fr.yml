@@ -2033,6 +2033,7 @@ fr:
     index:
       title: Liste configurations de véhicules
       capacities: Capacités
+      select_unselect_all: Sélectionner/Dé-sélectionner tous les véhicules
       stores: Départ - Arrivée
       store:
         no_start: Pas de dépôt de départ
@@ -2041,7 +2042,11 @@ fr:
       time: Début - Fin
       devices: Terminaux mobiles
       disable: Désactiver
+      multiple_disable: Désactiver les véhicules
+      multiple_enable: Activer les véhicules
       disable_confirm: Êtes-vous sûr ? Toutes les tournées utilisant ce véhicule dans
+        cette configuration seront perdues.
+      multiple_disable_confirm: Êtes-vous sûr ? Toutes les tournées utilisant ces véhicules dans
         cette configuration seront perdues.
       enable: Activer
     new:

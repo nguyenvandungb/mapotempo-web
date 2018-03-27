@@ -93,13 +93,19 @@ class VehicleUsageSetsController < ApplicationController
   end
 
   def destroy_multiple
-    VehicleUsageSet.transaction do
-      if params['vehicle_usage_sets']
-        ids = params['vehicle_usage_sets'].keys.collect { |i| Integer(i) }
-        current_user.customer.vehicle_usage_sets.select { |v| ids.include?(v.id) }.each(&:destroy)
-      end
-      respond_to do |format|
-        format.html { redirect_to vehicle_usage_sets_url }
+    if params['disable_multiple']
+      activate_multiple_vehicle_usage(params['disable_multiple'], false)
+    elsif params['enable_multiple']
+      activate_multiple_vehicle_usage(params['enable_multiple'], true)
+    else
+      VehicleUsageSet.transaction do
+        if params['vehicle_usage_sets']
+          ids = params['vehicle_usage_sets'].keys.collect { |i| Integer(i) }
+          current_user.customer.vehicle_usage_sets.select { |v| ids.include?(v.id) }.each(&:destroy)
+        end
+        respond_to do |format|
+          format.html { redirect_to vehicle_usage_sets_url }
+        end
       end
     end
   end
@@ -142,6 +148,20 @@ class VehicleUsageSetsController < ApplicationController
   end
 
   private
+
+  def activate_multiple_vehicle_usage(vehicle_usage_set_id, activate)
+    VehicleUsageSet.transaction do
+      if params['vehicle_usages']
+        vehicle_usage_ids = params['vehicle_usages'][vehicle_usage_set_id].map{ |vu| vu[0].to_i if vu[1] == 'on' }.compact
+        current_user.customer.vehicle_usage_sets.find(vehicle_usage_set_id).vehicle_usages.each{ |vu|
+          vu.update(active: activate) if vehicle_usage_ids.include?(vu.id)
+        }
+      end
+      respond_to do |format|
+        format.html { redirect_to vehicle_usage_sets_url }
+      end
+    end
+  end
 
   def time_with_day_params(params, local_params, times)
     times.each do |time|
