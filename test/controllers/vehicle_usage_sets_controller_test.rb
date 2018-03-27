@@ -175,7 +175,7 @@ class VehicleUsageSetsControllerTest < ActionController::TestCase
 
   test 'should upload' do
     file = ActionDispatch::Http::UploadedFile.new(
-        tempfile: File.new(Rails.root.join('test/fixtures/files/import_vehicle_usage_sets_one.csv')),
+      tempfile: File.new(Rails.root.join('test/fixtures/files/import_vehicle_usage_sets_one.csv')),
     )
     file.original_filename = 'import_vehicle_usage_sets_one.csv'
 

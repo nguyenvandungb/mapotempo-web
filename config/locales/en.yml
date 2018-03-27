@@ -1552,8 +1552,8 @@ en:
         out_of_drive_time_help: Vehicle shift time exceeded
         out_of_work_time: Out of work time
         out_of_work_time_help: Driver work time exceeded (service included)
-        out_of_max_distance: Maximum possible distance exceeded
-        out_of_max_distance_help: Maximum possible distance exceeded
+        out_of_max_distance: Maximum achievable distance exceeded
+        out_of_max_distance_help: Maximum achievable distance exceeded
         no_path: Unreachable destination
         no_path_help: 'Unreachable destination: missing or no path to or from the
           destination to find a route'
@@ -1870,6 +1870,8 @@ en:
     emissions_light_lgp: Light - LGP - %{n}
     emissions_ngv: Natural Gas Vehicle - %{n}
     import:
+      max_distance: maximum distance (in meters)
+      max_distance_desc: maximum achievable vehicle distance
       ref_vehicle: reference vehicle
       ref_desc: vehicle reference
       name_vehicle: name vehicle
@@ -2037,6 +2039,7 @@ en:
     new:
       title: New vehicles configuration
     import:
+      max_distance: Maximum achievable vehicle distance (in metres)
       title: Import vehicles configuration
       vehicle_usage_set: Vehicles configuration
       default_configuration_replaced: The default configuration for all vehicles will be replaced by imported data

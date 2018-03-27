@@ -1631,8 +1631,8 @@ fr:
         out_of_drive_time_help: Planifié en dehors des amplitudes horaires du véhicule
         out_of_work_time: Hors durée de travail
         out_of_work_time_help: Planifié en dehors de la durée de travail du chauffeur (service compris)
-        out_of_max_distance: Distance maximale possible dépassée
-        out_of_max_distance_help: Distance maximale possible dépassée
+        out_of_max_distance: Distance maximale réalisable dépassée
+        out_of_max_distance_help: Distance maximale réalisable dépassée
         no_path: Destination inaccessible
         no_path_help: 'Destination inaccessible : pas de voie d''accès ou itinéraire
           pour aller ou partir de la destination'
@@ -1954,6 +1954,8 @@ fr:
     emissions_light_lgp: VL - GPL - %{n}
     emissions_ngv: VL - Natural gas vehicle - %{n}
     import:
+      max_distance: distance maximale (en mètres)
+      max_distance_desc: distance maximale réalisable du véhicule
       ref_vehicle: référence véhicule
       ref_desc: référence du véhicule
       name_vehicle: nom véhicule
@@ -2123,6 +2125,7 @@ fr:
     new:
       title: Nouvelle configuration des véhicules
     import:
+      max_distance: Distance maximale du véhicule
       title: Importer une nouvelle configuration de véhicules
       vehicle_usage_set: Configuration de véhicules
       default_configuration_replaced: La configuration par défaut de tous les véhicules

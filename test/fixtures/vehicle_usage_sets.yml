@@ -11,6 +11,7 @@ vehicle_usage_set_one:
   rest_stop: 14:00:00
   rest_duration: 01:00:00
   store_rest:
+  max_distance: 30000
 
 vehicle_usage_set_two:
   name: vehicle_usage_set_two
