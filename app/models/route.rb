@@ -147,6 +147,7 @@ class Route < ApplicationRecord
       # Compute legs traces
       begin
         router_options = vehicle_usage.vehicle.default_router_options.symbolize_keys.merge(speed_multiplicator_areas: Zoning.speed_multiplicator_areas(planning.zonings))
+        router_options[:geometry] = false if options[:no_geojson]
 
         ts = router.trace_batch(speed_multiplicator, segments.reject(&:nil?), router_dimension, router_options)
         traces = segments.collect{ |segment|

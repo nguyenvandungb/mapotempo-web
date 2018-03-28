@@ -186,6 +186,7 @@ module Routers
         api_key: @api_key,
         mode: mode,
         dimension: dimension,
+        geometry: options[:geometry],
         traffic: options[:traffic],
         speed_multiplicator: options[:speed_multiplicator] == 1 ? nil : options[:speed_multiplicator],
         area: options[:speed_multiplicator_areas] ? options[:speed_multiplicator_areas].collect{ |a| a[:area].join(',') }.join('|') : nil,
