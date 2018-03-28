@@ -39,7 +39,8 @@ class DestinationsController < ApplicationController
         data = render_to_string.gsub("\n", "\r\n")
         send_data Iconv.iconv('ISO-8859-1//translit//ignore', 'utf-8', data).join(''),
             type: 'text/csv',
-            filename: format_filename(t('activerecord.models.destinations.other')) + '.csv'
+            filename: format_filename(t('activerecord.models.destinations.other')) + '.csv',
+            disposition: params.key?(:disposition) ? params[:disposition] : 'attachment'
       end
       format.csv do
         response.headers['Content-Disposition'] = 'attachment; filename="' + format_filename(t('activerecord.models.destinations.other')) + '.csv"'

@@ -457,7 +457,8 @@ class PlanningsController < ApplicationController
       data = render_to_string.gsub("\n", "\r\n")
       send_data Iconv.iconv('ISO-8859-1//translit//ignore', 'utf-8', data).join(''),
       type: 'text/csv',
-      filename: filename + '.csv'
+      filename: filename + '.csv',
+      disposition: @params.key?(:disposition) ? @params[:disposition] : 'attachment'
     end
     format.csv do
       @columns = (@params[:columns] && @params[:columns].split('|')) || export_columns
