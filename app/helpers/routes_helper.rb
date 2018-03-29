@@ -71,13 +71,17 @@ module RoutesHelper
     route_devices_hash
   end
 
-  def barcode(code, ref)
-    ("<div class=\"ref barcode barcode_#{code}\">" +
-    Barby::Code128B.new(ref).encoding.split('').collect{ |c|
-      "<span class=\"barcode_x barcode_#{c}\"></span>"
-    }.join('') +
-    "</div>").html_safe
-  rescue Exception => e
-    "<span class=\"ui-state-error\">#{I18n.t('errors.routes.bad_barcode_char')}</span>".html_safe
+  def barcode(code, refs)
+    refs.split(',').collect(&:strip).collect{ |ref|
+      begin
+        "<div class=\"ref barcode barcode_#{code}\">" +
+        Barby::Code128B.new(ref).encoding.split('').collect{ |c|
+          "<span class=\"barcode_x barcode_#{c}\"></span>"
+        }.join('') +
+        "</div>"
+      rescue Exception => e
+        "<span class=\"ui-state-error\">#{I18n.t('errors.routes.bad_barcode_char')}</span>"
+      end
+    }.join("\n").html_safe
   end
 end
