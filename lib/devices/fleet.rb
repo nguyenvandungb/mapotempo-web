@@ -209,7 +209,7 @@ class Fleet < DeviceBase
           order_id: order_id,
           status: @@order_status[mission['status_type_reference']],
           color: mission['status_type_color'],
-          eta: nil
+          eta: mission['eta']
         }
       end.compact
     else
