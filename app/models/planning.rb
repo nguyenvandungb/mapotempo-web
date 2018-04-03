@@ -362,7 +362,8 @@ class Planning < ApplicationRecord
     stops_on = (routes.find{ |r| !r.vehicle_usage? }.try(:stops) || []) + routes_with_vehicle.flat_map{ |r|
       r.stops_segregate(active_only)[true]
     }.compact
-    o = amalgamate_stops_same_position(stops_on, global) { |positions|
+
+    o = amalgamate_stops_same_position(stops_on, global, routes_with_vehicle.map(&:vehicle_usage)) { |positions|
       services_and_rests = positions.collect{ |position|
         stop_id, open1, close1, open2, close2, priority, duration, vehicle_usage_id, quantities, quantities_operations, skills, rest = position[2..13]
         {stop_id: stop_id, start1: open1, end1: close1, start2: open2, end2: close2, priority: priority, duration: duration, vehicle_usage_id: vehicle_usage_id, quantities: quantities, quantities_operations: quantities_operations, skills: skills, rest: rest}
@@ -610,13 +611,12 @@ class Planning < ApplicationRecord
   private
 
   # To reduce matrix computation with only one route... remove code?
-  def amalgamate_stops_same_position(stops, global)
+  def amalgamate_stops_same_position(stops, global, vehicle_usages)
     tws_or_quantities = stops.find{ |stop|
       stop.is_a?(StopRest) || stop.open1 || stop.close1 || stop.open2 || stop.close2
     }
     units_with_default = stops.flat_map{ |stop| stop.is_a?(StopVisit) && stop.visit.default_quantities.try(:keys) }.compact
-    multiples_vehicles_with_capacities = stops.collect{ |s| s.route.vehicle_usage_id }.uniq.size > 1 || (!stops.empty? && (capacities = stops[0].route.vehicle_usage.try(&:vehicle).try(&:default_capacities)) && capacities.any?{ |k, v| units_with_default.include?(k) && v })
-
+    multiples_vehicles_with_capacities = vehicle_usages.size > 1 || vehicle_usages.any? { |v| v.vehicle.default_capacities.any? { |k, v| units_with_default.include?(k) && v } }
     if tws_or_quantities || multiples_vehicles_with_capacities
       # Can't reduce cause of time windows, quantities or multiple vehicles
       positions_uniq = stops.collect{ |stop|

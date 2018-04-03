@@ -509,7 +509,7 @@ class PlanningTest < ActiveSupport::TestCase
     route = routes(:route_one_one)
 
     initial_positions = [D.new(1,1,1), D.new(2,2,2), D.new(3,3,3)]
-    ret = route.planning.send(:amalgamate_stops_same_position, initial_positions, false) { |positions|
+    ret = route.planning.send(:amalgamate_stops_same_position, initial_positions, false, [route.vehicle_usage]) { |positions|
       assert_equal 3, positions.size
       pos = positions.sort
       [pos.collect{ |p|
@@ -524,7 +524,7 @@ class PlanningTest < ActiveSupport::TestCase
     route = routes(:route_one_one)
 
     initial_positions = [D.new(1,1,1,nil,nil,nil,nil,nil,0,nil,nil, nil,[Struct.new(:label).new('skills')]), D.new(2,2,2,nil,nil,nil,nil,nil,0), D.new(2,2,3,nil,nil,nil,nil,nil,0), D.new(3,3,4,nil,nil,nil,nil,nil,0)]
-    ret = route.planning.send(:amalgamate_stops_same_position, initial_positions, false) { |positions|
+    ret = route.planning.send(:amalgamate_stops_same_position, initial_positions, false, [route.vehicle_usage]) { |positions|
       assert_equal 3, positions.size
       pos = positions.sort
       [pos.collect{ |p|
@@ -540,7 +540,7 @@ class PlanningTest < ActiveSupport::TestCase
     route = routes(:route_one_one)
 
     positions = [D.new(1,1,1,nil,nil,nil,nil,nil,0), D.new(2,2,2,nil,nil,nil,nil,nil,0), D.new(2,2,3,10,20,nil,nil,nil,0), D.new(3,3,4,nil,nil,nil,nil,nil,0)]
-    ret = route.planning.send(:amalgamate_stops_same_position, positions, false) { |positions|
+    ret = route.planning.send(:amalgamate_stops_same_position, positions, false, [route.vehicle_usage]) { |positions|
       assert_equal 4, positions.size
       [(1..(positions.size)).to_a]
     }
