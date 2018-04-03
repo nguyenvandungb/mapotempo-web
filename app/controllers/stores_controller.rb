@@ -108,8 +108,7 @@ class StoresController < ApplicationController
   def import_template
     respond_to do |format|
       format.excel do
-        data = render_to_string.gsub('\n', '\r\n')
-        send_data Iconv.iconv('ISO-8859-1//translit//ignore', 'utf-8', data).join(''),
+        send_data Iconv.iconv('ISO-8859-1//translit//ignore', 'utf-8', render_to_string).join(''),
             type: 'text/csv',
             filename: format_filename('import_template.csv')
       end
