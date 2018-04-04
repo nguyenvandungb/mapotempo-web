@@ -428,7 +428,12 @@ class Fleet < DeviceBase
   end
 
   def generate_mission_id(destination, date)
-    order_id = destination.is_a?(StopVisit) ? "v#{destination.visit_id}" : "r#{destination.id}"
+    order_id = if destination.is_a?(StopVisit)
+      ref = [destination.visit.ref, destination.ref].compact.join('-')
+      (ref.blank? ? '' : ref + '-') + "v#{destination.visit_id}"
+    else
+      "r#{destination.id}"
+    end
     "mission-#{order_id}-#{date.strftime('%Y_%m_%d')}"
   end
 
@@ -438,7 +443,7 @@ class Fleet < DeviceBase
   end
 
   def decode_mission_id(mission_ref)
-    mission_ref.split('-')[1, 2]
+    mission_ref.split('-')[-2..-1]
   end
 
 end
