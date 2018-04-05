@@ -596,6 +596,30 @@ class PlanningTest < ActiveSupport::TestCase
     assert_equal planning.routes.map{ |r| r.stops.size }.reduce(&:+), optim.flatten.size
   end
 
+  test 'should optimize planning and reduce matrix depending configuration' do
+    # stop lat and lng should be the same
+    customers(:customer_one).destinations.each{ |dest| dest.update!(lat: 44.82641, lng: -0.55674) }
+    # Visits must have no open and close
+    customers(:customer_one).destinations.map{ |d| d.visits.each{ |v| v.update!(open1: nil, close1: nil, open2: nil, close2: nil) } }
+    # Create a new VehicleUsageSet
+    vus = VehicleUsageSet.create(customer_id: customers(:customer_one).id, name: 'VUS test')
+    # Create planning
+    planning = Planning.create(customer: customers(:customer_one), vehicle_usage_set: vus, name: 'Planning test')
+    planning.default_routes
+    planning.save
+
+    stops = planning.routes.flat_map(&:stops)
+    # should be [nil]
+    assert_equal [nil], stops.collect{ |s| s.route.vehicle_usage_id }.uniq
+    # should be nil
+    assert_nil stops.find{ |stop| stop.is_a?(StopRest) || stop.open1 || stop.close1 || stop.open2 || stop.close2 }
+
+    planning.optimize(planning.routes, false,) do |positions, services, vehicles|
+      assert_equal stops.count, services.count
+      optimizer_global(positions, services, vehicles)
+    end
+  end
+
   test 'shoud set late_multiplier to nil when stop is a geolocalized rest during optimization' do
     planning = plannings(:planning_one)
     uri_template = Addressable::Template.new("#{Mapotempo::Application.config.optimize.url}/vrp/submit.json")
@@ -609,7 +633,7 @@ class PlanningTest < ActiveSupport::TestCase
     planning.optimize(planning.routes, false,) do |positions, services, vehicles|
       assert services.collect{ |s| s.key? :rest }.uniq.first # All Service should have a rest key
       # Given parameters in OptimizerWrapper::optimize should contain late_multiplier:null
-      Mapotempo::Application.config.optimize.optimize(positions, services, vehicles, stop_soft_upper_bound: 0.3)
+      optimizer_global(positions, services, vehicles)
     end
   end
 
@@ -623,7 +647,7 @@ class PlanningTest < ActiveSupport::TestCase
     planning.optimize(planning.routes, false,) do |positions, services, vehicles|
       assert vehicles.collect{ |s| s.key? :max_distance }.uniq.first # All Vehicles should have a max_distance key
       # Given parameters in OptimizerWrapper::optimize should contain distance
-      Mapotempo::Application.config.optimize.optimize(positions, services, vehicles, stop_soft_upper_bound: 0.3)
+      optimizer_global(positions, services, vehicles)
     end
   end
 
