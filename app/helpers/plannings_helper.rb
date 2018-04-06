@@ -80,7 +80,7 @@ module PlanningsHelper
       begin
         list = device.list_devices
         devices[device.service_name_id] = list unless list.empty?
-      rescue DeviceServiceError => e
+      rescue Exception => e
         Rails.logger.info(e)
       end
     }
