@@ -545,11 +545,13 @@ fr:
               after: doit être après l'horaire de début
             rest_stop:
               after: doit être après l'horaire de début qui doit alors être présent
-          missing_rest_window: doit être rempli(e) si la durée de repos ou un horaire est rempli
+          missing_rest_window: doit être rempli(e) si la durée de repos ou un horaire
+            est rempli
           missing_rest_duration: doit être remplie si une plage de repos est remplie
           rest_range: La plage de repos doit être comprise entre %{start} et %{end}
           service_range: ne peut pas être supérieure ou égale au temps de travail
-          work_time_inside_window: doit être inférieure ou égal à la plage horaire de travail
+          work_time_inside_window: doit être inférieure ou égal à la plage horaire
+            de travail
         vehicle_usage_set:
           attributes:
             close:
@@ -559,7 +561,8 @@ fr:
           at_least_one: Au moins une configuration de véhicules est requise
           missing_rest_window: doit être rempli(e) si la durée de repos est remplie
           missing_rest_duration: doit être remplie si une plage de repos est remplie
-          work_time_inside_window: doit être inférieure ou égal à la plage horaire de travail
+          work_time_inside_window: doit être inférieure ou égal à la plage horaire
+            de travail
         visit:
           attributes:
             close1:
@@ -591,7 +594,8 @@ fr:
             stores:
               over_max_limit: dépassement du nombre maximal de dépôts
             vehicle_usage_sets:
-              over_max_limit: dépassement du nombre maximal de configurations des véhicules
+              over_max_limit: dépassement du nombre maximal de configurations des
+                véhicules
         store:
           at_least_one: Au moins un dépôt est requis
           icon_unknown: n'est pas une icône font-awesome autorisée
@@ -649,14 +653,16 @@ fr:
       job_in_progress: Opération impossible pour le moment, une tâche de fond (optimisation)
         est en cours d'execution
     routes:
-      bad_barcode_char: Les données du code barre contiennent un caractère non pris en charge
+      bad_barcode_char: Les données du code barre contiennent un caractère non pris
+        en charge
   import:
     csv:
       line: Ligne %{s}
     tomtom:
       record: Enregistrement %{s}
     empty: Rien à importer, vérifiez vos données.
-    without_stop_type: Valeurs vides pour « type arrêt », retirez la colonne/clé ou renseignez une valeur parmi [visite | dépôt | pause].
+    without_stop_type: Valeurs vides pour « type arrêt », retirez la colonne/clé ou
+      renseignez une valeur parmi [visite | dépôt | pause].
     data: 'Vérifiez vos données :'
     data_erroneous:
       csv: Fichier invalide, ligne %{s}
@@ -703,10 +709,19 @@ fr:
         facebook_url_help: Lien Facebook du revendeur
         twitter_url_help: Lien Twitter du revendeur
         linkedin_url_help: Lien linkedIn du revendeur
-        audience_url_help: 'Adresse de la page web contenant votre tableau de bord d''audience. Vous pouvez utiliser « {ID} »  qui sera remplacé par le nombre de jours (par ex: https://analytics.mapotempo.com/public/dashboard/123456789?id={ID}'
-        behavior_url_help: 'Adresse de la page web contenant votre tableau de bord de comportement. Vous pouvez utiliser « {ID} »  qui sera remplacé par le nombre de jours (par ex: https://analytics.mapotempo.com/public/dashboard/123456789?id={ID}'
-        customer_audience_url_help: 'Adresse de la page web contenant votre tableau de bord d''audience pour un compte spécifique. Vous pouvez utiliser « {ID} »  qui sera remplacé par l''identifiant du compte client (par ex: https://analytics.mapotempo.com/public/dashboard/123456789?id={ID}'
-        customer_behavior_url_help: 'Adresse de la page web contenant votre tableau de bord de comportement pour un compte spécifique. Vous pouvez utiliser « {ID} »  qui sera remplacé par l''identifiant du compte client (par ex: https://analytics.mapotempo.com/public/dashboard/123456789?id={ID}'
+        audience_url_help: 'Adresse de la page web contenant votre tableau de bord
+          d''audience. Vous pouvez utiliser « {ID} »  qui sera remplacé par le nombre
+          de jours (par ex: https://analytics.mapotempo.com/public/dashboard/123456789?id={ID}'
+        behavior_url_help: 'Adresse de la page web contenant votre tableau de bord
+          de comportement. Vous pouvez utiliser « {ID} »  qui sera remplacé par le
+          nombre de jours (par ex: https://analytics.mapotempo.com/public/dashboard/123456789?id={ID}'
+        customer_audience_url_help: 'Adresse de la page web contenant votre tableau
+          de bord d''audience pour un compte spécifique. Vous pouvez utiliser « {ID} »  qui
+          sera remplacé par l''identifiant du compte client (par ex: https://analytics.mapotempo.com/public/dashboard/123456789?id={ID}'
+        customer_behavior_url_help: 'Adresse de la page web contenant votre tableau
+          de bord de comportement pour un compte spécifique. Vous pouvez utiliser
+          « {ID} »  qui sera remplacé par l''identifiant du compte client (par ex:
+          https://analytics.mapotempo.com/public/dashboard/123456789?id={ID}'
         logo_large_help: Logo pleine page redimensionnable, de préférence au format
           SVG, à défaut en PNG.
         logo_small_help: Logo du menu, 150×40 pixels en SVG ou PNG.
@@ -856,9 +871,9 @@ fr:
         plus les retards seront pénalisants (0 pour empêcher les retards de manière
         stricte : désactive les clusters dans ce cas).'
       optimization_cost_waiting_time_default: '%{n} (valeur par défaut)'
-      optimization_cost_waiting_time_help: Permet d'évaluer l'importance des temps d'attente. Plus
-        la valeur est grande, plus l'attente avant l'ouverture d'un créneau horaire
-        sera pénalisée (0 pour ne pas considérer l'attente dans l'optimisation).
+      optimization_cost_waiting_time_help: Permet d'évaluer l'importance des temps
+        d'attente. Plus la valeur est grande, plus l'attente avant l'ouverture d'un
+        créneau horaire sera pénalisée (0 pour ne pas considérer l'attente dans l'optimisation).
       optimization_force_start_help: Forcer le départ du véhicule à son horaire de
         début.
       enable_global_optimization_test: Actif si Test
@@ -867,24 +882,28 @@ fr:
         title: Impressions
         barcode:
           code128: Code 128
-        barcode_help: Inclure la référence sous forme de code barre.
+        barcode_help: Inclure la référence sous forme de code barre
       sms:
         title: SMS
       sms_character_count: Votre message comporte %{c} caractères
-      sms_template_help: Modèle de SMS envoyé à vos clients. {NAME} sera remplacé par le nom de
-        votre client renseigné sur l'application. Votre texte ne doit pas comporter de caractères
-        non standards (GSM 03.38) et ne devrait pas dépasser 160 caractères (ou 70 en cas de
-        caractères spéciaux).
-      sms_keys_help: "Chaines de remplacements disponibles : {NAME} {REF} {VISIT_REF} {DATE}
-        {TIME} {STREET} {CITY} {QUANTITIES} {COMMENT} {VEHICLE_NAME}"
-      sms_concat_help: Si coché vos SMS seront complets (mais facturés le prix de plusieurs SMS
-        en cas de dépassement), si non coché vos SMS seront tronqués en cas de dépassement.
-      sms_from_customer_name_help: Si coché « %{c} » sera utilisé comme nom d'expéditeur du SMS
+      sms_template_help: Modèle de SMS envoyé à vos clients. {NAME} sera remplacé
+        par le nom de votre client renseigné sur l'application. Votre texte ne doit
+        pas comporter de caractères non standards (GSM 03.38) et ne devrait pas dépasser
+        160 caractères (ou 70 en cas de caractères spéciaux).
+      sms_keys_help: 'Chaines de remplacements disponibles : {NAME} {REF} {VISIT_REF}
+        {DATE} {TIME} {STREET} {CITY} {QUANTITIES} {COMMENT} {VEHICLE_NAME}.'
+      sms_concat_help: Si coché vos SMS seront complets (mais facturés le prix de
+        plusieurs SMS en cas de dépassement), si non coché vos SMS seront tronqués
+        en cas de dépassement.
+      sms_from_customer_name_help: Si coché « %{c} » sera utilisé comme nom d'expéditeur
+        du SMS
       speed_multiplicator_default: '%{n} (valeur par défaut)'
       speed_multiplicator_help: Une valeur supérieure à 100% signifie une vitesse
         plus élevée.
-      audience_url_help: Se rendre sur le tableau de bord d'audience pour ce compte client
-      behavior_url_help: Se rendre sur le tableau de bord comportemental pour ce compte client
+      audience_url_help: Se rendre sur le tableau de bord d'audience pour ce compte
+        client
+      behavior_url_help: Se rendre sur le tableau de bord comportemental pour ce compte
+        client
       submit: Enregistrer paramétrage global
       external_callback:
         title: URL de rappel
@@ -1143,7 +1162,8 @@ fr:
       close2_desc: fin de la plage horaire 2 (peut dépasser 24:00) conseillée pour
         la visite.
       priority: priorité
-      priority_desc: priorité d'inclusion lors de l'optimisation, de -4 (min) à 4 (max).
+      priority_desc: priorité d'inclusion lors de l'optimisation, de -4 (min) à 4
+        (max).
       comment: commentaire
       comment_desc: informations nécessaires pour la visite.
       phone_number: téléphone
@@ -1160,7 +1180,7 @@ fr:
       format:
         string: texte
         integer: nombre
-        float: '0,123'
+        float: 0,123
         hour: HH:MM
         second: HH:MM:SS
         yes_no: oui/non
@@ -1284,8 +1304,9 @@ fr:
       hello: Bonjour
       subject: Comptes mobiles
       preheader: Comptes mobiles
-      content: "Les utilisateurs mobiles suivant ont été créés et sont maintenant disponibles pour se connecter sur le mobile (email comme login et password)"
-      login: "email: %{email} / password: %{password}"
+      content: Les utilisateurs mobiles suivant ont été créés et sont maintenant disponibles
+        pour se connecter sur le mobile (email comme login et password)
+      login: 'email: %{email} / password: %{password}'
       footer: Comptes mobiles
     connection:
       subject: Connexion à votre compte %{name}
@@ -1404,15 +1425,15 @@ fr:
         img_src: https://www.mapotempo.com/wp-content/uploads/2015/10/calendar.png
       panel_two:
         title: TomTom WEBFLEET (optionnel)
-        content: ' vous utilisez TomTom WEBFLEET ? Apprenez comment interfacer %{name}
+        content: vous utilisez TomTom WEBFLEET ? Apprenez comment interfacer %{name}
           et TomTom WEBFLEET. Comment le planificateur peut réaliser l’interfaçage
-          et comment les agents de terrain pourront l’utiliser au quotidien.'
+          et comment les agents de terrain pourront l’utiliser au quotidien.
         time: ⏱9min.
         doc_link: Doc - TomTom WEBFLEET
         doc_href: /manual/07-tomtom_webfleet.html
         img_src: https://www.mapotempo.com/wp-content/uploads/2015/10/globe.png
       panel_three:
-        title: Options avancées
+        title: 'Options avancées :'
         content: 'utiliser les options avancées : créer des visites multiples avec
           des paramètres différents pour un même client etc.'
         time: ⏱4min.
@@ -1441,11 +1462,13 @@ fr:
       try_period_over: Vous arrivez au terme de votre période d’essai. <b>Nous vous
         remercions de l’intérêt que vous portez à %{name} et nous espérons que l'expérience
         a répondu à vos attentes.</b>
-      content: Si vous souhaitez poursuivre l’aventure à nos côtés <b>vous pouvez
+      content: 'Si vous souhaitez poursuivre l’aventure à nos côtés <b>vous pouvez
         dès à présent contacter notre service commercial par le biais de ce formulaire
-        ou par téléphone au +33&nbsp;5&nbsp;64&nbsp;27&nbsp;04&nbsp;59&nbsp;:</b>
+        ou par téléphone au +33&nbsp;5&nbsp;64&nbsp;27&nbsp;04&nbsp;59&nbsp;</b> :'
       link: Je demande à m'abonner à %{name}
-      preheader: Vous arrivez au terme de votre période d’essai. Nous vous remercions de l’intérêt que vous portez à Mapotempo Web (resseler solution name) et nous espérons que l'expérience a répondu à vos attentes.
+      preheader: Vous arrivez au terme de votre période d’essai. Nous vous remercions
+        de l’intérêt que vous portez à Mapotempo Web (resseler solution name) et nous
+        espérons que l'expérience a répondu à vos attentes.
       footer: Vous recevez ce message en tant qu'utilisateur de %{name}
   plannings:
     menu:
@@ -1463,8 +1486,8 @@ fr:
         spreadsheet: Tableur CSV / Excel
         none_planning: Veuillez sélectionner au moins un plan à exporter
       over_max_limit: 'Vous avez atteint la limite de plans autorisés pour votre compte
-        (Limite : %{limit}), veuillez supprimer vos précédents plans ou contacter le support
-        si vous avez besoin de plus de plans.'
+        (Limite : %{limit}), veuillez supprimer vos précédents plans ou contacter
+        le support si vous avez besoin de plus de plans.'
     edit:
       vehicles: Véhicules
       marker_clusters: Activer/Désactiver les groupes de points
@@ -1567,7 +1590,8 @@ fr:
       vehicle_help: Paramétrer le véhicule
       export_help: Exporter la tournée
       route_stops_active_help: Sélectionner les arrêts actifs
-      route_duration_help: Durée de la tournée / Créneau horaire ou durée de travail véhicule
+      route_duration_help: Durée de la tournée / Créneau horaire ou durée de travail
+        véhicule
       route_distance_help: Distance de la tournée
       route_quantity_help: Quantité / Capacité véhicule
       route_speed_average_help: Vitesse moyenne du véhicule
@@ -1630,7 +1654,8 @@ fr:
         out_of_drive_time: Hors amplitude horaire véhicule
         out_of_drive_time_help: Planifié en dehors des amplitudes horaires du véhicule
         out_of_work_time: Hors durée de travail
-        out_of_work_time_help: Planifié en dehors de la durée de travail du chauffeur (service compris)
+        out_of_work_time_help: Planifié en dehors de la durée de travail du chauffeur
+          (service compris)
         out_of_max_distance: Distance maximale réalisable dépassée
         out_of_max_distance_help: Distance maximale réalisable dépassée
         no_path: Destination inaccessible
@@ -1646,13 +1671,14 @@ fr:
           visits:
             title: Visites
             sticky_vehicle: Conserver les visites dans les mêmes tournées
-            sticky_vehicle_true_help: Indiquer à l'optimisation de traiter les tournées indépendamment
-              les unes des autres afin de ne pas attribuer une nouvelle tournée pour une visite.
-            sticky_vehicle_false_help: Laisser à l'optimisation le choix d'attribution des tournées à
-              toutes les visites.
+            sticky_vehicle_true_help: Indiquer à l'optimisation de traiter les tournées
+              indépendamment les unes des autres afin de ne pas attribuer une nouvelle
+              tournée pour une visite.
+            sticky_vehicle_false_help: Laisser à l'optimisation le choix d'attribution
+              des tournées à toutes les visites.
             active_only: Placer les visites décochées en fin de tournée
-            active_only_true_help: Ne prendre en compte que les visites cochées dans les
-              tournées.
+            active_only_true_help: Ne prendre en compte que les visites cochées dans
+              les tournées.
             active_only_false_help: Optimiser toutes les visites d'une tournée, qu'elle
               soient actives ou non (les visites décochées resteront décochées).
             cost_late_multiplier: Autoriser les retards créneau visite
@@ -1755,7 +1781,10 @@ fr:
       ref_help: Référence libre
       begin_end_date: Période de validité
       begin_end_date_help: Période durant laquelle le plan est valide
-      tags_help: Permet de filtrer les visites qui seront présentes sur le plan selon leur libellé. Si «tous » est sélectionné, les visites/clients doivent avoir l’ensemble des libellés. Si « ou » est sélectionné un libellé de la liste suffit.
+      tags_help: Permet de filtrer les visites qui seront présentes sur le plan selon
+        leur libellé. Si «tous » est sélectionné, les visites/clients doivent avoir
+        l’ensemble des libellés. Si « ou » est sélectionné un libellé de la liste
+        suffit.
       order_array: Comm.
       zonings_help: Permet d'affecter automatiquement des visites/clients à des véhicules
         suivant des zones géographiques prédéfinies.
@@ -1889,7 +1918,7 @@ fr:
         string: texte
         integer: nombre
         hour: HH:MM
-        float: '0,123'
+        float: 0,123
         required: obligatoire
         advisable: recommandé
         optionnal: optionnel
@@ -1980,7 +2009,9 @@ fr:
       color: couleur
       color_desc: couleur associée au véhicule
       tags: compétences du véhicule
-      tags_desc: 'compétences associées au véhicule. (Attention : lorsqu’un véhicule est associé à une compétence, lors de l’optimisation les visites ayant ce besoin de compétence seront automatiquement attribuées à ce véhicule.)'
+      tags_desc: 'compétences associées au véhicule. (Attention : lorsqu’un véhicule
+        est associé à une compétence, lors de l’optimisation les visites ayant ce
+        besoin de compétence seront automatiquement attribuées à ce véhicule.)'
       tags_format: compétence 1,compétence 2
       devices: appareils
       devices_desc: référence ou ID de votre GPS associé aux véhicules
@@ -2026,7 +2057,9 @@ fr:
       contact_email:
         help: Email du terminal du chauffeur
       tags_empty: Pas de compétences trouvées
-      tags_help: 'Compétences associées au véhicule. (Attention : si un seul véhicule possède des compétences alors tous les autres véhicules ne pourront utiliser cette compétence si non déclaré)'
+      tags_help: 'Compétences associées au véhicule. (Attention : si un seul véhicule
+        possède des compétences alors tous les autres véhicules ne pourront utiliser
+        cette compétence si non déclaré)'
   vehicle_usages:
     menu:
       vehicle_usages: Configurations de véhicules
@@ -2048,8 +2081,8 @@ fr:
       multiple_enable: Activer les véhicules
       disable_confirm: Êtes-vous sûr ? Toutes les tournées utilisant ce véhicule dans
         cette configuration seront perdues.
-      multiple_disable_confirm: Êtes-vous sûr ? Toutes les tournées utilisant ces véhicules dans
-        cette configuration seront perdues.
+      multiple_disable_confirm: Êtes-vous sûr ? Toutes les tournées utilisant ces
+        véhicules dans cette configuration seront perdues.
       enable: Activer
     new:
       title: Nouvelle configuration de véhicule
@@ -2099,11 +2132,15 @@ fr:
         arrêt
       work_time: Durée de travail
       work_time_default: '%{n} (valeur par défaut)'
-      work_time_help: La durée de travail doit être inférieure ou égale à l'amplitude horaire (service compris sans la pause). Si défini, l'optimisation respectera strictement la durée de travail.
+      work_time_help: La durée de travail doit être inférieure ou égale à l'amplitude
+        horaire (service compris sans la pause). Si défini, l'optimisation respectera
+        strictement la durée de travail.
       devices:
         placeholder: Sélectionner un appareil
         fieldset: GPS & Mobiles
-      tags_help: 'Compétences associées à la configuration du véhicule. (Attention : si un seul véhicule possède des compétences alors tous les autres véhicules ne pourront utiliser cette compétence si non déclaré)'
+      tags_help: 'Compétences associées à la configuration du véhicule. (Attention
+        : si un seul véhicule possède des compétences alors tous les autres véhicules
+        ne pourront utiliser cette compétence si non déclaré)'
   vehicle_usage_sets:
     default:
       name: Défaut
@@ -2190,7 +2227,9 @@ fr:
       work_time: durée de travail
       work_time_desc: durée de travail, inférieure ou égal à la plage de travail
       tags: compétences
-      tags_desc: 'compétences associées à la configuration du véhicule. (Attention : si un seul véhicule possède des compétences alors tous les autres véhicules ne pourront utiliser cette compétence si non déclaré)'
+      tags_desc: 'compétences associées à la configuration du véhicule. (Attention
+        : si un seul véhicule possède des compétences alors tous les autres véhicules
+        ne pourront utiliser cette compétence si non déclaré)'
       tags_format: compétence 1,compétence 2
       format:
         string: texte
@@ -2226,7 +2265,8 @@ fr:
       service_times_help: Durées ajoutées avant le premier arrêt et après le dernier
         arrêt.
       work_time: Durée de travail
-      work_time_help: La durée de travail doit être inférieure à l'amplitude horaire de travail (service compris sans la pause)
+      work_time_help: La durée de travail doit être inférieure à l'amplitude horaire
+        de travail (service compris sans la pause)
       rest_duration_store: Durée de repos / lieu
       rest_duration:
         help: Requiert une plage de repos si renseigné
@@ -2243,17 +2283,19 @@ fr:
         fill: Remplir véhicule (d'au moins)
         empty: Vider véhicule (à partir de)
         default: '%{n} (valeur par défaut)'
-        quantities_operations_title: 'Remplissage/vidage'
-        quantities_operations_help: 'Ne sélectionner que si vous voulez remplir/vider le véhicule en totalité lors de cette visite'
+        quantities_operations_title: Remplissage/vidage
+        quantities_operations_help: Ne sélectionner que si vous voulez remplir/vider
+          le véhicule en totalité lors de cette visite
         help: Quantités à livrer. Dans le cas d'un remplissage ou d'un vidage, l'optimisation
-          déterminera elle-même la quantité, si vous précisez une valeur elle sera un minimum
-          à remplir / vider.
+          déterminera elle-même la quantité, si vous précisez une valeur elle sera
+          un minimum à remplir / vider.
       take_over_default: défaut
       take_over_help: Si vide utilise la valeur par défaut
       open_close1: Plage horaire 1
       open_close2: Plage horaire 2
       priority: Priorité
-      priority_help: Priorité d’insertion lors de l’optimisation (utile lorsque vous savez que votre flotte de véhicules ne pourra pas visiter tous les clients)
+      priority_help: Priorité d’insertion lors de l’optimisation (utile lorsque vous
+        savez que votre flotte de véhicules ne pourra pas visiter tous les clients)
       close_help: Sans tenir compte de la durée de visite
       tags_help: Catégories de la visite
       delete: Marquer à supprimer
@@ -2286,13 +2328,14 @@ fr:
       title: Liste zonages
       new: Nouveau zonage
       over_max_limit: 'Vous avez atteint la limite de zonages autorisés pour votre
-        compte (Limite : %{limit}), veuillez supprimer vos précédents zonages ou
-        contacter le support si vous avez besoin de plus de zonages'
+        compte (Limite : %{limit}), veuillez supprimer vos précédents zonages ou contacter
+        le support si vous avez besoin de plus de zonages'
     new:
       title: Nouveau zonage
     form:
       planning_id: Clients depuis un plan
-      planning_id_help: Permet par exemple de filtrer les clients à afficher avec certains libellés définis dans le plan de tournées sélectionné
+      planning_id_help: Permet par exemple de filtrer les clients à afficher avec
+        certains libellés définis dans le plan de tournées sélectionné.
       hide_out_of_route: Cacher les clients non planifiés
       all_destinations: Afficher tous les clients
       from_planning_help: Vous pouvez aussi afficher les clients d'un unique plan
@@ -2383,7 +2426,8 @@ fr:
           without_vehicle: Sans véhicule
   notifications:
     sms:
-      alert_plan: Bonjour {NAME}. Votre visite est planifiée le {DATE} entre {TIME-60} et {TIME+60} à {CITY}.
+      alert_plan: Bonjour {NAME}. Votre visite est planifiée le {DATE} entre {TIME-60}
+        et {TIME+60} à {CITY}.
   all:
     datepicker: dd-mm-yyyy
     map_attribution:
@@ -2450,7 +2494,7 @@ fr:
     format:
       delimiter:  
   text:
-    separator: ' : '
+    separator: ':'
   devise:
     shared:
       links:
