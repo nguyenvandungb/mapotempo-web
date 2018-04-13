@@ -227,7 +227,7 @@ class Fleet < DeviceBase
     departure = route.vehicle_usage.default_store_start
     destinations << {
       mission_type: 'departure',
-      external_ref: generate_store_id(departure, planning_date(route.planning), type: 'departure'),
+      external_ref: generate_store_id(departure, route, planning_date(route.planning), type: 'departure'),
       name: departure.name,
       date: p_time(route, route.start).strftime('%FT%T.%L%:z'),
       duration: route.vehicle_usage.default_service_time_start,
@@ -293,7 +293,7 @@ class Fleet < DeviceBase
     arrival = route.vehicle_usage.default_store_stop
     destinations << {
       mission_type: 'arrival',
-      external_ref: generate_store_id(arrival, planning_date(route.planning), type: 'arrival'),
+      external_ref: generate_store_id(arrival, route, planning_date(route.planning), type: 'arrival'),
       name: arrival.name,
       date: p_time(route, route.end).strftime('%FT%T.%L%:z'),
       duration: route.vehicle_usage.default_service_time_end,
@@ -422,9 +422,10 @@ class Fleet < DeviceBase
     URI.encode("#{api_url}/api/0.1/users/#{convert_user(user)}/missions/destroy_multiples?start_date=#{start_date}&end_date=#{end_date}")
   end
 
-  def generate_store_id(destination, date, options)
+  def generate_store_id(destination, route, date, options)
     order_id = destination.id
-    "#{options[:type]}-#{order_id}-#{date.strftime('%Y_%m_%d')}"
+    route_id = route.id
+    "#{options[:type]}-#{order_id}-#{date.strftime('%Y_%m_%d')}-#{route_id}"
   end
 
   def generate_mission_id(destination, date)
