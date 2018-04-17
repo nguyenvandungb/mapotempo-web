@@ -601,10 +601,22 @@ var zonings_edit = function(params) {
       type: "patch",
       url: '/zonings/' + zoning_id + '/from_planning' + (planning_id ? '/planning/' + planning_id : '') + '.json',
       beforeSend: beforeSendWaiting,
-      success: displayZoning,
+      success: function(data) {
+        fitBounds = true;
+        displayZoning(data);
+      },
       complete: completeAjaxMap,
       error: ajaxError
     });
+  });
+
+  $('#isochrone_date, #isodistance_date').datepicker({
+    language: I18n.currentLocale(),
+    autoclose: true,
+    calendarWeeks: true,
+    todayHighlight: true,
+    format: I18n.t("all.datepicker"),
+    zIndexOffset: 1000
   });
 
   $('#isochrone_size').timeEntry({
@@ -620,38 +632,32 @@ var zonings_edit = function(params) {
     var size = $('#isochrone_size').val().split(':');
     size = parseInt(size[0]) * 60 + parseInt(size[1]);
 
+    $('#isochrone-modal').modal('hide');
+    $('#isochrone-progress-modal').modal({
+      backdrop: 'static',
+      keyboard: true
+    });
+
     $.ajax({
-      url: '/zonings/' + zoning_id + '/isochrone',
       type: "patch",
-      dataType: "json",
+      url: '/zonings/' + zoning_id + '/isochrone.json',
       data: {
         vehicle_usage_set_id: $('#isochrone_vehicle_usage_set_id').val(),
-        size: size
+        size: size,
+        departure_date: $('#isochrone_date').datepicker('getDate')
       },
-      beforeSend: function() {
-        beforeSendWaiting();
-        $('#isochrone-modal').modal('hide');
-        $('#isochrone-progress-modal').modal({
-          backdrop: 'static',
-          keyboard: true
-        });
-      },
+      beforeSend: beforeSendWaiting,
       success: function(data) {
-        hideNotices();
         fitBounds = true;
         displayZoning(data);
-        notice(I18n.t('zonings.edit.success'));
       },
       complete: function() {
         completeAjaxMap();
         $('#isochrone-progress-modal').modal('hide');
       },
-      error: function() {
-        stickyError(I18n.t('zonings.edit.failed'));
-      }
+      error: ajaxError
     });
   });
-
 
   $('#isodistance').click(function() {
     if (nbZones && !confirm(I18n.t('zonings.edit.generate_confirm'))) {
@@ -660,14 +666,20 @@ var zonings_edit = function(params) {
     var isodistanceSize = parseFloat($('#isodistance_size').val().replace(/,/g, '.'));
     var size = (prefered_unit == 'km') ? isodistanceSize : Math.ceil10(isodistanceSize * 1.60934, -2);
 
+    $('#isodistance-modal').modal('hide');
     $('#isodistance-progress-modal').modal({
       backdrop: 'static',
       keyboard: true
     });
-    $('#isodistance-modal').modal('hide');
+
     $.ajax({
       type: "patch",
-      url: '/zonings/' + zoning_id + '/isodistance.json?vehicle_usage_set_id=' + $('#isodistance_vehicle_usage_set_id').val() + '&size=' + size,
+      url: '/zonings/' + zoning_id + '/isodistance.json',
+      data: {
+        vehicle_usage_set_id: $('#isodistance_vehicle_usage_set_id').val(),
+        size: size,
+        departure_date: $('#isodistance_date').datepicker('getDate')
+      },
       beforeSend: beforeSendWaiting,
       success: function(data) {
         fitBounds = true;

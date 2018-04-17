@@ -124,8 +124,8 @@ class ZoningsController < ApplicationController
       vehicle_usage_set_id = Integer(params[:vehicle_usage_set_id])
       vehicle_usage_set = current_user.customer.vehicle_usage_sets.to_a.find{ |vehicle_usage_set| vehicle_usage_set.id == vehicle_usage_set_id }
       if size && vehicle_usage_set
-        @zoning.isochrones(size, vehicle_usage_set)
-        @zoning.save
+        @zoning.isochrones(size, vehicle_usage_set, params[:departure_date].blank? ? Date.today : Date.parse(params[:departure_date]))
+        @zoning.save!
       end
       format.json { render action: 'edit' }
     end
@@ -138,8 +138,8 @@ class ZoningsController < ApplicationController
       vehicle_usage_set = current_user.customer.vehicle_usage_sets.to_a.find{ |vehicle_usage_set| vehicle_usage_set.id == vehicle_usage_set_id }
       if size && vehicle_usage_set
         @zoning.prefered_unit = current_user.prefered_unit
-        @zoning.isodistances(size, vehicle_usage_set)
-        @zoning.save
+        @zoning.isodistances(size, vehicle_usage_set, params[:departure_date].blank? ? Date.today : Date.parse(params[:departure_date]))
+        @zoning.save!
       end
       format.json { render action: 'edit' }
     end
@@ -154,6 +154,9 @@ class ZoningsController < ApplicationController
     }
     @isodistance = vehicle_usage_sets.collect { |vehicle_usage_set|
       [vehicle_usage_set, @zoning.isodistance?(vehicle_usage_set)]
+    }
+    @isoline_need_time = vehicle_usage_sets.map { |vehicle_usage_set|
+      [vehicle_usage_set, vehicle_usage_set.vehicle_usages.any?{ |vu| vu.vehicle.default_router_options['traffic'] }]
     }
   end
 

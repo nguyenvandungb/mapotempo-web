@@ -158,6 +158,7 @@ class V01::Zonings < Grape::API
       requires :id, type: Integer
       requires :size, type: Integer, desc: 'Area accessible from the start store by this travel time in seconds.'
       optional :vehicle_usage_set_id, type: Integer, desc: 'If not provided, use one or the only one vehicle_usage_set.'
+      optional :departure_date, type: Date, desc: 'Departure date (only used if router supports traffic). Open time for each vehicle is used in addition of this date.'
     end
     patch ':id/isochrone' do
       Zoning.transaction do
@@ -170,7 +171,7 @@ class V01::Zonings < Grape::API
         end
         size = Integer(params[:size])
         if zoning && vehicle_usage_set
-          zoning.isochrones(size, vehicle_usage_set)
+          zoning.isochrones(size, vehicle_usage_set, params[:departure_date])
           zoning.save!
           present zoning, with: V01::Entities::Zoning
         else
@@ -187,6 +188,7 @@ class V01::Zonings < Grape::API
       requires :id, type: Integer
       requires :size, type: Integer, desc: 'Area accessible from the start store by this travel time in seconds.'
       requires :vehicle_usage_id, type: Integer
+      optional :departure_date, type: Date, desc: 'Departure date (only used if router supports traffic). Open time of the vehicle is used in addition of this date.'
     end
     patch ':id/vehicle_usage/:vehicle_usage_id/isochrone' do
       Zoning.transaction do
@@ -199,7 +201,8 @@ class V01::Zonings < Grape::API
         }.compact.first
         size = Integer(params[:size])
         if zoning && vehicle_usage
-          zoning.isochrone(size, vehicle_usage)
+          # Use Time.zone.parse to preserve time zone from user (instead of to_time)
+          zoning.isochrone(size, vehicle_usage, nil, !params[:departure_date].blank? && Time.zone.parse(params[:departure_date].to_s) + vehicle_usage.default_open)
           zoning.save!
           present zoning.zones.find{ |z| z.vehicle == vehicle_usage.vehicle }, with: V01::Entities::Zone
         else
@@ -216,6 +219,7 @@ class V01::Zonings < Grape::API
       requires :id, type: Integer
       requires :size, type: Integer, desc: 'Area accessible from the start store by this travel distance in meters.'
       optional :vehicle_usage_set_id, type: Integer, desc: 'If not provided, use one or the only one vehicle_usage_set.'
+      optional :departure_date, type: Date, desc: 'Departure date (only used if router supports traffic). Open time for each vehicle is used in addition of this date.'
     end
     patch ':id/isodistance' do
       Zoning.transaction do
@@ -229,7 +233,7 @@ class V01::Zonings < Grape::API
         size = Integer(params[:size])
         if zoning && vehicle_usage_set
           zoning.prefered_unit = @current_user.prefered_unit
-          zoning.isodistances(size, vehicle_usage_set)
+          zoning.isodistances(size, vehicle_usage_set, params[:departure_date])
           zoning.save!
           present zoning, with: V01::Entities::Zoning
         else
@@ -246,6 +250,7 @@ class V01::Zonings < Grape::API
       requires :id, type: Integer
       requires :size, type: Integer, desc: 'Area accessible from the start store by this travel distance in meters.'
       requires :vehicle_usage_id, type: Integer
+      optional :departure_date, type: Date, desc: 'Departure date (only used if router supports traffic). Open time of the vehicle is used in addition of this date.'
     end
     patch ':id/vehicle_usage/:vehicle_usage_id/isodistance' do
       Zoning.transaction do
@@ -259,7 +264,8 @@ class V01::Zonings < Grape::API
         size = Integer(params[:size])
         if zoning && vehicle_usage
           zoning.prefered_unit = @current_user.prefered_unit
-          zoning.isodistance(size, vehicle_usage)
+          # Use Time.zone.parse to preserve time zone from user (instead of to_time)
+          zoning.isodistance(size, vehicle_usage, nil, !params[:departure_date].blank? && Time.zone.parse(params[:departure_date].to_s) + vehicle_usage.default_open)
           zoning.save!
           present zoning.zones.find{ |z| z.vehicle == vehicle_usage.vehicle }, with: V01::Entities::Zone
         else
@@ -277,6 +283,7 @@ class V01::Zonings < Grape::API
       requires :lng, type: Float, desc: 'Longitude.'
       requires :size, type: Integer, desc: 'Area accessible from the start point by this travel time in seconds.'
       optional :vehicle_usage_id, type: Integer, desc: 'If not provided, use default router from customer.'
+      optional :departure, type: DateTime, desc: 'Departure time (only used if router supports traffic)'
     end
     patch 'isochrone' do
       zoning = Zoning.new customer_id: current_customer.id
@@ -286,7 +293,7 @@ class V01::Zonings < Grape::API
         }
       }.compact.first
       size = Integer(params[:size])
-      zoning.isochrone(size, vehicle_usage, [params[:lat], params[:lng]])
+      zoning.isochrone(size, vehicle_usage, [params[:lat], params[:lng]], params[:departure])
       present zoning, with: V01::Entities::Zoning
     end
 
@@ -299,6 +306,7 @@ class V01::Zonings < Grape::API
       requires :lng, type: Float, desc: 'Longitude.'
       requires :size, type: Integer, desc: 'Area accessible from the start point by this travel distance in meters.'
       optional :vehicle_usage_id, type: Integer, desc: 'If not provided, use default router from customer.'
+      optional :departure, type: DateTime, desc: 'Departure time (only used if router supports traffic)'
     end
     patch 'isodistance' do
       zoning = Zoning.new customer_id: current_customer.id
@@ -309,7 +317,7 @@ class V01::Zonings < Grape::API
       }.compact.first
       size = Integer(params[:size])
       zoning.prefered_unit = @current_user.prefered_unit
-      zoning.isodistance(size, vehicle_usage, [params[:lat], params[:lng]])
+      zoning.isodistance(size, vehicle_usage, [params[:lat], params[:lng]], params[:departure])
       present zoning, with: V01::Entities::Zoning
     end
 

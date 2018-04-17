@@ -26,17 +26,8 @@ $(document).on('ready page:load', function() {
   dropdownAutoDirection($('[data-toggle="dropdown"]'));
 
   $('.modal').on('shown.bs.modal', function() {
-    var modal = this;
-    $('input:not(:hidden)', modal).focus();
-    $(modal).on('keyup', function(e) {
-      if (e.keyCode == 13) {
-        $('.btn-primary', modal)[0].click();
-      }
-    });
-  });
-  $('.modal').on('hidden.bs.modal', function() {
-    var modal = this;
-    $(modal).off('keyup');
+    // Focus first primary button
+    $('.btn-primary', this).first().focus();
   });
 });
 
@@ -430,4 +421,25 @@ L.disableClustersControl = function(map, routesLayer) {
   });
 
   map.addControl(new disableClustersControl(routesLayer));
+};
+
+Date.prototype.toLocalISOString = function() {
+  // ISO 8601
+  var d = this
+    , pad = function(n) { return n<10 ? '0'+n : n}
+    , tz = d.getTimezoneOffset() // mins
+    , tzs = (tz>0 ? "-" : "+") + pad(parseInt(Math.abs(tz/60)))
+
+  if (tz%60 != 0)
+    tzs += pad(Math.abs(tz%60))
+
+  if (tz === 0) // Zulu time == UTC
+    tzs = 'Z'
+
+  return d.getFullYear()+'-'
+    + pad(d.getMonth()+1)+'-'
+    + pad(d.getDate())+'T'
+    + pad(d.getHours())+':'
+    + pad(d.getMinutes())+':'
+    + pad(d.getSeconds()) + tzs
 };

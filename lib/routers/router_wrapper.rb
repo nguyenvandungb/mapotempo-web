@@ -188,6 +188,7 @@ module Routers
         dimension: dimension,
         geometry: options[:geometry],
         traffic: options[:traffic],
+        departure: options[:departure],
         speed_multiplicator: options[:speed_multiplicator] == 1 ? nil : options[:speed_multiplicator],
         area: options[:speed_multiplicator_areas] ? options[:speed_multiplicator_areas].collect{ |a| a[:area].join(',') }.join('|') : nil,
         speed_multiplicator_area: options[:speed_multiplicator_areas] ? options[:speed_multiplicator_areas].collect{ |a| a[:speed_multiplicator_area] }.join('|') : nil,

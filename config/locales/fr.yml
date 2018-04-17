@@ -2352,20 +2352,22 @@ fr:
       isochrone: Isochrone par véhicule(s)
       isodistance: Isodistance par véhicule(s)
       dialog:
-        isochrone:
-          title: Isochrone
+        isoline:
           vehicle_usage_set: Configuration des véhicules
           vehicle_usage_set_help: Configuration des véhicules à prendre en compte,
             en particulier le dépôt de départ.
+          date: Date
+          default_date: Date du jour par défaut
+          vehicles_open: Départs véhicules
+          date_help: Jour et heure de départ
+        isochrone:
+          title: Isochrone
           size: Temps
           size_help: Zone accessible depuis le point de départ en ce temps de parcours.
         isochrone-progress:
           title: Calcul d'isochrones en cours
         isodistance:
           title: Isodistance
-          vehicle_usage_set: Configuration des véhicules
-          vehicle_usage_set_help: Configuration des véhicules à prendre en compte,
-            en particulier le dépôt de départ.
           size: Distance
           size_help: Zone accessible depuis le point de départ avec cette distance
             de parcours.

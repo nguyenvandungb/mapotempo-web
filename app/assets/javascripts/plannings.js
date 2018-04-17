@@ -152,25 +152,7 @@ var spreadsheetModalExport = function(columns, planningId) {
 };
 
 var plannings_form = function() {
-  $('#planning_date').datepicker({
-    language: I18n.currentLocale(),
-    autoclose: true,
-    calendarWeeks: true,
-    todayHighlight: true,
-    format: I18n.t("all.datepicker"),
-    zIndexOffset: 1000
-  });
-
-  $('#planning_begin_date').datepicker({
-    language: I18n.currentLocale(),
-    autoclose: true,
-    calendarWeeks: true,
-    todayHighlight: true,
-    format: I18n.t("all.datepicker"),
-    zIndexOffset: 1000
-  });
-
-  $('#planning_end_date').datepicker({
+  $('#planning_date, #planning_begin_date, #planning_end_date, #isochrone_date, #isodistance_date').datepicker({
     language: I18n.currentLocale(),
     autoclose: true,
     calendarWeeks: true,
@@ -1681,64 +1663,74 @@ var plannings_edit = function(params) {
     spinnerImage: '',
     defaultTime: '00:00'
   });
+  $('#isochrone_hour, #isodistance_hour').timeEntry({
+    show24Hours: true,
+    spinnerImage: ''
+  });
 
   $('#isochrone').click(function() {
     var vehicle_usage_id = $('#isochrone_vehicle_usage_id').val();
     var size = $('#isochrone_size').val().split(':');
     size = parseInt(size[0]) * 3600 + parseInt(size[1]) * 60;
+    var departure = $('#isochrone_date').datepicker('getDate');
+    var hour = $('#isochrone_hour').val().match(/^([0-9]{2}):([0-9]{2})$/);
+    if (hour[1] && hour[2])
+      departure.setHours(hour[1], hour[2]);
+
+    $('#isochrone-modal').modal('hide');
+    $('#isochrone-progress-modal').modal({
+      backdrop: 'static',
+      keyboard: true
+    });
 
     $.ajax({
-      url: '/api/0.1/zonings/isochrone',
       type: 'PATCH',
-      dataType: "json",
+      url: '/api/0.1/zonings/isochrone.json',
       data: {
         vehicle_usage_id: vehicle_usage_id,
         size: size,
         lat: $('#isochrone_lat').val(),
-        lng: $('#isochrone_lng').val()
+        lng: $('#isochrone_lng').val(),
+        departure: departure.toLocalISOString()
       },
-      beforeSend: function() {
-        beforeSendWaiting();
-        $('#isochrone-modal').modal('hide');
-        $('#isochrone-progress-modal').modal({
-          backdrop: 'static',
-          keyboard: true
-        });
-      },
+      beforeSend: beforeSendWaiting,
       success: function(data) {
         hideNotices();
         fitBounds = true;
         displayZoning(data);
         map.closePopup();
-        notice(I18n.t('zonings.edit.success'));
       },
       complete: function() {
         completeAjaxMap();
         $('#isochrone-progress-modal').modal('hide');
       },
-      error: function() {
-        stickyError(I18n.t('zonings.edit.failed'));
-      }
+      error: stickyError
     });
   });
 
   $('#isodistance').click(function() {
     var vehicle_usage_id = $('#isodistance_vehicle_usage_id').val();
     var size = $('#isodistance_size').val() * 1000;
+    var departure = $('#isodistance_date').datepicker('getDate');
+    var hour = $('#isodistance_hour').val().match(/^([0-9]{2}):([0-9]{2})$/);
+    if (hour[1] && hour[2])
+      departure.setHours(hour[1], hour[2]);
+
+    $('#isodistance-modal').modal('hide');
     $('#isodistance-progress-modal').modal({
       backdrop: 'static',
       keyboard: true
     });
-    $('#isodistance-modal').modal('hide');
+
     $.ajax({
       type: 'PATCH',
       url: '/api/0.1/zonings/isodistance.json',
-      dataType: "json",
       data: {
         vehicle_usage_id: vehicle_usage_id,
         size: size,
         lat: $('#isodistance_lat').val(),
-        lng: $('#isodistance_lng').val()
+        lng: $('#isodistance_lng').val(),
+        departure: departure.toLocalISOString()
       },
       beforeSend: beforeSendWaiting,
       success: function(data) {

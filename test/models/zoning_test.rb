@@ -55,10 +55,12 @@ class ZoningTest < ActiveSupport::TestCase
   test 'should generate isochrones' do
     begin
       store_one = stores(:store_one)
-      stub_isochrone = stub_request(:post, 'localhost:5000/0.1/isoline.json').with(:query => hash_including({})).
-        to_return(File.new(File.expand_path('../../web_mocks/', __FILE__) + '/isochrone/isochrone-1.json').read)
+      stub_isochrone = stub_request(:post, 'localhost:5000/0.1/isoline.json')
+        .with(:body => hash_including(size: '5', mode: 'car', traffic: 'true', weight: '10', departure: Date.today.strftime('%Y-%m-%d') + ' 10:00:00 UTC'))
+        .to_return(File.new(File.expand_path('../../web_mocks/', __FILE__) + '/isochrone/isochrone-1.json').read)
       zoning = zonings(:zoning_one)
-      zoning.isochrones(5, zoning.customer.vehicle_usage_sets[0])
+      zoning.isochrones(5, zoning.customer.vehicle_usage_sets[0], Date.today)
+      assert_equal zoning.customer.vehicle_usage_sets[0].vehicle_usages.select(&:active).count, zoning.zones.length
     ensure
       remove_request_stub(stub_isochrone) if stub_isochrone
     end

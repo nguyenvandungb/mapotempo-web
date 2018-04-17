@@ -16,7 +16,7 @@
                 <input id="isochrone_vehicle_usage_id" type="hidden" value=""/>
               <% else %>
                 <div class="form-group">
-                  <label class="col-md-4 control-label" for="vehicle_use_set"><%= t 'zonings.form.dialog.isochrone.vehicle_usage_set' %></label>
+                  <label class="col-md-4 control-label" for="vehicle_use_set"><%= t 'zonings.form.dialog.isoline.vehicle_usage_set' %></label>
                   <div class="col-md-8 input-append">
                     <div class="input-group">
                       <%= select_tag :isochrone_vehicle_usage_set_id, options_for_select(Hash[@isochrone.collect{ |i| [i[0].name, i[0].id] }], disabled: @isochrone.select{ |i| i[-1] }.collect(&:first)), class: 'form-control' %>
@@ -25,7 +25,7 @@
                       </span>
                     </div>
                     <p class="help-block">
-                      <%= t 'zonings.form.dialog.isochrone.vehicle_usage_set_help' %>
+                      <%= t 'zonings.form.dialog.isoline.vehicle_usage_set_help' %>
                     </p>
                   </div>
                 </div>
@@ -44,6 +44,23 @@
                   </p>
                 </div>
               </div>
+              <% if @isoline_need_time.any?{ |i| i[1] } %>
+              <div class="form-group">
+                <label class="col-md-4 control-label" for="size"><%= t 'zonings.form.dialog.isoline.date' %></label>
+                <div class="col-md-8 input-append">
+                  <div class="input-group">
+                    <input type="text" class="form-control width_1_2" id="isochrone_date" value="<%= @planning.try(&:date) && I18n.l(@planning.date.to_time, format: :datepicker) %>" placeholder="<%= t('zonings.form.dialog.isoline.default_date') %>" />
+                    <input type="text" class="form-control width_1_2" id="isochrone_hour" value="" placeholder="<%= @zoning ? t('zonings.form.dialog.isoline.vehicles_open') : t('all.unit.hour_minute') %>" <% if @zoning %>disabled<% end %>/>
+                    <span class="input-group-addon">
+                      <i class="fa fa-calendar fa-fw"></i>
+                    </span>
+                  </div>
+                  <p class="help-block">
+                    <%= t 'zonings.form.dialog.isoline.date_help' %>
+                  </p>
+                </div>
+              </div>
+              <% end %>
             </form>
           </div>
         </div>
@@ -93,7 +110,7 @@
                 <input id="isodistance_vehicle_usage_id" type="hidden" value=""/>
               <% else %>
                 <div class="form-group">
-                  <label class="col-md-4 control-label" for="vehicle_use_set"><%= t 'zonings.form.dialog.isodistance.vehicle_usage_set' %></label>
+                  <label class="col-md-4 control-label" for="vehicle_use_set"><%= t 'zonings.form.dialog.isoline.vehicle_usage_set' %></label>
                   <div class="col-md-8 input-append">
                     <div class="input-group">
                       <%= select_tag :isodistance_vehicle_usage_set_id, options_for_select(Hash[@isodistance.collect{ |i| [i[0].name, i[0].id] }], disabled: @isodistance.select{ |i| i[-1] }.collect(&:first)), class: 'form-control' %>
@@ -102,7 +119,7 @@
                       </span>
                     </div>
                     <p class="help-block">
-                      <%= t 'zonings.form.dialog.isodistance.vehicle_usage_set_help' %>
+                      <%= t 'zonings.form.dialog.isoline.vehicle_usage_set_help' %>
                     </p>
                   </div>
                 </div>
@@ -124,6 +141,23 @@
                   <% end %>
                 </div>
               </div>
+              <% if @isoline_need_time.any?{ |i| i[1] } %>
+              <div class="form-group">
+                <label class="col-md-4 control-label" for="size"><%= t 'zonings.form.dialog.isoline.date' %></label>
+                <div class="col-md-8 input-append">
+                  <div class="input-group">
+                    <input type="text" class="form-control width_1_2" id="isodistance_date" value="<%= @planning.try(&:date) && I18n.l(@planning.date.to_time, format: :datepicker) %>" placeholder="<%= t('zonings.form.dialog.isoline.default_date') %>" />
+                    <input type="text" class="form-control width_1_2" id="isodistance_hour" value="" placeholder="<%= @zoning ? t('zonings.form.dialog.isoline.vehicles_open') : t('all.unit.hour_minute') %>" <% if @zoning %>disabled<% end %>/>
+                    <span class="input-group-addon">
+                      <i class="fa fa-calendar fa-fw"></i>
+                    </span>
+                  </div>
+                  <p class="help-block">
+                    <%= t 'zonings.form.dialog.isoline.date_help' %>
+                  </p>
+                </div>
+              </div>
+              <% end %>
             </form>
           </div>
         </div>

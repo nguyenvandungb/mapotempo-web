@@ -122,24 +122,24 @@ class Zoning < ApplicationRecord
     isowhat?(:isochrone?, vehicle_usage_set)
   end
 
-  def isochrone(size, vehicle_usage = nil, loc = nil)
-    isowhat(:isochrone?, :isochrone, size, vehicle_usage, loc)
+  def isochrone(size, vehicle_usage = nil, loc = nil, time = nil)
+    isowhat(:isochrone?, :isochrone, size, vehicle_usage, loc, time)
   end
 
-  def isochrones(size, vehicle_usage_set)
-    isowhats(:isochrone?, :isochrone, size, vehicle_usage_set)
+  def isochrones(size, vehicle_usage_set, date)
+    isowhats(:isochrone?, :isochrone, size, vehicle_usage_set, date)
   end
 
   def isodistance?(vehicle_usage_set, _from_store = true)
     isowhat?(:isodistance?, vehicle_usage_set)
   end
 
-  def isodistance(size, vehicle_usage = nil, loc = nil)
-    isowhat(:isodistance?, :isodistance, size, vehicle_usage, loc)
+  def isodistance(size, vehicle_usage = nil, loc = nil, time = nil)
+    isowhat(:isodistance?, :isodistance, size, vehicle_usage, loc, time)
   end
 
-  def isodistances(size, vehicle_usage_set)
-    isowhats(:isodistance?, :isodistance, size, vehicle_usage_set)
+  def isodistances(size, vehicle_usage_set, date)
+    isowhats(:isodistance?, :isodistance, size, vehicle_usage_set, date)
   end
 
   private
@@ -163,14 +163,15 @@ class Zoning < ApplicationRecord
     }
   end
 
-  def isowhats(what_qm, what, size, vehicle_usage_set)
+  def isowhats(what_qm, what, size, vehicle_usage_set, date = nil)
     zones.clear
     vehicle_usage_set.vehicle_usages.select(&:active).each{ |vehicle_usage|
-      isowhat(what_qm, what, size, vehicle_usage, nil)
+      # Use Time.zone.parse to preserve time zone from user (instead of to_time)
+      isowhat(what_qm, what, size, vehicle_usage, nil, date && vehicle_usage.vehicle.default_router_options['traffic'] && Time.zone.parse(date.to_s) + vehicle_usage.default_open)
     }
   end
 
-  def isowhat(what_qm, what, size, vehicle_usage, loc)
+  def isowhat(what_qm, what, size, vehicle_usage, loc, time)
     return unless vehicle_usage || loc
     router = vehicle_usage ? vehicle_usage.vehicle.default_router : customer.router
 
@@ -181,9 +182,12 @@ class Zoning < ApplicationRecord
       loc = [vehicle_usage.default_store_start.try(&:lat), vehicle_usage.default_store_start.try(&:lng)]
       name += ' ' + I18n.t('zonings.default.from') + ' ' + vehicle_usage.default_store_start.name if vehicle_usage.try(&:default_store_start)
     end
+    name += ' ' + I18n.l(time, format: :short) if time && router.options['traffic']
 
     if router.method(what_qm).call && loc[0] && loc[1]
-      geom = router.method('compute_' + what.to_s).call(loc[0], loc[1], size, vehicle_usage ? vehicle_usage.vehicle.default_speed_multiplicator : customer.speed_multiplicator, (vehicle_usage ? vehicle_usage.vehicle.default_router_options : customer.router_options).symbolize_keys)
+      router_options = (vehicle_usage ? vehicle_usage.vehicle.default_router_options : customer.router_options).symbolize_keys
+      router_options[:departure] = time
+      geom = router.method('compute_' + what.to_s).call(loc[0], loc[1], size, vehicle_usage ? vehicle_usage.vehicle.default_speed_multiplicator : customer.speed_multiplicator, router_options)
     end
     if geom
       zone = vehicle_usage && zones.to_a.find{ |zone| zone.vehicle_id == vehicle_usage.vehicle.id }

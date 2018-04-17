@@ -59,5 +59,6 @@ class ApiWeb::V01::PlanningsController < ApiWeb::V01::ApiWebController
   def capabilities
     @isochrone = []
     @isodistance = []
+    @isoline_need_time = []
   end
 end
