@@ -50,7 +50,7 @@ pt:
       customer: Conta cliente
       customers:
         one: conta cliente
-        other: contas clientes
+        other: contas cliente
       deliverable_unit: Unidade de despacho
       deliverable_units:
         one: unidade de despacho
@@ -70,7 +70,7 @@ pt:
       order_array: Lista de pedidos
       order_arrays:
         one: lista de pedidos
-        other: lista de pedidos
+        other: listas de pedidos
       planning: Plano
       plannings:
         one: plano
@@ -188,6 +188,12 @@ pt:
         max_zonings: Max zoneamentos
         max_destinations: Max pontos
         max_vehicle_usage_sets: Max parâmetros base dos veículos
+        enable_sms: Ativar envio de SMS
+        sms_template: SMS modelo
+        sms_concat: SMS longos
+        sms_from_customer_name: Expedidor de SMS
+        print_barcode: Código de barras
+        router_options_traffic: Ter em conta o tráfego
       deliverable_unit:
         label: Marcador
         ref: Referência
@@ -395,6 +401,7 @@ pt:
         contact_email: E-mail
         capacities: Capacidades
         tag_ids: Especificidades do veículo
+        max_distance: Distância máxima
       vehicle_usage:
         vehicle_id: Veículo
         open: Hora de início
@@ -644,6 +651,8 @@ pt:
       automatic_insert_no_result: Impossível afetar paragens
       job_in_progress: Impossível realizar esta operação de momento, encontra-se a
         decorrer uma operação (otimização) em "background"
+    routes:
+      bad_barcode_char: Os dados do código de barras contêm caracteres não suportados
   import:
     csv:
       line: Linha %{s}
@@ -710,6 +719,7 @@ pt:
         customer_behavior_url_help: 'Página web que contém o painel de comportamento
           de um cliente. Pode utilizar "{ID}" que serà substituído pelo idioma como
           « en », « fr »   (ie: https://analytics.mapotempo.com/public/dashboard/{ID}'
+        sms_api_key_help: Chave da API para envio de SMS
     users:
       menu:
         users: Utilizadores
@@ -742,7 +752,7 @@ pt:
       user_settings: Parâmetros de utilizador
       customers: Contas cliente
     edit:
-      title: Modificar parâmetros gliobais
+      title: Modificar parâmetros globais
       send_email: Enviar email de confirmação
       password: Alterar palavra passe
       user:
@@ -2011,9 +2021,9 @@ pt:
   vehicles:
     default_name: Veículo %{n}
     emissions_nothing: Nenhum - %{n}
-    emissions_light_petrol: Luz - Gasolina - %{n}
-    emissions_light_diesel: Luz - Gasóleo - %{n}
-    emissions_light_lgp: Luz - GPL - %{n}
+    emissions_light_petrol: Ligeiro - Gasolina - %{n}
+    emissions_light_diesel: Ligeiro - Gasóleo - %{n}
+    emissions_light_lgp: Ligeiro - GPL - %{n}
     import:
       ref_vehicle: referência veículo
       ref_desc: referência do veículo
@@ -2319,3 +2329,6 @@ pt:
     sessions:
       new:
         remember_me: Lembrar-se de mim
+  date:
+    formats:
+      weekday: '%a %d %b'
