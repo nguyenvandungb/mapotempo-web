@@ -102,7 +102,7 @@ class ZoningsController < ApplicationController
       n = params[:n].to_i if params[:n]
       hide_out_of_route = params[:hide_out_of_route].to_i == 1
       @zoning.automatic_clustering @planning, n, !hide_out_of_route
-      @zoning.save
+      @zoning.save!
       format.json { render action: 'edit' }
     end
   end
@@ -112,7 +112,7 @@ class ZoningsController < ApplicationController
       @planning = params.key?(:planning_id) ? current_user.customer.plannings.find(params[:planning_id]) : nil
       if @planning
         @zoning.from_planning(@planning)
-        @zoning.save
+        @zoning.save!
       end
       format.json { render action: 'edit' }
     end

@@ -47,16 +47,37 @@ class ZoningTest < ActiveSupport::TestCase
     assert 1, zoning.zones.size
   end
 
+  test 'should generate automatic clustering with/without out_of_route' do
+    customer = customers :customer_one
+    planning = plannings :planning_one
+    assert planning.routes.find{ |route| !route.vehicle_usage }.stops.exists?
+    destinations(:destination_unaffected_one).update(lat: -45, lng: 2)
+    geometries = nil
+    zoning = customer.zonings.new
+    [true, false].each { |out_of_route|
+      zoning.automatic_clustering planning, nil, out_of_route
+      assert_equal customer.vehicles.count, zoning.zones.length
+      if !geometries
+        geometries = zoning.zones.map(&:polygon).join(',')
+      else
+        assert_not_equal geometries, zoning.zones.map(&:polygon).join(',')
+      end
+    }
+  end
+
   test 'should generate from planning' do
-    zoning = zonings(:zoning_one)
-    zoning.from_planning(plannings(:planning_one))
+    zoning = zonings :zoning_one
+    planning = plannings :planning_one
+    zoning.from_planning(planning)
+    assert_equal planning.routes.select(&:vehicle_usage_id).count, zoning.zones.length
   end
 
   test 'should generate isochrones' do
     begin
-      store_one = stores(:store_one)
+        # TODO: An undefined test changes time zone...
+        # .with(:body => hash_including(size: '5', mode: 'car', traffic: 'true', weight: '10', departure: Date.today.strftime('%Y-%m-%d') + ' 10:00:00 UTC'))
       stub_isochrone = stub_request(:post, 'localhost:5000/0.1/isoline.json')
-        .with(:body => hash_including(size: '5', mode: 'car', traffic: 'true', weight: '10', departure: Date.today.strftime('%Y-%m-%d') + ' 10:00:00 UTC'))
+        .with(:body => hash_including(size: '5', mode: 'car', traffic: 'true', weight: '10', departure: Date.today.strftime('%Y-%m-%d') + ' 10:00:00 ' + (Time.zone.now.strftime('%z') == '+0000' ? 'UTC' : (Time.zone.now.strftime('%z')))))
         .to_return(File.new(File.expand_path('../../web_mocks/', __FILE__) + '/isochrone/isochrone-1.json').read)
       zoning = zonings(:zoning_one)
       zoning.isochrones(5, zoning.customer.vehicle_usage_sets[0], Date.today)
@@ -65,23 +86,4 @@ class ZoningTest < ActiveSupport::TestCase
       remove_request_stub(stub_isochrone) if stub_isochrone
     end
   end
-
-  test 'Automatic Clustering, Include Unaffected' do
-    customer = customers :customer_one
-    planning = plannings :planning_one
-    zoning = customer.zonings.new
-    assert planning.routes.detect{|route| !route.vehicle_usage }.stops.exists?
-    zoning.automatic_clustering planning, nil, true
-    assert_equal customer.vehicles.count, zoning.zones.length
-  end
-
-  test 'Automatic Clustering, Reject Unaffected' do
-    customer = customers :customer_one
-    planning = plannings :planning_one
-    zoning = customer.zonings.new
-    assert planning.routes.detect{|route| !route.vehicle_usage }.stops.exists?
-    zoning.automatic_clustering planning, nil, false
-    assert_equal customer.vehicles.count, zoning.zones.length
-  end
-
 end
