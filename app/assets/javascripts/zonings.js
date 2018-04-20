@@ -216,8 +216,8 @@ var zonings_edit = function(params) {
     }
   };
 
-  var setColor = function(polygon, vehicle_id, speed_multiplicator) {
-    polygon.setStyle((speed_multiplicator === 0) ? {
+  var setColor = function(polygon, vehicle_id, speed_multiplier) {
+    polygon.setStyle((speed_multiplier === 0) ? {
       color: '#FF0000',
       fillColor: '#707070',
       opacity: 0.5,
@@ -259,7 +259,7 @@ var zonings_edit = function(params) {
       this.on('mouseover', function() {
         that.setStyle({
           opacity: 0.9,
-          weight: (zone.speed_multiplicator === 0) ? 5 : 3
+          weight: (zone.speed_multiplier === 0) ? 5 : 3
         });
         if (zone.name) {
           labelMarker = L.marker(that.getBounds().getCenter(), {
@@ -274,7 +274,7 @@ var zonings_edit = function(params) {
       this.on('mouseout', function() {
         that.setStyle({
           opacity: 0.5,
-          weight: (zone.speed_multiplicator === 0) ? 5 : 2
+          weight: (zone.speed_multiplier === 0) ? 5 : 2
         });
         if (labelMarker) {
           labelLayer.removeLayer(labelMarker);
@@ -359,7 +359,7 @@ var zonings_edit = function(params) {
         name: vehiclesMap[zone.vehicle_id].name
       });
     }
-    zone.avoid_zone = zone.speed_multiplicator == 0;
+    zone.avoid_zone = zone.speed_multiplier == 0;
     zone.router_avoid_zones = zone.vehicle_id && vehiclesMap[zone.vehicle_id] ? vehiclesMap[zone.vehicle_id].router_avoid_zones : router_avoid_zones;
     zone.show_deliverable_units = showUnits;
     if (showUnits) {
@@ -464,7 +464,7 @@ var zonings_edit = function(params) {
     $.each(data.zoning, function(index, zone) {
       var geom = (new zoneGeometry(JSON.parse(zone.polygon))).addOverlay(zone);
       if (geom) {
-        setColor(geom, zone.vehicle_id, zone.speed_multiplicator);
+        setColor(geom, zone.vehicle_id, zone.speed_multiplier);
         addZone(zone, geom);
       }
     });

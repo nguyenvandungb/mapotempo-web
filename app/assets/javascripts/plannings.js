@@ -604,7 +604,7 @@ var plannings_edit = function(params) {
       this.on('mouseover', function() {
         that.setStyle({
           opacity: 0.9,
-          weight: (zone.speed_multiplicator === 0) ? 5 : 3
+          weight: (zone.speed_multiplier === 0) ? 5 : 3
         });
         if (zone.name) labelMarker = L.marker(that.getBounds().getCenter(), {
           icon: L.divIcon({
@@ -617,7 +617,7 @@ var plannings_edit = function(params) {
       this.on('mouseout', function() {
         that.setStyle({
           opacity: 0.5,
-          weight: (zone.speed_multiplicator === 0) ? 5 : 2
+          weight: (zone.speed_multiplier === 0) ? 5 : 2
         });
         if (labelMarker) labelLayer.removeLayer(labelMarker);
         labelMarker = null;
@@ -631,7 +631,7 @@ var plannings_edit = function(params) {
       var geoJsonLayer = (new zoneGeometry(JSON.parse(zone.polygon))).addOverlay(zone);
       var geom = geoJsonLayer.getLayers()[0];
       if (geom) {
-        geom.setStyle((zone.speed_multiplicator === 0) ? {
+        geom.setStyle((zone.speed_multiplier === 0) ? {
           color: '#FF0000',
           fillColor: '#707070',
           opacity: 0.5,

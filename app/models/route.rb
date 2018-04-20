@@ -112,7 +112,7 @@ class Route < ApplicationRecord
       service_time_start = service_time_start_value
       service_time_end = service_time_end_value
       self.end = self.start = departure || vehicle_usage.default_open
-      speed_multiplicator = vehicle_usage.vehicle.default_speed_multiplicator
+      speed_multiplier = vehicle_usage.vehicle.default_speed_multiplier
       if vehicle_usage.default_store_start.try(&:position?)
         last_lat, last_lng = vehicle_usage.default_store_start.lat, vehicle_usage.default_store_start.lng
       end
@@ -146,10 +146,14 @@ class Route < ApplicationRecord
 
       # Compute legs traces
       begin
-        router_options = vehicle_usage.vehicle.default_router_options.symbolize_keys.merge(speed_multiplicator_areas: Zoning.speed_multiplicator_areas(planning.zonings))
+        router_options = vehicle_usage.vehicle.default_router_options.symbolize_keys
         router_options[:geometry] = false if options[:no_geojson]
+        router_options[:speed_multiplier] = speed_multiplier
+        router_options[:speed_multiplier_areas] = Zoning.speed_multiplier_areas(planning.zonings)
+        # Use Time.zone.parse to preserve time zone from user (instead of to_time)
+        router_options[:departure] = Time.zone.parse((planning.date || Date.today).to_s) + departure if departure
 
-        ts = router.trace_batch(speed_multiplicator, segments.reject(&:nil?), router_dimension, router_options)
+        ts = router.trace_batch(segments.reject(&:nil?), router_dimension, router_options)
         traces = segments.collect{ |segment|
           if segment.nil?
             [nil, nil, nil]
@@ -276,7 +280,7 @@ class Route < ApplicationRecord
   def compute!(options = {})
     if self.vehicle_usage?
       self.geojson_tracks = nil
-      stops_sort, stops_drive_time, stops_time_windows = plan(nil, options)
+      stops_sort, stops_drive_time, stops_time_windows = plan(vehicle_usage.default_open, options)
 
       if stops_sort
         # Try to minimize waiting time by a later begin

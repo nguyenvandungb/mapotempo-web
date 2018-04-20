@@ -69,7 +69,7 @@ CREATE TABLE customers (
     optimization_time integer,
     optimization_stop_soft_upper_bound double precision,
     profile_id integer NOT NULL,
-    speed_multiplicator double precision DEFAULT 1.0 NOT NULL,
+    speed_multiplier double precision DEFAULT 1.0 NOT NULL,
     default_country character varying NOT NULL,
     job_store_geocoding_id integer,
     reseller_id integer NOT NULL,
@@ -998,7 +998,7 @@ CREATE TABLE vehicles (
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
     router_id integer,
-    speed_multiplicator double precision,
+    speed_multiplier double precision,
     ref character varying,
     contact_email character varying,
     fuel_type character varying,
@@ -1081,7 +1081,7 @@ CREATE TABLE zones (
     updated_at timestamp without time zone,
     vehicle_id integer,
     name character varying,
-    speed_multiplicator double precision DEFAULT 1.0 NOT NULL
+    speed_multiplier double precision DEFAULT 1.0 NOT NULL
 );
 
 
@@ -2743,4 +2743,6 @@ INSERT INTO schema_migrations (version) VALUES ('20180306111703');
 INSERT INTO schema_migrations (version) VALUES ('20180306134209');
 
 INSERT INTO schema_migrations (version) VALUES ('20180316104056');
+
+INSERT INTO schema_migrations (version) VALUES ('20180420075039');
 

@@ -166,7 +166,7 @@ pt:
         optimization_force_start: Forçar hora de partida do veículo
         profile: Perfil
         profile_id: Perfil
-        speed_multiplicator: Multiplicador de velocidade
+        speed_multiplier: Multiplicador de velocidade
         default_country: País por defeito
         with_state: Adicionar campo de Estado nos endereços
         ref: Referência
@@ -389,7 +389,7 @@ pt:
         router: Calculador de itinerário
         router_id: Calculador de itinerário
         router_dimension: Objetivo do calculador
-        speed_multiplicator: Ajuste da velocidade
+        speed_multiplier: Ajuste da velocidade
         customised_color: Personalização da cor
         ref: Referência
         contact_email: E-mail
@@ -488,7 +488,7 @@ pt:
         router: Calculador de itinerário
         router_id: Calculador de itinerário
         router_dimension: Objetivo do calculador
-        speed_multiplicator: Ajuste da velocidade
+        speed_multiplier: Ajuste da velocidade
         customised_color: Selecionar uma cor personalizada
         ref: Referencia
         contact_email: E-mail
@@ -666,7 +666,7 @@ pt:
       index:
         title: Listagem de perfis
         avoid_zones: Zonas de bypass
-        speed_multiplicator_zones: Zonas de abrandamento
+        speed_multiplier_zones: Zonas de abrandamento
     resellers:
       menu:
         reseller: Revendedor
@@ -831,8 +831,8 @@ pt:
       print_header_help: Bloqueio de texto adicionado antes de cada rota
       print:
         title: Impressão
-      speed_multiplicator_default: '%{n} (valor por defeito)'
-      speed_multiplicator_help: Um valor superior a 100% significa velocidade mais
+      speed_multiplier_default: '%{n} (valor por defeito)'
+      speed_multiplier_help: Um valor superior a 100% significa velocidade mais
         elevada.
       submit: Atualizar parâmetros globais
       external_callback:
@@ -2034,8 +2034,8 @@ pt:
       router_options: opções do calculador
       router_options_desc: forçar a utilização de opções específicas do calculador
         de itinerário
-      speed_multiplicator: ajuste da velocidade
-      speed_multiplicator_desc: um valor superior a 100% significa uma velocidade
+      speed_multiplier: ajuste da velocidade
+      speed_multiplier_desc: um valor superior a 100% significa uma velocidade
         mais elevada
       color: cor
       color_desc: cor associada ao veículo
@@ -2073,7 +2073,7 @@ pt:
         help: Forçar a utilização de um calculador de itinerário
       router_dimension:
         default: Defeito
-      speed_multiplicator:
+      speed_multiplier:
         default: '%{n} (valor por defeito)'
         help: Um valor superior a 100% significa uma velocidade mais elevada. O ajustamento
           global dos parâmetros é também utilizado nos cálculos.

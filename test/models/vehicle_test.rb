@@ -13,8 +13,8 @@ class VehicleTest < ActiveSupport::TestCase
     assert_not vehicle.save, 'Saved without required fields'
   end
 
-  test 'should not save speed_multiplicator' do
-    vehicle = customers(:customer_one).vehicles.build(name: 'plop', speed_multiplicator: 2)
+  test 'should not save speed_multiplier' do
+    vehicle = customers(:customer_one).vehicles.build(name: 'plop', speed_multiplier: 2)
     assert_not vehicle.save
   end
 

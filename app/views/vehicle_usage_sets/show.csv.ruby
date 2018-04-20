@@ -14,7 +14,7 @@ CSV.generate { |csv|
     I18n.t('vehicles.import.router_mode'),
     I18n.t('vehicles.import.router_dimension'),
     I18n.t('vehicles.import.router_options'),
-    I18n.t('vehicles.import.speed_multiplicator'),
+    I18n.t('vehicles.import.speed_multiplier'),
     I18n.t('vehicles.import.color'),
     I18n.t('vehicles.import.tags'),
     I18n.t('vehicles.import.devices'),
@@ -59,7 +59,7 @@ CSV.generate { |csv|
       vehicle_usage.vehicle.router.try(:mode),
       vehicle_usage.vehicle.router_dimension,
       vehicle_usage.vehicle.router_options.to_json,
-      vehicle_usage.vehicle.speed_multiplicator,
+      vehicle_usage.vehicle.speed_multiplier,
       vehicle_usage.vehicle.color,
       vehicle_usage.vehicle.tags.collect(&:label).join(',')
     ]

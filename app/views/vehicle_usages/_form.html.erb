@@ -334,16 +334,16 @@
         </div>
 
         <div class="form-group">
-          <label class="col-md-2 control-label" for="speed_multiplicator">
-            <%= t('activerecord.attributes.vehicle.speed_multiplicator') %>
+          <label class="col-md-2 control-label" for="speed_multiplier">
+            <%= t('activerecord.attributes.vehicle.speed_multiplier') %>
           </label>
           <div class="col-md-6 input-append">
             <div class="input-group">
-              <%= number_field_tag :speed_multiplicator, (@vehicle_usage.vehicle.speed_multiplicator ? (@vehicle_usage.vehicle.speed_multiplicator * 100).to_i : nil), { min: 50, max: 150, placeholder: t('vehicles.form.speed_multiplicator.default', n: (@vehicle_usage.vehicle.customer.speed_multiplicator ? (@vehicle_usage.vehicle.customer.speed_multiplicator * 100).to_i : 75)), class: 'form-control number-to-percentage' } %>
+              <%= number_field_tag :speed_multiplier, (@vehicle_usage.vehicle.speed_multiplier ? (@vehicle_usage.vehicle.speed_multiplier * 100).to_i : nil), { min: 50, max: 150, placeholder: t('vehicles.form.speed_multiplier.default', n: (@vehicle_usage.vehicle.customer.speed_multiplier ? (@vehicle_usage.vehicle.customer.speed_multiplier * 100).to_i : 75)), class: 'form-control number-to-percentage' } %>
               <span class="input-group-addon">%</span>
             </div>
             <p class="help-block">
-              <%= t('vehicles.form.speed_multiplicator.help') %>
+              <%= t('vehicles.form.speed_multiplier.help') %>
             </p>
           </div>
         </div>

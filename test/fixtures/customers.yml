@@ -14,7 +14,7 @@ customer_one:
   optimization_stop_soft_upper_bound: 3
   optimization_vehicle_soft_upper_bound: 3
   profile: profile_one
-  speed_multiplicator: 1
+  speed_multiplier: 1
   default_country: France
   reseller: reseller_one
   max_plannings: 10
@@ -53,7 +53,7 @@ customer_one_other:
   optimization_stop_soft_upper_bound: 3
   optimization_vehicle_soft_upper_bound: 3
   profile: profile_one
-  speed_multiplicator: 1
+  speed_multiplier: 1
   default_country: France
   reseller: reseller_one
 
@@ -68,6 +68,6 @@ customer_two:
   router_dimension: 'time'
   enable_orders: false
   profile: profile_two
-  speed_multiplicator: 1.1
+  speed_multiplier: 1.1
   default_country: France
   reseller: reseller_two

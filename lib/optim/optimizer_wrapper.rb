@@ -80,7 +80,7 @@ class OptimizerWrapper
             # router_options are flattened and merged below
             speed_multiplier: vehicle[:speed_multiplier],
             area: vehicle[:speed_multiplier_areas] ? vehicle[:speed_multiplier_areas].map{ |a| a[:area].join(',') }.join('|') : nil,
-            speed_multiplier_area: vehicle[:speed_multiplier_areas] ? vehicle[:speed_multiplier_areas].map{ |a| a[:speed_multiplicator_area] }.join('|') : nil,
+            speed_multiplier_area: vehicle[:speed_multiplier_areas] ? vehicle[:speed_multiplier_areas].map{ |a| a[:speed_multiplier_area] }.join('|') : nil,
             timewindow: {start: vehicle[:open], end: vehicle[:close]},
             duration: vehicle[:work_time],
             distance: vehicle[:max_distance],

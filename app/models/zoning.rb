@@ -43,14 +43,14 @@ class Zoning < ApplicationRecord
     })
   end
 
-  def self.speed_multiplicator_areas(zonings)
-    zonings.collect(&:zones).flatten.select{ |z| z.speed_multiplicator != 1 }.collect{ |z|
+  def self.speed_multiplier_areas(zonings)
+    zonings.collect(&:zones).flatten.select{ |z| z.speed_multiplier != 1 }.collect{ |z|
       feat = RGeo::GeoJSON.decode(z.polygon, json_parser: :json)
       coordinates = feat.geometry.coordinates[0] if feat && feat.geometry.geometry_type == RGeo::Feature::Polygon
       coordinates = feat.geometry.coordinates[0][0] if feat && feat.geometry.geometry_type == RGeo::Feature::MultiPolygon
       {
         area: coordinates.collect(&:reverse),
-        speed_multiplicator_area: z.speed_multiplicator
+        speed_multiplier_area: z.speed_multiplier
       }
     }
   end
@@ -187,7 +187,8 @@ class Zoning < ApplicationRecord
     if router.method(what_qm).call && loc[0] && loc[1]
       router_options = (vehicle_usage ? vehicle_usage.vehicle.default_router_options : customer.router_options).symbolize_keys
       router_options[:departure] = time
-      geom = router.method('compute_' + what.to_s).call(loc[0], loc[1], size, vehicle_usage ? vehicle_usage.vehicle.default_speed_multiplicator : customer.speed_multiplicator, router_options)
+      router_options[:speed_multiplier] = vehicle_usage ? vehicle_usage.vehicle.default_speed_multiplier : customer.speed_multiplier
+      geom = router.method('compute_' + what.to_s).call(loc[0], loc[1], size, router_options)
     end
     if geom
       zone = vehicle_usage && zones.to_a.find{ |zone| zone.vehicle_id == vehicle_usage.vehicle.id }

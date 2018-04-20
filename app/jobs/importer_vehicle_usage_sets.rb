@@ -43,7 +43,7 @@ class ImporterVehicleUsageSets < ImporterBase
       router_mode: { title: I18n.t('vehicles.import.router_mode'), desc: I18n.t('vehicles.import.router_mode_desc'), format: "[#{router_modes.join(' | ')}]" },
       router_dimension: { title: I18n.t('vehicles.import.router_dimension'), desc: I18n.t('vehicles.import.router_dimension_desc'), format: "[#{router_dimensions.join(' | ')}]" },
       router_options: { title: I18n.t('vehicles.import.router_options'), desc: I18n.t('vehicles.import.router_options_desc'), format: I18n.t('vehicles.import.format.json') + " [#{router_options.join(' | ')}]" },
-      speed_multiplicator: { title: I18n.t('vehicles.import.speed_multiplicator'), desc: I18n.t('vehicles.import.speed_multiplicator_desc'), format: I18n.t('vehicles.import.format.integer') },
+      speed_multiplier: { title: I18n.t('vehicles.import.speed_multiplier'), desc: I18n.t('vehicles.import.speed_multiplier_desc'), format: I18n.t('vehicles.import.format.integer') },
       color: { title: I18n.t('vehicles.import.color'), desc: I18n.t('vehicles.import.color_desc'), format: I18n.t('vehicles.import.format.string') },
       tags_vehicle: { title: I18n.t('vehicles.import.tags'), desc: I18n.t('vehicles.import.tags_desc'), format: I18n.t('vehicles.import.tags_format') },
       devices: { title: I18n.t('vehicles.import.devices'), desc: I18n.t('vehicles.import.devices_desc'), format: I18n.t('vehicles.import.format.string') }

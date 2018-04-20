@@ -27,7 +27,9 @@ class V01::Zonings < Grape::API
       if p[:zones]
         p[:zones_attributes] = p[:zones]
       end
-      p.permit(:name, zones_attributes: [:id, :name, :polygon, :_destroy, :vehicle_id, :speed_multiplicator])
+      # Deals with deprecated speed_multiplicator
+      p[:speed_multiplier] = p.delete[:speed_multiplicator] if p[:speed_multiplicator] && !p[:speed_multiplier]
+      p.permit(:name, zones_attributes: [:id, :name, :polygon, :_destroy, :vehicle_id, :speed_multiplier])
     end
   end
 

@@ -68,8 +68,8 @@ class ApiWeb::V01::ZoningsController < ApiWeb::V01::ApiWebController
   def zoning_params
     params[:zoning] ||= {id: params[:id]} # Require not empty if none zone
     params[:zoning][:zones_attributes].each{ |zone|
-      zone[:speed_multiplicator] = zone[:avoid_zone] ? 0 : 1
+      zone[:speed_multiplier] = zone[:avoid_zone] ? 0 : 1
     } if params[:zoning][:zones_attributes]
-    params.require(:zoning).permit(:name, zones_attributes: [:id, :name, :polygon, :_destroy, :vehicle_id, :speed_multiplicator])
+    params.require(:zoning).permit(:name, zones_attributes: [:id, :name, :polygon, :_destroy, :vehicle_id, :speed_multiplier])
   end
 end

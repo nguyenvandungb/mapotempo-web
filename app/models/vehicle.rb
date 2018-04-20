@@ -41,7 +41,7 @@ class Vehicle < ApplicationRecord
   validates :consumption, numericality: {only_float: true}, allow_nil: true
   validates :color, presence: true
   validates_format_of :color, with: /\A(\#[A-Fa-f0-9]{6})\Z/
-  validates :speed_multiplicator, numericality: { greater_than_or_equal_to: 0.5, less_than_or_equal_to: 1.5 }, if: :speed_multiplicator
+  validates :speed_multiplier, numericality: { greater_than_or_equal_to: 0.5, less_than_or_equal_to: 1.5 }, if: :speed_multiplier
   validates :contact_email, format: { with: /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i }, allow_blank: true
   validate :capacities_validator
   validates :max_distance, numericality: true, allow_nil: true
@@ -146,8 +146,8 @@ class Vehicle < ApplicationRecord
     @current_router_options ||= {}
   end
 
-  def default_speed_multiplicator
-    customer.speed_multiplicator * (speed_multiplicator || 1)
+  def default_speed_multiplier
+    customer.speed_multiplier * (speed_multiplier || 1)
   end
 
   def default_capacities
@@ -210,7 +210,7 @@ class Vehicle < ApplicationRecord
   end
 
   def update_outdated
-    if emission_changed? || consumption_changed? || capacities_changed? || router_id_changed? || router_dimension_changed? || router_options_changed? || speed_multiplicator_changed? || max_distance_changed?
+    if emission_changed? || consumption_changed? || capacities_changed? || router_id_changed? || router_dimension_changed? || router_options_changed? || speed_multiplier_changed? || max_distance_changed?
       vehicle_usages.each{ |vehicle_usage|
         vehicle_usage.routes.each{ |route|
           route.outdated = true

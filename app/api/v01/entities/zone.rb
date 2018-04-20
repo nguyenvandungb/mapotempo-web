@@ -24,5 +24,6 @@ class V01::Entities::Zone < Grape::Entity
   expose(:name, documentation: { type: String })
   expose(:vehicle_id, documentation: { type: Integer })
   expose(:polygon, documentation: { type: String }) # format: GeoJson
-  expose(:speed_multiplicator, documentation: { type: Float, desc: 'Speed multiplicator for this area. Taken into accound only for routers which support avoid_zones or speed_zones.' })
+  expose(:speed_multiplicator, documentation: { type: Float, desc: 'Deprecated, use speed_multiplier instead.' }) { |m| m.speed_multiplier }
+  expose(:speed_multiplier, documentation: { type: Float, desc: 'Speed multiplicator for this area. Taken into accound only for routers which support avoid_zones or speed_zones.' })
 end

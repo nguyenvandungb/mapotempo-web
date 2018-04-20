@@ -146,7 +146,7 @@ class CustomersController < ApplicationController
         :profile_id,
         :router_id,
         :router_dimension,
-        :speed_multiplicator,
+        :speed_multiplier,
         router_options: [
           :time,
           :distance,
@@ -190,7 +190,7 @@ class CustomersController < ApplicationController
         :external_callback_name,
         :router_id,
         :router_dimension,
-        :speed_multiplicator,
+        :speed_multiplier,
         router_options: [
           :time,
           :distance,

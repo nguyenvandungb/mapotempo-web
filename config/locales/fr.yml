@@ -169,7 +169,7 @@ fr:
         print_map: Inclure la carte
         print_stop_time: Inclure les horaires de passage
         print_barcode: Code barre
-        speed_multiplicator: Ajustement de la vitesse
+        speed_multiplier: Ajustement de la vitesse
         router: Calculateur d'itinéraire
         router_id: Calculateur d'itinéraire
         router_dimension: Objectif du calculateur
@@ -395,7 +395,7 @@ fr:
         router: Calculateur d'itinéraire
         router_id: Calculateur d'itinéraire
         router_dimension: Objectif du calculateur
-        speed_multiplicator: Ajustement de la vitesse
+        speed_multiplier: Ajustement de la vitesse
         customised_color: Couleur personnalisée
         ref: Référence
         contact_email: Email
@@ -409,7 +409,7 @@ fr:
         router: Calculateur d'itinéraire
         router_id: Calculateur d'itinéraire
         router_dimension: Objectif du calculateur
-        speed_multiplicator: Ajustement de la vitesse
+        speed_multiplier: Ajustement de la vitesse
         customised_color: Couleur personnalisée
         ref: Référence
         contact_email: Email
@@ -677,7 +677,7 @@ fr:
       index:
         title: Liste profils
         avoid_zones: Zones de contournement
-        speed_multiplicator_zones: Zones de ralentissement
+        speed_multiplier_zones: Zones de ralentissement
     resellers:
       menu:
         reseller: Revendeur
@@ -897,8 +897,8 @@ fr:
         en cas de dépassement.
       sms_from_customer_name_help: Si coché « %{c} » sera utilisé comme nom d'expéditeur
         du SMS
-      speed_multiplicator_default: '%{n} (valeur par défaut)'
-      speed_multiplicator_help: Une valeur supérieure à 100% signifie une vitesse
+      speed_multiplier_default: '%{n} (valeur par défaut)'
+      speed_multiplier_help: Une valeur supérieure à 100% signifie une vitesse
         plus élevée.
       audience_url_help: Se rendre sur le tableau de bord d'audience pour ce compte
         client
@@ -2003,8 +2003,8 @@ fr:
       router_dimension_desc: forcer l'utilisation d'un calculateur d'objectif du calculateur
       router_options: options du calculateur
       router_options_desc: forcer l'utilisation les options du calculateur d'itinéraire
-      speed_multiplicator: ajustement de la vitesse
-      speed_multiplicator_desc: une valeur supérieure à 100% signifie une vitesse
+      speed_multiplier: ajustement de la vitesse
+      speed_multiplier_desc: une valeur supérieure à 100% signifie une vitesse
         plus élevée
       color: couleur
       color_desc: couleur associée au véhicule
@@ -2050,7 +2050,7 @@ fr:
         help: Forcer l'utilisation d'un calculateur d'itinéraire
       router_dimension:
         default: Défaut
-      speed_multiplicator:
+      speed_multiplier:
         default: '%{n} (valeur par défaut)'
         help: Une valeur supérieure à 100% signifie une vitesse plus élevée. L'ajustement
           global au niveau du paramétrage est également utilisé lors des calculs.

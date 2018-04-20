@@ -18,18 +18,18 @@
 require 'routers/router_wrapper'
 
 class RouterWrapper < Router
-  def trace(speed_multiplicator, lat1, lng1, lat2, lng2, dimension = :time, options = {})
-    trace_batch(speed_multiplicator, [[lat1, lng1, lat2, lng2]], dimension, options)
+  def trace(lat1, lng1, lat2, lng2, dimension = :time, options = {})
+    trace_batch([[lat1, lng1, lat2, lng2]], dimension, options)
   end
 
-  def trace_batch(speed_multiplicator, segments, dimension = :time, options = {})
-    Mapotempo::Application.config.router_wrapper.compute_batch(url_time, mode, dimension, segments, sanitize_options(options, speed_multiplicator: speed_multiplicator))
+  def trace_batch(segments, dimension = :time, options = {})
+    Mapotempo::Application.config.router_wrapper.compute_batch(url_time, mode, dimension, segments, sanitize_options(options))
   end
 
-  def matrix(row, column, speed_multiplicator, dimension = :time, options = {}, &block)
+  def matrix(row, column, dimension = :time, options = {}, &block)
     block.call(nil, nil) if block
 
-    matrix = Mapotempo::Application.config.router_wrapper.matrix(url_time, mode, [dimension], row, column, sanitize_options(options, speed_multiplicator: speed_multiplicator))
+    matrix = Mapotempo::Application.config.router_wrapper.matrix(url_time, mode, [dimension], row, column, sanitize_options(options))
     matrix ||= [Array.new(row.size) { Array.new(column.size, 2147483647) }]
 
     matrix[0].map{ |row|
@@ -37,22 +37,22 @@ class RouterWrapper < Router
     }
   end
 
-  def compute_isochrone(lat, lng, size, speed_multiplicator, options = {})
-    Mapotempo::Application.config.router_wrapper.isoline(url_time, mode, :time, lat, lng, size, sanitize_options(options, speed_multiplicator: speed_multiplicator))
+  def compute_isochrone(lat, lng, size, options = {})
+    Mapotempo::Application.config.router_wrapper.isoline(url_time, mode, :time, lat, lng, size, sanitize_options(options))
   end
 
-  def compute_isodistance(lat, lng, size, speed_multiplicator, options = {})
-    Mapotempo::Application.config.router_wrapper.isoline(url_time, mode, :distance, lat, lng, size, sanitize_options(options, speed_multiplicator: speed_multiplicator))
+  def compute_isodistance(lat, lng, size, options = {})
+    Mapotempo::Application.config.router_wrapper.isoline(url_time, mode, :distance, lat, lng, size, sanitize_options(options))
   end
 
   private
 
   def sanitize_options(options, extra_options = {})
-    if !avoid_zones? && !speed_multiplicator_zones?
-      options.delete(:speed_multiplicator_areas)
+    if !avoid_zones? && !speed_multiplier_zones?
+      options.delete(:speed_multiplier_areas)
       options.delete(:area)
     end
-
-    options.merge(extra_options)
+    options[:speed_multiplier] = options.delete(:speed_multiplicator) if options[:speed_multiplicator] && !options[:speed_multiplier]
+    options
   end
 end

@@ -153,55 +153,51 @@ class VehicleUsageTest < ActiveSupport::TestCase
   end
 
   test 'disable vehicle usage' do
-    # Stub Requests
-    routers(:router_one).update(type: RouterOsrm) # TMP
-    expected_response = File.read(Rails.root.join('test/web_mocks/osrm/route.json')).strip
-    store = stores :store_one
-    stub_request(:get, "http://localhost:5000/viaroute?alt=false&loc=#{store.lat},#{store.lng}&output=json").to_return(status: 200, body: expected_response)
+    Routers::RouterWrapper.stub_any_instance(:compute_batch, lambda { |url, mode, dimension, segments, options| segments.collect{ |i| [1, 720, '_ibE_seK_seK_seK'] } } ) do
+      planning = plannings(:planning_one)
+      out_of_route = planning.routes.detect{|route| !route.vehicle_usage }
+      route = planning.routes.detect{|route| route.ref == 'route_one' }
+      vehicle_usage = route.vehicle_usage
 
-    planning = plannings(:planning_one)
-    out_of_route = planning.routes.detect{|route| !route.vehicle_usage }
-    route = planning.routes.detect{|route| route.ref == 'route_one' }
-    vehicle_usage = route.vehicle_usage
+      # There are 3 Stops on this Route, + 1 Rest Stop
+      assert_equal 3, route.stops.reload.select{|stop| stop.is_a?(StopVisit) }.count
+      assert_equal 1, route.stops.reload.select{|stop| stop.is_a?(StopRest) }.count
+      assert_equal 1, out_of_route.stops.reload.select{|stop| stop.is_a?(StopVisit) }.count
 
-    # There are 3 Stops on this Route, + 1 Rest Stop
-    assert_equal 3, route.stops.reload.select{|stop| stop.is_a?(StopVisit) }.count
-    assert_equal 1, route.stops.reload.select{|stop| stop.is_a?(StopRest) }.count
-    assert_equal 1, out_of_route.stops.reload.select{|stop| stop.is_a?(StopVisit) }.count
+      # Scope includes Vehicle Usage
+      assert VehicleUsage.active.find(route.vehicle_usage_id)
 
-    # Scope includes Vehicle Usage
-    assert VehicleUsage.active.find(route.vehicle_usage_id)
+      # Deactivating Vehicle Usage
+      assert_difference('planning.routes.size', -1) do
+        assert vehicle_usage.active
+        vehicle_usage.update! active: false
+        assert !vehicle_usage.active
+        planning.reload
+      end
 
-    # Deactivating Vehicle Usage
-    assert_difference('planning.routes.size', -1) do
-      assert vehicle_usage.active
-      vehicle_usage.update! active: false
-      assert !vehicle_usage.active
-      planning.reload
+      # Scope does not include Vehicle Usage
+      assert_raises ActiveRecord::RecordNotFound do
+        VehicleUsage.active.find(route.vehicle_usage_id)
+      end
+
+      # All Stops are now out of route
+      assert_raises ActiveRecord::RecordNotFound do
+        route.reload
+      end
+
+      # Activating Vehicle Usage
+      assert_difference('planning.routes.size', 1) do
+        vehicle_usage.update! active: true
+        assert vehicle_usage.active
+      end
+
+      # Routes should be recreated
+      route = planning.routes.reload.detect{|planning_route| planning_route.vehicle_usage_id == vehicle_usage.id }
+      assert route.persisted?
+      assert_equal 0, route.stops.reload.select{|stop| stop.is_a?(StopVisit) }.count
+      assert_equal 1, route.stops.reload.select{|stop| stop.is_a?(StopRest) }.count
+      assert_equal 4, out_of_route.stops.reload.select{|stop| stop.is_a?(StopVisit) }.count
     end
-
-    # Scope does not include Vehicle Usage
-    assert_raises ActiveRecord::RecordNotFound do
-      VehicleUsage.active.find(route.vehicle_usage_id)
-    end
-
-    # All Stops are now out of route
-    assert_raises ActiveRecord::RecordNotFound do
-      route.reload
-    end
-
-    # Activating Vehicle Usage
-    assert_difference('planning.routes.size', 1) do
-      vehicle_usage.update! active: true
-      assert vehicle_usage.active
-    end
-
-    # Routes should be recreated
-    route = planning.routes.reload.detect{|planning_route| planning_route.vehicle_usage_id == vehicle_usage.id }
-    assert route.persisted?
-    assert_equal 0, route.stops.reload.select{|stop| stop.is_a?(StopVisit) }.count
-    assert_equal 1, route.stops.reload.select{|stop| stop.is_a?(StopRest) }.count
-    assert_equal 4, out_of_route.stops.reload.select{|stop| stop.is_a?(StopVisit) }.count
   end
 
   test 'should destroy disabled vehicle usage' do

@@ -26,6 +26,9 @@ class V01::Customers < Grape::API
 
       customer = @current_user.admin? && params[:id] ? @current_user.reseller.customers.where(ParseIdsRefs.read(params[:id])).first! : @current_user.customer
 
+      # Deals with deprecated speed_multiplicator
+      p[:speed_multiplier] = p.delete[:speed_multiplicator] if p[:speed_multiplicator] && !p[:speed_multiplier]
+
       p[:devices] = p[:devices] ? JSON.parse(p[:devices], symbolize_names: true) : {}
       p[:devices] = customer[:devices].deep_merge(p[:devices]) if customer && customer[:devices].size > 0
 
@@ -74,7 +77,7 @@ class V01::Customers < Grape::API
           :profile_id,
           :router_id,
           :router_dimension,
-          :speed_multiplicator,
+          :speed_multiplier,
           router_options: [:time, :distance, :isochrone, :isodistance, :traffic, :avoid_zones, :track, :motorway, :toll, :trailers, :weight, :weight_per_axle, :height, :width, :length, :hazardous_goods, :max_walk_distance, :approach, :snap, :strict_restriction],
           devices: permit_recursive_params(p[:devices]))
       else
@@ -102,7 +105,7 @@ class V01::Customers < Grape::API
           :advanced_options,
           :router_id,
           :router_dimension,
-          :speed_multiplicator,
+          :speed_multiplier,
           router_options: [:time, :distance, :isochrone, :isodistance, :traffic, :avoid_zones, :track, :motorway, :toll, :trailers, :weight, :weight_per_axle, :height, :width, :length, :hazardous_goods, :max_walk_distance, :approach, :snap, :strict_restriction],
           devices: permit_recursive_params(p[:devices]))
       end

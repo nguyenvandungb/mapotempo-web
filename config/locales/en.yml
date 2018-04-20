@@ -169,7 +169,7 @@ en:
         print_map: Include map
         print_stop_time: Include stop time
         print_barcode: Barcode
-        speed_multiplicator: Speed multiplier
+        speed_multiplier: Speed multiplier
         router: Routing Engine
         router_id: Routing Engine
         router_dimension: Router objective
@@ -395,7 +395,7 @@ en:
         router: Routing Engine
         router_id: Routing Engine
         router_dimension: Router objective
-        speed_multiplicator: Speed multiplier
+        speed_multiplier: Speed multiplier
         customised_color: Select a custom color
         ref: Reference
         contact_email: E-Mail
@@ -409,7 +409,7 @@ en:
         router: Routing Engine
         router_id: Routing Engine
         router_dimension: Router objective
-        speed_multiplicator: Speed multiplier
+        speed_multiplier: Speed multiplier
         customised_color: Select a custom color
         ref: Reference
         contact_email: E-Mail
@@ -668,7 +668,7 @@ en:
       index:
         title: Listing profiles
         avoid_zones: Bypass zones
-        speed_multiplicator_zones: Slowing down zones
+        speed_multiplier_zones: Slowing down zones
     resellers:
       menu:
         reseller: Reseller
@@ -867,8 +867,8 @@ en:
       sms_concat_help: If checked your SMS will be complete (but charged several SMS for price when
         exceeding), if not checked your SMS will be truncated.
       sms_from_customer_name_help: If checked "%{c}" will be used for SMS sender name
-      speed_multiplicator_default: '%{n} (default value)'
-      speed_multiplicator_help: A value higher than 100% means higher speed.
+      speed_multiplier_default: '%{n} (default value)'
+      speed_multiplier_help: A value higher than 100% means higher speed.
       audience_url_help: Go to the customer dashboard Audience page
       behavior_url_help: Go to the customer dashboard Behavior page
       submit: Update Global settings
@@ -1890,8 +1890,8 @@ en:
       router_dimension_desc: force use of a specific routing dimension
       router_options: router options
       router_options_desc: force use of specific routing options
-      speed_multiplicator: speed multiplier
-      speed_multiplicator_desc: a value higher than 100% means higher speed
+      speed_multiplier: speed multiplier
+      speed_multiplier_desc: a value higher than 100% means higher speed
       color: color
       color_desc: color associated to vehicle
       tags: vehicle skills
@@ -1934,7 +1934,7 @@ en:
         help: Force use of a specific routing engine
       router_dimension:
         default: Default
-      speed_multiplicator:
+      speed_multiplier:
         default: '%{n} (default value)'
         help: A value higher than 100% means higher speed. The global tune up set
           on settings is also used on computation.

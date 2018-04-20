@@ -179,7 +179,7 @@ es:
         name: Nombre
         profile: Perfil
         profile_id: Perfil
-        speed_multiplicator: Ajuste de velocidad
+        speed_multiplier: Ajuste de velocidad
         ref: Referencia
       deliverable_unit:
         default_quantity: Cantidad por defecto
@@ -369,7 +369,7 @@ es:
         router: Calculador de itinerario
         router_id: Calculador de itinerario
         router_dimension: Objetivo del calculador
-        speed_multiplicator: Ajuste de la velocidad
+        speed_multiplier: Ajuste de la velocidad
         customised_color: Color personalizado
         ref: Referencia
         contact_email: Email
@@ -612,7 +612,7 @@ es:
       index:
         title: Lista perfiles
         avoid_zones: Zonas de circunvalación
-        speed_multiplicator_zones: Zonas de desaceleración
+        speed_multiplier_zones: Zonas de desaceleración
     resellers:
       edit:
         title: Modificar revendedor
@@ -727,7 +727,7 @@ es:
       print_header_help: Bloque de texto añadido antes cada gira
       print:
         title: Impresiones
-      speed_multiplicator_help: Un valor superior a 100% significa una velocidad mas
+      speed_multiplier_help: Un valor superior a 100% significa una velocidad mas
         alta.
       submit: Registrar parametrado global
       external_callback:
@@ -746,7 +746,7 @@ es:
       optimization_cluster_size_default: '%{n} (valor predeterminado)'
       optimization_time_default: '%{n} (valor predeterminado)'
       optimization_soft_upper_bound_default: '%{n} (valor predeterminado)'
-      speed_multiplicator_default: '%{n} (valor predeterminado)'
+      speed_multiplier_default: '%{n} (valor predeterminado)'
     new:
       title: Nueva cuenta cliente
   deliverable_units:

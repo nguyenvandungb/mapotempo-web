@@ -8,7 +8,7 @@ vehicle_one:
   capacities: '"1" => "1", "999" => "1"'
   color: "#004499"
   customer: customer_one
-  speed_multiplicator:
+  speed_multiplier:
   contact_email: 'toto@toto.toto'
   router_options:
     traffic: true
@@ -21,7 +21,7 @@ vehicle_two:
   capacities: '"4" => "1"'
   color: "#004499"
   customer: customer_two
-  speed_multiplicator: 0.9
+  speed_multiplier: 0.9
 
 vehicle_three:
   ref: '003'
@@ -31,7 +31,7 @@ vehicle_three:
   capacities: '"1" => "3"'
   color: "#00FF00"
   customer: customer_one
-  speed_multiplicator:
+  speed_multiplier:
   tags: tag_one
 
 vehicle_four:
@@ -41,4 +41,4 @@ vehicle_four:
   capacities: '"3" => "3"'
   color: "#004499"
   customer: customer_one_other
-  speed_multiplicator:
+  speed_multiplier:

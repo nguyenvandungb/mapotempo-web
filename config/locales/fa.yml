@@ -169,7 +169,7 @@ fa:
         optimization_force_start: ''
         profile: ''
         profile_id: ''
-        speed_multiplicator: ''
+        speed_multiplier: ''
         default_country: ''
         with_state: ''
         ref: ''
@@ -368,7 +368,7 @@ fa:
         router: ''
         router_id: ''
         router_dimension: ''
-        speed_multiplicator: ''
+        speed_multiplier: ''
         customised_color: ''
         ref: ''
         contact_email: ''
@@ -584,7 +584,7 @@ fa:
       index:
         title: ''
         avoid_zones: ''
-        speed_multiplicator_zones: ''
+        speed_multiplier_zones: ''
     resellers:
       menu:
         reseller: ''
@@ -701,8 +701,8 @@ fa:
       print_header_help: ''
       print:
         title: ''
-      speed_multiplicator_default: ''
-      speed_multiplicator_help: ''
+      speed_multiplier_default: ''
+      speed_multiplier_help: ''
       submit: ''
       external_callback:
         title: ''
@@ -1473,8 +1473,8 @@ fa:
       router_dimension_desc: ''
       router_options: ''
       router_options_desc: ''
-      speed_multiplicator: ''
-      speed_multiplicator_desc: ''
+      speed_multiplier: ''
+      speed_multiplier_desc: ''
       color: ''
       color_desc: ''
       devices: ''
@@ -1511,7 +1511,7 @@ fa:
         help: ''
       router_dimension:
         default: ''
-      speed_multiplicator:
+      speed_multiplier:
         default: ''
         help: ''
       contact_email:

@@ -55,8 +55,8 @@ var api_web_v01_zones_index = function(params) {
 
   var fitBounds = initializeMapHash(map, true);
 
-  var setColor = function(polygon, vehicle_id, speed_multiplicator) {
-    polygon.setStyle((speed_multiplicator === 0) ? {
+  var setColor = function(polygon, vehicle_id, speed_multiplier) {
+    polygon.setStyle((speed_multiplier === 0) ? {
       color: '#FF0000',
       fillColor: '#707070',
       weight: 5,
@@ -84,7 +84,7 @@ var api_web_v01_zones_index = function(params) {
       this.on('mouseover', function(e) {
         that.setStyle({
           opacity: 0.9,
-          weight: (zone.speed_multiplicator === 0) ? 5 : 3
+          weight: (zone.speed_multiplier === 0) ? 5 : 3
         });
         if (zone.name) labelMarker = L.marker(that.getBounds().getCenter(), {
           icon: L.divIcon({
@@ -97,7 +97,7 @@ var api_web_v01_zones_index = function(params) {
       this.on('mouseout', function(e) {
         that.setStyle({
           opacity: 0.5,
-          weight: (zone.speed_multiplicator === 0) ? 5 : 2
+          weight: (zone.speed_multiplier === 0) ? 5 : 2
         });
         if (labelMarker) labelLayer.removeLayer(labelMarker);
         labelMarker = null
@@ -145,7 +145,7 @@ var api_web_v01_zones_index = function(params) {
 
     $.each(data.zoning, function(index, zone) {
       var geom = (new zoneGeometry(JSON.parse(zone.polygon))).addOverlay(zone);
-      setColor(geom, zone.vehicle_id, zone.speed_multiplicator);
+      setColor(geom, zone.vehicle_id, zone.speed_multiplier);
       addZone(zone, geom);
     });
 

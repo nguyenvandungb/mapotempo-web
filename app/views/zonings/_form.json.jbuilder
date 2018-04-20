@@ -3,7 +3,7 @@ json.stores @planning ? @planning.routes.select(&:vehicle_usage).collect { |rout
 end
 index = 0
 json.zoning @zoning.zones do |zone|
-  json.extract! zone, :id, :name, :vehicle_id, :polygon, :speed_multiplicator
+  json.extract! zone, :id, :name, :vehicle_id, :polygon, :speed_multiplier
   json.index index += 1
 end
 if @planning

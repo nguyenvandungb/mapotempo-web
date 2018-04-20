@@ -53,11 +53,11 @@ class Zone < ApplicationRecord
   end
 
   def avoid_zone
-    speed_multiplicator == 0
+    speed_multiplier == 0
   end
 
   def avoid_zone=(bool)
-    speed_multiplicator = bool ? 0 : 1
+    speed_multiplier = bool ? 0 : 1
   end
 
   private
@@ -98,6 +98,6 @@ class Zone < ApplicationRecord
   end
 
   def update_outdated
-    zoning.flag_outdated if self.changed? && (polygon_changed? || vehicle_id_changed? || speed_multiplicator_changed?)
+    zoning.flag_outdated if self.changed? && (polygon_changed? || vehicle_id_changed? || speed_multiplier_changed?)
   end
 end

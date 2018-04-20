@@ -79,9 +79,9 @@ class ZoningsControllerTest < ActionController::TestCase
     assert_equal @zoning.plannings.map(&:zoning_outdated), [true, true]
   end
 
-  test 'should set @planning.zoning_outdated to true when modifying relevant zone field: speed_multiplicator' do
-    speed_multiplicator = 0
-    patch :update, id: @zoning.id, zoning: { name: @zoning.name, zones_attributes: [{ id: @zoning.zones.first.id, avoid_zone: true, speed_multiplicator: speed_multiplicator}] }
+  test 'should set @planning.zoning_outdated to true when modifying relevant zone field: speed_multiplier' do
+    speed_multiplier = 0
+    patch :update, id: @zoning.id, zoning: { name: @zoning.name, zones_attributes: [{ id: @zoning.zones.first.id, avoid_zone: true, speed_multiplier: speed_multiplier}] }
     assert_equal @zoning.plannings.map(&:zoning_outdated), [true, true]
   end
 

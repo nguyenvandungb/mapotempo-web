@@ -81,7 +81,7 @@ class Customer < ApplicationRecord
   validates :max_zonings, numericality: { greater_than: 0, less_than_or_equal_to: Mapotempo::Application.config.max_zonings }, allow_nil: true
   validates :max_destinations, numericality: { greater_than: 0, less_than_or_equal_to: Mapotempo::Application.config.max_destinations }, allow_nil: true
   validates :max_vehicle_usage_sets, numericality: { greater_than: 0, less_than_or_equal_to: Mapotempo::Application.config.max_vehicle_usage_sets }, allow_nil: true
-  validates :speed_multiplicator, numericality: { greater_than_or_equal_to: 0.5, less_than_or_equal_to: 1.5 }, if: :speed_multiplicator
+  validates :speed_multiplier, numericality: { greater_than_or_equal_to: 0.5, less_than_or_equal_to: 1.5 }, if: :speed_multiplier
 
   after_initialize :assign_defaults, :update_max_vehicles, if: :new_record?
   after_initialize :assign_device
@@ -370,7 +370,7 @@ class Customer < ApplicationRecord
   end
 
   def update_outdated
-    if optimization_force_start_changed? || take_over_changed? || router_id_changed? || router_dimension_changed? || router_options_changed? || speed_multiplicator_changed? || @deliverable_units_updated
+    if optimization_force_start_changed? || take_over_changed? || router_id_changed? || router_dimension_changed? || router_options_changed? || speed_multiplier_changed? || @deliverable_units_updated
       plannings.each { |planning|
         planning.routes.each { |route|
           route.outdated = true

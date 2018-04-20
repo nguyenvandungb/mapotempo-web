@@ -175,7 +175,7 @@ he:
         optimization_cost_waiting_time: מקדם זמן המתנה
         profile: פרופיל
         profile_id: פרופיל
-        speed_multiplicator: מכפיל מהירות
+        speed_multiplier: מכפיל מהירות
         default_country: ארץ ברירת מחדל
         ref: הפניה
         ref_help: הפניה חייבת להיות אחידה
@@ -364,7 +364,7 @@ he:
         router: מנוע ניתוב
         router_id: מנוע ניתוב
         router_dimension: נתב המטרה
-        speed_multiplicator: מכפיל מהירות
+        speed_multiplier: מכפיל מהירות
         customised_color: בחירת צבע מותאם אישית
         ref: הפניה
         contact_email: דואר אלקטרוני
@@ -560,7 +560,7 @@ he:
       index:
         title: רשימת פרופילים
         avoid_zones: איזור עקיפה
-        speed_multiplicator_zones: האטת איזורים
+        speed_multiplier_zones: האטת איזורים
     resellers:
       menu:
         reseller: מפיץ
@@ -695,8 +695,8 @@ he:
       print_header_help: טקסט שיוכנס לפני כל מסלול
       print:
         title: הדפסה
-      speed_multiplicator_default: '%{n} (ערך ברירת מחדל)'
-      speed_multiplicator_help: ערך הגבוה מ-100% משמעו מהירות גבוה יותר.
+      speed_multiplier_default: '%{n} (ערך ברירת מחדל)'
+      speed_multiplier_help: ערך הגבוה מ-100% משמעו מהירות גבוה יותר.
       submit: עידכון הגדרות גלובליות
       sync:
         complete: סינכרון הושלם
@@ -1406,7 +1406,7 @@ he:
         default: ברירת מחדל
       router_dimension:
         default: ברירת מחדל
-      speed_multiplicator:
+      speed_multiplier:
         default: '%{n} (ערך ברירת מחדל)'
       contact_email:
         help: סוג דוא"ל לנהג
