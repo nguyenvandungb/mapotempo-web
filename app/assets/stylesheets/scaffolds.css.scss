@@ -157,6 +157,10 @@ a.disabled {
   border-radius: 0;
 }
 
+.select2-search__field {
+  min-width: 100px !important;
+}
+
 /* Tables */
 .table {
   word-wrap: break-word;

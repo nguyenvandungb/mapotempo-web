@@ -64,8 +64,26 @@ var vehicle_usages_form = function(params) {
         return noResults;
       }
     },
-    width: '100%'
+    width: '100%',
+    tags: true,
+    closeOnSelect: false,
+    createTag: function(params) {
+      var term = $.trim(params.term);
+      if (term === '') return null;
+      return {
+        id: term,
+        newTag: true,
+        text: term + ' ( + ' + I18n.t('web.select2.new') + ')'
+      };
+    }
+  }).on('select2:open', function(e) {
+    $(e.target).parent().find('.select2-search__field').attr('placeholder', I18n.t('web.select2.placeholder'));
+  }).on('select2:close', function(e) {
+    $(e.target).parent().find('.select2-search__field').attr('placeholder', '');
+  }).on('select2:selecting', function(e) {
+    selectTag(e);
   });
+
   $('select[name$=\\[tag_ids\\]\\[\\]]', '#vehicle_usage_tag_ids_input').select2({
     theme: 'bootstrap',
     minimumResultsForSearch: -1,

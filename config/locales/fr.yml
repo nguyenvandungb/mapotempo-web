@@ -2417,6 +2417,8 @@
       'days': 'J+'
     'select2':
       'empty_result': 'Pas de résultat'
+      'new': 'Nouveau'
+      'placeholder': 'Écrire ici'
     'dialog':
       'close': 'Fermer'
     'placeholder_filter': 'filtrer'

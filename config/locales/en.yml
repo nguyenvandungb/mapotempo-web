@@ -2255,6 +2255,8 @@ en:
       days: D+
     select2:
       empty_result: No results matched
+      new: New
+      placeholder: Write here
     dialog:
       close: Close
     placeholder_filter: filter

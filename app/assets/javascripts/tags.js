@@ -61,3 +61,32 @@ var templateTag = function(item) {
     return item.text;
   }
 };
+
+var selectTag = function(event) {
+  console.log('Selecting ...');
+  if (event.params.args.data.newTag) {
+    event.preventDefault();
+    $.ajax({
+      type: "post",
+      data: '{"label": "' + event.params.args.data.id + '", "ref": "#' + event.params.args.data.id + '"}',
+      contentType: 'application/json',
+      url: '/api/0.1/tags.json',
+      success: function(data) {
+        var $select = $(event.target);
+        $select.parent().find('.select2-search__field').val('');
+
+        $select.find('option').filter(function() { this.value == data.label }).remove();
+        $select.append(new Option(data.label, data.id, false, false)).trigger('change');
+
+        selectedOptions = $select.select2('data').map(function(el) { return el.id });
+        selectedOptions.push(data.id.toString());
+
+        $select.val(selectedOptions).trigger('change');
+        $select.select2('close');
+      },
+      beforeSend: beforeSendWaiting,
+      complete: completeWaiting,
+      error: ajaxError
+    });
+  }
+}
