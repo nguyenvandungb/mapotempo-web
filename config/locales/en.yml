@@ -641,7 +641,7 @@ en:
       import_too_routes: Tried to import more routes than available vehicles
       already_optimizing: A plan optimization is already in progress
       deadlock: 'Warning: Failed to update data. Another update was realized simultaneously,
-        you may performed several operations too fast.'
+        you may performed several operations too fast or multiple times.'
       automatic_insert_no_result: No route to set stop
       job_in_progress: Impossible to execute this operation for the moment, a background task
         (optimization) is currently running
