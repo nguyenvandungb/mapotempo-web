@@ -198,7 +198,7 @@ class OptimizerWrapper
       result = JSON.parse(result)
     end
 
-    [result['solutions'][0]['unassigned'] ? result['solutions'][0]['unassigned'].collect{ |activity|
+    [result['solutions'][0]['unassigned'] ? result['solutions'][0]['unassigned'].select{ |activity| activity['service_id'] }.collect{ |activity|
       activity['service_id'][1..-1].to_i
     } : []] + vehicles.collect{ |vehicle|
       route = result['solutions'][0]['routes'].find{ |r| r['vehicle_id'] == "v#{vehicle[:id]}" }
