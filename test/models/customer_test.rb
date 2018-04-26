@@ -249,13 +249,12 @@ class CustomerTest < ActiveSupport::TestCase
   test 'should update enable_multi_visits' do
     customer = @customer
     refs = customer.destinations.collect(&:ref)
-    tags = customer.destinations.collect { |d| d.tags.collect(&:label) }.flatten
     assert_no_difference('Destination.count') do
       assert_no_difference('Visit.count') do
         customer.enable_multi_visits = true
         customer.save
-        assert_equal refs, customer.destinations.collect { |d| d.visits.collect(&:ref) }.flatten
-        assert_equal tags, customer.destinations.collect { |d| d.visits.collect { |v| v.tags.collect(&:label) }.flatten }.flatten
+        assert_equal refs, customer.destinations.flat_map { |d| d.visits.collect(&:ref) }
+        assert_equal [tags(:tag_one).label] * 4, customer.destinations.flat_map { |d| d.visits.flat_map { |v| v.tags.collect(&:label) } }
       end
     end
 
@@ -265,7 +264,7 @@ class CustomerTest < ActiveSupport::TestCase
         customer.enable_multi_visits = false
         customer.save
         assert_equal refs, customer.destinations.collect(&:ref)
-        assert_equal tags, customer.destinations.collect { |d| d.tags.collect(&:label) }.flatten
+        assert_equal [tags(:tag_one).label] * 4, customer.destinations.flat_map { |d| d.tags.collect(&:label) }
       end
     end
   end
