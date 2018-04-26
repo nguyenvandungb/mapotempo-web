@@ -408,8 +408,8 @@ class Customer < ApplicationRecord
         if enable_multi_visits
           self.destinations.each{ |destination|
             destination.visits.each{ |visit|
-              visit.ref = destination.ref
-              visit.tags = destination.tags # ?
+              visit.ref ||= destination.ref
+              visit.tags |= destination.tags
             }
             destination.ref = nil
             destination.tag_ids = []
@@ -418,7 +418,7 @@ class Customer < ApplicationRecord
           self.destinations.each{ |destination|
             if !destination.visits.empty?
               destination.ref = destination.visits[0].ref
-              destination.tags = destination.visits[0].tags # ?
+              destination.tags = destination.visits[0].tags | destination.tags
               destination.visits.each{ |visit|
                 visit.ref = nil
                 visit.tag_ids = []
