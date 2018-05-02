@@ -550,7 +550,7 @@ class PlanningTest < ActiveSupport::TestCase
 
   test 'should optimize one route with one store rest' do
     route = routes(:route_one_one)
-    optim = route.planning.optimize([route], false) { |*a|
+    optim = route.planning.optimize([route], { global: false }) { |*a|
       optimizer_route(*a)
     }
     assert_equal [route.stops.collect(&:id)], optim
@@ -561,7 +561,7 @@ class PlanningTest < ActiveSupport::TestCase
     vehicle_usages(:vehicle_usage_one_one).update! store_rest: nil
     vehicle_usage_sets(:vehicle_usage_set_one).update! store_rest: nil
     route.reload
-    optim = route.planning.optimize([route], false) { |*a|
+    optim = route.planning.optimize([route], { global: false }) { |*a|
       optimizer_route(*a)
     }
     assert_equal [route.stops.collect(&:id)], optim
@@ -572,7 +572,7 @@ class PlanningTest < ActiveSupport::TestCase
     vehicle_usages(:vehicle_usage_one_one).update! store_start: nil, store_stop: nil, store_rest: nil
     vehicle_usage_sets(:vehicle_usage_set_one).update! store_start: nil, store_stop: nil, store_rest: nil
     route.reload
-    optim = route.planning.optimize([route], false) { |*a|
+    optim = route.planning.optimize([route], { global: false }) { |*a|
       optimizer_route(*a)
     }
     assert_equal [route.stops.collect(&:id)], optim
@@ -580,7 +580,7 @@ class PlanningTest < ActiveSupport::TestCase
 
   test 'should optimize one route with none geoloc store' do
     route = routes(:route_three_one)
-    optim = route.planning.optimize([route], false) { |*a|
+    optim = route.planning.optimize([route], { global: false }) { |*a|
       optimizer_route(*a)
     }
     assert_equal [route.stops.collect(&:id)], optim
@@ -588,7 +588,7 @@ class PlanningTest < ActiveSupport::TestCase
 
   test 'should optimize global planning' do
     planning = plannings(:planning_one)
-    optim = planning.optimize(planning.routes, true) { |*a|
+    optim = planning.optimize(planning.routes, { global: true }) { |*a|
       optimizer_global(*a)
     }
     assert_equal 0, optim[0].size
@@ -614,7 +614,7 @@ class PlanningTest < ActiveSupport::TestCase
     # should be nil
     assert_nil stops.find{ |stop| stop.is_a?(StopRest) || stop.open1 || stop.close1 || stop.open2 || stop.close2 }
 
-    planning.optimize(planning.routes, false,) do |positions, services, vehicles|
+    planning.optimize(planning.routes, { global: false }) do |positions, services, vehicles|
       assert_equal stops.count, services.count
       optimizer_global(positions, services, vehicles)
     end
@@ -630,7 +630,7 @@ class PlanningTest < ActiveSupport::TestCase
     assert_equal ['Pause', 'store 1'], # It should have a Pause (geolocalized rest)
       planning.routes.collect{ |r| r.stops.map{ |s| s.name if s.type == 'StopRest' } }.map(&:compact).flatten
 
-    planning.optimize(planning.routes, false,) do |positions, services, vehicles|
+    planning.optimize(planning.routes, { global: false }) do |positions, services, vehicles|
       assert services.collect{ |s| s.key? :rest }.uniq.first # All Service should have a rest key
       # Given parameters in OptimizerWrapper::optimize should contain late_multiplier:null
       optimizer_global(positions, services, vehicles)
@@ -644,7 +644,7 @@ class PlanningTest < ActiveSupport::TestCase
       .with(body: /distance/)
       .to_return(File.new(File.expand_path('../../web_mocks/', __FILE__) + '/optimizer/optimize.json').read)
 
-    planning.optimize(planning.routes, false,) do |positions, services, vehicles|
+    planning.optimize(planning.routes, { global: false }) do |positions, services, vehicles|
       assert vehicles.collect{ |s| s.key? :max_distance }.uniq.first # All Vehicles should have a max_distance key
       # Given parameters in OptimizerWrapper::optimize should contain distance
       optimizer_global(positions, services, vehicles)
@@ -656,13 +656,13 @@ class PlanningTest < ActiveSupport::TestCase
     inactive_stop = planning.routes.third.stops.second
     inactive_stop.update_attribute(:active, false)
 
-    active_optim = planning.optimize(planning.routes, false, false) { |*a|
+    active_optim = planning.optimize(planning.routes, { global: false, active_only: false }) { |*a|
       optimizer_global(*a)
     }
     planning.set_stops(planning.routes, active_optim)
     active_stops = planning.routes.third.stops.map(&:id)
 
-    all_optim = planning.optimize(planning.routes, false, true) { |*a|
+    all_optim = planning.optimize(planning.routes, { global: false, active_only: true }) { |*a|
       optimizer_global(*a)
     }
     planning.set_stops(planning.routes, all_optim, true)
@@ -677,7 +677,7 @@ class PlanningTest < ActiveSupport::TestCase
     initial_inactive_stop = planning.routes.first.stops.first
     initial_inactive_stop.update_attribute(:active, false)
 
-    active_optim = planning.optimize(planning.routes, false, false) { |*a|
+    active_optim = planning.optimize(planning.routes, { global: false, active_only: false }) { |*a|
       optimizer_global(*a)
     }
     planning.set_stops(planning.routes, active_optim)
@@ -697,7 +697,7 @@ class PlanningTest < ActiveSupport::TestCase
 
   test 'should set stops for planning' do
     planning = plannings(:planning_one)
-    optim = planning.optimize(planning.routes, true) { |*a|
+    optim = planning.optimize(planning.routes, { global: true }) { |*a|
       optimizer_global(*a)
     }
     planning.set_stops(planning.routes, optim)

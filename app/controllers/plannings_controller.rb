@@ -262,7 +262,7 @@ class PlanningsController < ApplicationController
     active_only = ValueToBoolean::value_to_boolean(params[:active_only])
     respond_to do |format|
       begin
-        if Optimizer.optimize(@planning, nil, global, false, active_only) && @planning.customer.save
+        if Optimizer.optimize(@planning, nil, { global: global, synchronous: false, active_only: active_only, ignore_overload_multipliers: ignore_overload_multipliers }) && @planning.customer.save
           format.json { render action: 'show', location: @planning }
         else
           format.json { render json: @planning.errors, status: :unprocessable_entity }
@@ -276,10 +276,11 @@ class PlanningsController < ApplicationController
 
   def optimize_route
     active_only = ValueToBoolean::value_to_boolean(params[:active_only])
+    optimize_overload_multiplier = ValueToBoolean::value_to_boolean(params[:optimize_overload_multiplier])
     respond_to do |format|
       route = @planning.routes.find{ |route| route.id == Integer(params[:route_id]) }
       begin
-        if route && Optimizer.optimize(@planning, route, false, false, active_only) && @planning.customer.save
+        if route && Optimizer.optimize(@planning, route, { global: false, synchronous: false, active_only: active_only, ignore_overload_multipliers: ignore_overload_multipliers }) && @planning.customer.save
           @routes = [route]
           format.json { render action: 'show', location: @planning }
         else
@@ -349,6 +350,19 @@ class PlanningsController < ApplicationController
   end
 
   private
+
+  def ignore_overload_multipliers
+    if params[:ignore_overload_multipliers]
+      params[:ignore_overload_multipliers].values.map{ |obj|
+        {
+          unit_id: obj['unit_id'].to_i,
+          ignore: ValueToBoolean::value_to_boolean(obj['ignore'])
+        }
+      }
+    else
+      []
+    end
+  end
 
   # Use callbacks to share common setup or constraints between actions.
   def set_planning

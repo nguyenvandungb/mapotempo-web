@@ -357,13 +357,13 @@ class Planning < ApplicationRecord
     end
   end
 
-  def optimize(routes, global, active_only = true, &optimizer)
+  def optimize(routes, option = { global:false, active_only: true, ignore_overload_multipliers: [] }, &optimizer)
     routes_with_vehicle = routes.select(&:vehicle_usage?)
     stops_on = (routes.find{ |r| !r.vehicle_usage? }.try(:stops) || []) + routes_with_vehicle.flat_map{ |r|
-      r.stops_segregate(active_only)[true]
+      r.stops_segregate(option[:active_only])[true]
     }.compact
 
-    o = amalgamate_stops_same_position(stops_on, global, routes_with_vehicle.map(&:vehicle_usage)) { |positions|
+    o = amalgamate_stops_same_position(stops_on, option[:global], routes_with_vehicle.map(&:vehicle_usage)) { |positions|
       services_and_rests = positions.collect{ |position|
         stop_id, open1, close1, open2, close2, priority, duration, vehicle_usage_id, quantities, quantities_operations, skills, rest = position[2..13]
         {stop_id: stop_id, start1: open1, end1: close1, start2: open2, end2: close2, priority: priority, duration: duration, vehicle_usage_id: vehicle_usage_id, quantities: quantities, quantities_operations: quantities_operations, skills: skills, rest: rest}
@@ -397,16 +397,16 @@ class Planning < ApplicationRecord
             stores: [position_start && :start, position_stop && :stop].compact,
             rests: rests.select{ |s| s[:vehicle_usage_id] == r.vehicle_usage_id },
             capacities: r.vehicle_usage.vehicle.default_capacities && r.vehicle_usage.vehicle.default_capacities.each.map{ |k, v|
+              capacity = option[:ignore_overload_multipliers].find{ |iom| iom[:unit_id] == k } if option[:ignore_overload_multipliers]
               {
                 deliverable_unit_id: k,
-                capacity: v,
+                capacity: capacity.nil? ? v : capacity[:ignore] ? nil : v,
                 overload_multiplier: customer.deliverable_units.find{ |du| du.id == k }.optimization_overload_multiplier || Mapotempo::Application.config.optimize_overload_multiplier
               }
             },
             skills: vehicle_skills
           }
         }
-
         # Remove out-of-route if no global optimization
         optimizer.call(positions, services, vehicles)[(routes.find{ |r| !r.vehicle_usage? } ? 0 : 1)..-1]
       }
@@ -415,7 +415,7 @@ class Planning < ApplicationRecord
       if o[routes.find{ |route| !route.vehicle_usage? } ? i + 1 : i].size > 0
         r.optimized_at = Time.now.utc
         r.last_sent_to = r.last_sent_at = nil
-      elsif global
+      elsif option[:global]
         r.optimized_at = r.last_sent_to = r.last_sent_at = nil
       end
     }

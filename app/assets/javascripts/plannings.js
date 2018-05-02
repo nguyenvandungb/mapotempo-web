@@ -16,6 +16,11 @@
 // <http://www.gnu.org/licenses/agpl.html>
 //
 'use strict';
+
+$(function () {
+  $('[data-toggle="tooltip"]').tooltip()
+})
+
 var getPlanningsId = function() {
   return $.makeArray($('#plannings').find('input[type=checkbox]:checked').map(function(index, id) { return $(id).val(); }));
 };
@@ -1604,13 +1609,20 @@ var plannings_edit = function(params) {
     initOptimizerDialog();
 
     var routeId = $('#optimization-route_id').val();
+    var ignore_overload_multipliers = Array();
+    $("input[name^='overload_multiplier']:checked").each(function () {
+      if ($(this).val() == 'ignore')
+        ignore_overload_multipliers.push({unit_id: $(this).attr('unit-id'), ignore: true})
+    })
+
     $.ajax({
       type: 'GET',
       url: '/plannings/' + planning_id + (routeId ? '/' + routeId : '') + '/optimize.json',
       data: {
         with_stops: routeId ? true : withStopsInSidePanel,
         active_only: $('input[name="active_only"]:checked').val(),
-        global: !routeId && (($('input[name="sticky_vehicle"]:checked').val() == 'true') ? 'false' : 'true')
+        global: !routeId && (($('input[name="sticky_vehicle"]:checked').val() == 'true') ? 'false' : 'true'),
+        ignore_overload_multipliers: ignore_overload_multipliers
       },
       beforeSend: beforeSendWaiting,
       success: function(data) {

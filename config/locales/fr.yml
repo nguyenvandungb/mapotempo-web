@@ -1704,6 +1704,9 @@
           'deliverable_units':
             'title': 'Unités livrables'
             'overload_multiplier': 'Autoriser le dépassement de chargement'
+            'overload_multiplier_true_help': 'La capacité du véhicule est limitée'
+            'overload_multiplier_ignore_help': 'La capacité du véhicule est illimitée'
+            'ignore': 'ignorer'
           'optimize': 'Optimiser'
         'optimizer':
           'title': 'Optimisation'

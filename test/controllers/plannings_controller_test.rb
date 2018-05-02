@@ -532,6 +532,14 @@ class PlanningsControllerTest < ActionController::TestCase
     assert_equal @planning.routes.size, JSON.parse(response.body)['routes'].size
   end
 
+  test 'should optimize planning with overload_multiplier options' do
+    overload_multipliers = {}
+    @planning.customer.deliverable_units.each_with_index{ |du, index| overload_multipliers[index] = {unit_id: du.id, ignore: true}}
+    get :optimize, planning_id: @planning, format: :json, global: true, ignore_overload_multipliers: overload_multipliers
+    assert_response :success
+    assert_equal @planning.routes.size, JSON.parse(response.body)['routes'].size
+  end
+
   test 'should not optimize when an optimization job is already running' do
     customers(:customer_one).update(job_optimizer: delayed_jobs(:job_optimizer))
 

@@ -1588,6 +1588,9 @@ en:
           deliverable_units:
             title: Deliverable units
             overload_multiplier: Authorize overload
+            overload_multiplier_true_help: The vehicle capacity is limited
+            overload_multiplier_ignore_help: The vehicle capacity is unlimited
+            ignore: ignore
           optimize: Optimize
         optimizer:
           title: Optimization

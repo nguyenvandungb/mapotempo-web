@@ -28,27 +28,27 @@ class Optimizer
   @@cost_waiting_time = Mapotempo::Application.config.optimize_cost_waiting_time
   @@force_start = Mapotempo::Application.config.optimize_force_start
 
-  def self.optimize(planning, route, global = false, synchronous = false, active_only = true)
+  def self.optimize(planning, route, options = { global: false, synchronous: false, active_only: true, ignore_overload_multipliers: [] })
     optimize_time = planning.customer.optimization_time || @@optimize_time
-    if route && route.size_active <= 1 && active_only
+    if route && route.size_active <= 1 && options[:active_only]
       # Nothing to optimize
       route.compute
       planning.save
-    elsif !synchronous && Mapotempo::Application.config.delayed_job_use
+    elsif !options[:synchronous] && Mapotempo::Application.config.delayed_job_use
       if planning.customer.job_optimizer
         # Customer already run an optimization
         planning.errors.add(:base, I18n.t('errors.planning.already_optimizing'))
         false
       else
-        planning.customer.job_optimizer = Delayed::Job.enqueue(OptimizerJob.new(planning.id, route && route.id, global, active_only))
+        planning.customer.job_optimizer = Delayed::Job.enqueue(OptimizerJob.new(planning.id, route && route.id, options[:global], options[:active_only]))
         planning.customer.job_optimizer.save!
       end
     else
       routes = planning.routes.select { |r|
-        (route && r.id == route.id) || (!route && !global && r.vehicle_usage_id && r.size_active > 1) || (!route && global)
+        (route && r.id == route.id) || (!route && !options[:global] && r.vehicle_usage_id && r.size_active > 1) || (!route && options[:global])
       }.reject(&:locked)
       optimum = unless routes.select(&:vehicle_usage_id).empty?
-        planning.optimize(routes, global, active_only) do |positions, services, vehicles|
+        planning.optimize(routes, options) do |positions, services, vehicles|
           Mapotempo::Application.config.optimize.optimize(
             positions, services, vehicles,
             name: planning.name,
@@ -64,7 +64,7 @@ class Optimizer
       end
 
       if optimum
-        planning.set_stops(routes, optimum, active_only)
+        planning.set_stops(routes, optimum, options[:active_only])
         routes.each{ |r|
           r.reload # Refresh stops order
           r.compute
