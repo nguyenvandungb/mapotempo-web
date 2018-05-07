@@ -17,15 +17,15 @@
 //
 'use strict';
 
-$(document).ready(function(){
-  $('#disabled-planning').popover({
+$(document).ready(function() {
+  $('#navbar-plan.disabled').popover({
     placement: 'bottom',
     content: I18n.t('all.subscribe.planning_unavailable'),
     trigger: 'manual click'
   })
   .popover("show");
 
-  $('.popover').on('click', function(){
+  $('.popover').on('click', function() {
     $('.popover').popover("hide");
   });
 });

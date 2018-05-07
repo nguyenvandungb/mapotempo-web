@@ -30,7 +30,7 @@
             <% end %>
             <% if user_signed_in? && current_user.customer %>
               <% if !@unsubscribed %>
-                <li class="dropdown">
+                <li class="dropdown" id="navbar-plan">
                   <%= link_to plannings_path, :class=>"dropdown-toggle", 'data-toggle'=>"dropdown" do %><i class="fa fa-calendar-o fa-fw"></i> <span class="menu_label"><%= t 'plannings.menu.plannings' %></span> <span class="caret"></span><% end %>
                   <ul class="dropdown-menu">
                     <li<% if current_user.customer.too_many_plannings? %> class="disabled"<% end %>><%= link_to new_planning_path do %><i class="fa fa-plus fa-fw"></i> <%= t 'all.verb.new' %><% end %></li>
@@ -60,11 +60,11 @@
                     </li>
                   </ul>
               <% else %>
-                <li class="disabled" id="disabled-planning"><a href="#"><i class="fa fa-calendar-o fa-fw"></i> <%= t 'plannings.menu.plannings' %></a></li>
+                <li class="disabled" id="navbar-plan"><a href="#"><i class="fa fa-calendar-o fa-fw"></i> <%= t 'plannings.menu.plannings' %></a></li>
               <% end %>
               </li>
               <% if can?(:manage, OrderArray) %>
-                <li class="dropdown">
+                <li class="dropdown" id="navbar-orderarray">
                   <%= link_to order_arrays_path, :class=>"dropdown-toggle", 'data-toggle'=>"dropdown" do %><i class="fa fa-check-square-o fa-fw"></i> <span class="menu_label"><%= t 'order_arrays.menu.order_arrays' %></span> <span class="caret"></span><% end %>
                   <ul class="dropdown-menu">
                     <li><%= link_to new_order_array_path do %><i class="fa fa-plus fa-fw"></i> <%= t 'all.verb.new' %><% end %></li>
@@ -78,7 +78,7 @@
                   </ul>
                 </li>
               <% end %>
-              <li class="dropdown">
+              <li class="dropdown" id="navbar-destination">
                 <%= link_to destinations_path, :class=>"dropdown-toggle", 'data-toggle'=>"dropdown" do %><i class="fa fa-map-marker fa-fw"></i> <span class="menu_label"><%= t 'destinations.menu.destinations' %></span> <span class="caret"></span><% end %>
                 <ul class="dropdown-menu">
                   <li<% if current_user.customer.too_many_destinations? %> class="disabled"<% end %>><%= link_to new_destination_path do %><i class="fa fa-plus fa-fw"></i> <%= t 'all.verb.new' %><% end %></li>
@@ -93,7 +93,7 @@
                   <li><%= link_to destinations_path, method: :delete, data: { confirm: t('destinations.menu.clear_confirm') } do %><i class="fa fa-trash-o fa-fw"></i> <%= t 'destinations.menu.clear' %><% end %></li>
                 </ul>
               </li>
-              <li class="dropdown">
+              <li class="dropdown" id="navbar-vehicle">
                 <%= link_to vehicle_usage_sets_path, :class=>"dropdown-toggle", 'data-toggle'=>"dropdown" do %><i class="fa fa-truck fa-fw"></i> <span class="menu_label"><%= t 'vehicle_usage_sets.menu.vehicle_usage_sets' %></span> <span class="caret"></span><% end %>
                 <ul class="dropdown-menu">
                   <li><%= link_to vehicle_usage_sets_path do %><i class="fa fa-truck fa-fw"></i> <%= t 'all.verb.list' %><% end %></li>
@@ -118,7 +118,7 @@
           <ul class="nav navbar-nav pull-right">
             <% if user_signed_in? %>
               <% if current_user.customer && request.env['reseller'].subscription_url && (current_user.customer.test? || (current_user.customer.end_subscription && current_user.customer.end_subscription < Time.now)) %>
-                <li class="subscription">
+                <li class="subscription" id="navbar-subscription">
                   <%= link_to request.env['reseller'].subscription_url.gsub('{LG}', I18n.locale.to_s), target: '_blank' do %>
                     <i class="fa fa-rocket fa-fw"></i> <span class="menu_label"><%= t 'web.subscription' %></span>
                   <% end %>
@@ -126,7 +126,7 @@
               <% end %>
 
               <% if [request.env['reseller'].help_url, request.env['reseller'].help_search_url, request.env['reseller'].contact_url].compact.size > 1 %>
-                <li class="dropdown help">
+                <li class="dropdown help" id="navbar-help">
                   <%= link_to request.env['reseller'].help_url.gsub('{LG}', I18n.locale.to_s), class: 'dropdown-toggle', 'data-toggle' => "dropdown" do %>
                     <i class="fa fa-info-circle fa-fw"></i> <span class="menu_label"><%= t 'web.help_menu' %></span>
                     <span class="caret"></span>
@@ -158,7 +158,7 @@
                 </ul>
                 </li>
               <% end %>
-              <li class="dropdown">
+              <li class="dropdown" id="navbar-settings">
                 <% if current_user.customer %>
                   <%= link_to [:edit, current_user.customer], class: 'dropdown-toggle', 'data-toggle' => 'dropdown' do %>
                     <i class="fa fa-user fa-fw"></i> <span class="menu_label"><%= current_user.customer.name %></span>
