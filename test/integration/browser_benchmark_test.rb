@@ -12,7 +12,7 @@ if ENV['BENCHMARK'] == 'true'
       Rails.logger = dev_null
       ActiveRecord::Base.logger = dev_null
 
-      @customer = customers(:customer_two)
+      @customer = customers(:customer_one)
       @customer.max_vehicles = 80
       @customer.job_optimizer_id = nil
       @customer.job_destination_geocoding_id = nil
@@ -58,16 +58,17 @@ if ENV['BENCHMARK'] == 'true'
       @planning.compute
       @planning.save!
 
-      @time_elapsed = Benchmark.realtime do
+      time_ref = 40.seconds
+      time_elapsed = Benchmark.realtime do
         visit edit_planning_path(@planning)
 
         assert_selector '.routes.ui-sortable'
         assert_no_selector 'body.ajax_waiting'
       end.round
 
-      p "Time for displaying 900 points in browser: #{@time_elapsed} seconds"
+      p "Time for displaying 900 points in browser: #{time_elapsed} seconds (should be less than #{time_ref})"
 
-      assert @time_elapsed <= 40
+      assert_operator time_elapsed, :<=, time_ref
     end
 
     # Markers are clusterized and routes collapsed
@@ -85,16 +86,17 @@ if ENV['BENCHMARK'] == 'true'
       @planning.compute
       @planning.save!
 
-      @time_elapsed = Benchmark.realtime do
+      time_ref = 30.seconds
+      time_elapsed = Benchmark.realtime do
         visit edit_planning_path(@planning)
 
         assert_selector '.routes.ui-sortable'
         assert_no_selector 'body.ajax_waiting'
       end.round
 
-      p "Time for displaying 4000 points in browser: #{@time_elapsed} seconds"
+      p "Time for displaying 4000 points in browser: #{time_elapsed} seconds (should be less than #{time_ref})"
 
-      assert @time_elapsed <= 30
+      assert_operator time_elapsed, :<=, time_ref
     end
   end
 end
