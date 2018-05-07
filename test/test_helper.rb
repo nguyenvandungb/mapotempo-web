@@ -11,8 +11,8 @@ require 'webmock/minitest'
 
 Dir[Rails.root.join('lib/**/*.rb')].each { |file| load file } # only explicitly required files are tracked
 
-WebMock.allow_net_connect!
-# WebMock.disable_net_connect!
+# WebMock.allow_net_connect!
+WebMock.disable_net_connect!
 
 require 'html_validation'
 #PageValidations::HTMLValidation.show_warnings = false
@@ -107,6 +107,8 @@ if ENV['BENCHMARK'] == 'true'
     include Capybara::Minitest::Assertions
 
     def setup
+      WebMock.allow_net_connect!
+
       Capybara.run_server = true
 
       Capybara.app_host = 'http://localhost:3020'

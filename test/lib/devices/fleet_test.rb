@@ -24,7 +24,7 @@ class FleetTest < ActionController::TestCase
 
   setup do
     @customer = customers(:customer_one)
-    @customer.update(devices: { fleet: { enable: true, user: 'test', password: '123456' } }, enable_vehicle_position: true, enable_stop_status: true)
+    @customer.update(devices: { fleet: { enable: true, user: 'test', api_key: '123456' } }, enable_vehicle_position: true, enable_stop_status: true)
     @service = Mapotempo::Application.config.devices.fleet
   end
 
@@ -32,7 +32,7 @@ class FleetTest < ActionController::TestCase
     with_stubs [:auth] do
       params = {
         user: @customer.devices[:fleet][:user],
-        password: @customer.devices[:fleet][:password]
+        api_key: @customer.devices[:fleet][:api_key]
       }
       assert @service.check_auth(params)
     end
