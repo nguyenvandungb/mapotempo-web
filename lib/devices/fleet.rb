@@ -357,7 +357,7 @@ class Fleet < DeviceBase
   def rest_client_get(url, api_key, _options = {})
     RestClient.get(
       url,
-      { content_type: :json, accept: :json, Authorization: "Token token=#{api_key}" }
+      { content_type: :json, accept: :json, Authorization: 'Token token=' + api_key }
     )
   rescue RestClient::RequestTimeout, Errno::ECONNREFUSED, SocketError
     raise DeviceServiceError.new("Fleet: #{I18n.t('errors.fleet.timeout')}")
