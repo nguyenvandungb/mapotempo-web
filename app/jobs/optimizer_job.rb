@@ -44,6 +44,7 @@ class OptimizerJob < Job.new(:planning_id, :route_id, :global, :active_only)
         planning.optimize(routes, global, active_only) do |positions, services, vehicles|
           optimum = Mapotempo::Application.config.optimize.optimize(
             positions, services, vehicles,
+            name: planning.name,
             optimize_time: @@optimize_time_force || (optimize_time ? optimize_time * 1000 : nil),
             max_split_size: planning.customer.optimization_max_split_size || @@max_split_size,
             stop_soft_upper_bound: planning.customer.optimization_stop_soft_upper_bound || @@stop_soft_upper_bound,
