@@ -222,9 +222,7 @@ class ImporterVehicleUsageSets < ImporterBase
     unless @common_configuration.keys.empty?
       @vehicle_usage_set.assign_attributes @common_configuration
       @vehicle_usage_set.vehicle_usages.each{ |vu|
-        vu.assign_attributes Hash[@common_configuration.keys.map{ |k|
-          [k, nil] if k != :max_distance
-        }]
+        vu.assign_attributes Hash[@common_configuration.keys.select{ |k| k != :max_distance }.map{ |k| [k, nil] }]
       }
       @vehicle_usage_set.save!
     end

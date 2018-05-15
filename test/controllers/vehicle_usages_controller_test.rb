@@ -53,7 +53,7 @@ class VehicleUsagesControllerTest < ActionController::TestCase
     [{ max_distance: nil }, {}].each do |max_distance_param|
       @vehicle_usage.vehicle.update(max_distance_param)
       patch :update, id: @vehicle_usage, vehicle_usage: { vehicle: max_distance_param }
-      assert_equal nil, @vehicle_usage.vehicle.max_distance
+      assert_nil @vehicle_usage.vehicle.max_distance
     end
   end
 
