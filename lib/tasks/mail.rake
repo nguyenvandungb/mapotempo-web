@@ -3,18 +3,17 @@ namespace :mail do
 
   desc 'Send automation mails at defined time'
   task automation: :environment do
-    request = User.joins(:customer).where('customers.test' => true, 'customers.end_subscription' => DateTime.now.in_time_zone.midnight + 1.days) | User.where(created_at: (Time.now.midnight - 9.days)..Time.now.midnight).where.not(customer_id: nil)
+    request = User.joins(:customer).where('customers.test' => true, 'customers.end_subscription' => Time.zone.today + 1.days) | User.where(created_at: (Time.zone.today - 9.days)..Time.zone.today).where.not(customer_id: nil)
 
     users = request.select { |user|
       /https?:\/\/www.mapotempo.com\/[^\/]+\/help-center/.match(user.customer.reseller.help_url) && /https?:\/\/www.mapotempo.com\/[^\/]+\/contact-support/.match(user.customer.reseller.contact_url)
     }
-
     users.each do |user|
       begin
-        date = user.created_at.midnight
+        date = user.created_at.to_date
         locale = user.locale ? user.locale.to_sym : I18n.locale
 
-        case DateTime.now.in_time_zone.midnight
+        case Time.zone.today
           when date + 1.days
             UserMailer.automation_dispatcher(user, locale, 'accompanying_team').deliver_now # 3
           when date + 2.days
@@ -23,7 +22,7 @@ namespace :mail do
             UserMailer.automation_dispatcher(user, locale, 'advanced_options', true).deliver_now # 5
           when date + 9.days
             UserMailer.accompanying_message(user, locale).deliver_now
-          when user.customer.end_subscription && user.customer.end_subscription.midnight - 1.days
+          when user.customer.end_subscription && user.customer.end_subscription.to_date - 1.days
             UserMailer.subscribe_message(user, locale).deliver_now if user.customer.test
         end
       rescue Net::SMTPFatalError => e

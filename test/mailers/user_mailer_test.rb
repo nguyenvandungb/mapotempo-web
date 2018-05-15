@@ -82,7 +82,7 @@ class UserMailerTest < ActionMailer::TestCase
     user_one = users(:user_one)
     creation_date = user_one.created_at
 
-    user_one.update(created_at: Time.now.in_time_zone.midnight - 9.days)
+    user_one.update(created_at: Time.zone.today - 9.days)
     user_one.customer.update(test: true)
     user_one.customer.reseller.update(contact_url: "https://www.mapotempo.com/{LG}/contact-support/", help_url: "https://www.mapotempo.com/{LG}/help-center")
 
