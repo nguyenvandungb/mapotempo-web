@@ -1672,9 +1672,10 @@ var plannings_edit = function(params) {
     var vehicle_usage_id = $('#isochrone_vehicle_usage_id').val();
     var size = $('#isochrone_size').val().split(':');
     size = parseInt(size[0]) * 3600 + parseInt(size[1]) * 60;
-    var departure = $('#isochrone_date').datepicker('getDate');
-    var hour = $('#isochrone_hour').val().match(/^([0-9]{2}):([0-9]{2})$/);
-    if (hour[1] && hour[2])
+    var departure = $('#isochrone_date').val() ? $('#isochrone_date').datepicker('getDate') : new Date();
+    var hour = $('#isochrone_hour').val();
+    if (hour) hour = hour.match(/^([0-9]{2}):([0-9]{2})$/);
+    if (hour && hour[1] && hour[2])
       departure.setHours(hour[1], hour[2]);
 
     $('#isochrone-modal').modal('hide');
@@ -1695,7 +1696,6 @@ var plannings_edit = function(params) {
       },
       beforeSend: beforeSendWaiting,
       success: function(data) {
-        hideNotices();
         fitBounds = true;
         displayZoning(data);
         map.closePopup();
@@ -1711,9 +1711,10 @@ var plannings_edit = function(params) {
   $('#isodistance').click(function() {
     var vehicle_usage_id = $('#isodistance_vehicle_usage_id').val();
     var size = $('#isodistance_size').val() * 1000;
-    var departure = $('#isodistance_date').datepicker('getDate');
-    var hour = $('#isodistance_hour').val().match(/^([0-9]{2}):([0-9]{2})$/);
-    if (hour[1] && hour[2])
+    var departure = $('#isodistance_date').val() ? $('#isodistance_date').datepicker('getDate') : new Date();
+    var hour = $('#isodistance_hour').val();
+    if (hour) hour = hour.match(/^([0-9]{2}):([0-9]{2})$/);
+    if (hour && hour[1] && hour[2])
       departure.setHours(hour[1], hour[2]);
 
     $('#isodistance-modal').modal('hide');

@@ -644,7 +644,7 @@ var zonings_edit = function(params) {
       data: {
         vehicle_usage_set_id: $('#isochrone_vehicle_usage_set_id').val(),
         size: size,
-        departure_date: $('#isochrone_date').datepicker('getDate')
+        departure_date: $('#isochrone_date').val() && $('#isochrone_date').datepicker('getDate')
       },
       beforeSend: beforeSendWaiting,
       success: function(data) {
@@ -678,7 +678,7 @@ var zonings_edit = function(params) {
       data: {
         vehicle_usage_set_id: $('#isodistance_vehicle_usage_set_id').val(),
         size: size,
-        departure_date: $('#isodistance_date').datepicker('getDate')
+        departure_date: $('#isodistance_date').val() && $('#isodistance_date').datepicker('getDate')
       },
       beforeSend: beforeSendWaiting,
       success: function(data) {
