@@ -352,28 +352,6 @@ $sidebar-margins: 10px;
     color: #333;
   }
 
-  .stop-tools {
-    .btn-inverse {
-      border-color: #ccc;
-      .fa {
-        color: #333;
-      }
-    }
-
-    .btn-inverse:hover,
-    .btn-inverse:focus,
-    .btn-inverse.active {
-      background-color: #efefef;
-      .fa {
-        color: #333;
-      }
-    }
-
-    button {
-      background-color: transparent;
-    }
-  }
-
   .routes {
     padding: 0px;
     margin: 0px;

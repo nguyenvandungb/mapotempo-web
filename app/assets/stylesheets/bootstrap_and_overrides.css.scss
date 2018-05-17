@@ -91,10 +91,9 @@ button {
   }
 }
 
-a.btn-primary:link { color:#FFFFFF; }
-a.btn-primary:visited { color:#FFFFFF; }
-a.btn-primary:hover { color:#FFFFFF; }
-a.btn-primary:active { color:#FFFFFF; }
+a.btn-default {
+  color: #333;
+}
 
 .dropdown-menu {
   max-height: 300px;
