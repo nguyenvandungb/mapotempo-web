@@ -60,15 +60,12 @@ var popupModule = (function() {
       if (_ajaxCanBeProceeded()) {
         var url = _context.options.appBaseUrl;
 
-        if (_context.planningId) {
-          url += (marker.properties.store_id) ?
-            'stores/' + marker.properties.store_id + '.json' :
-            'routes/' + marker.properties.route_id + '/stops/by_index/' + marker.properties.index + '.json';
-        } else {
-          url += (marker.properties.store_id) ?
-            'stores/' + marker.properties.store_id + '.json' :
-            'visits/' + marker.properties.visit_id + '.json';
-        }
+        if (marker.properties.store_id)
+          url += 'stores/' + marker.properties.store_id + '.json';
+        else if (marker.properties.visit_id)
+          url += 'visits/' + marker.properties.visit_id + '.json';
+        else if (marker.properties.route_id)
+          url += 'routes/' + marker.properties.route_id + '/stops/by_index/' + marker.properties.index + '.json';
 
         getPopupContent(url, marker, map);
 
@@ -276,7 +273,7 @@ var RoutesLayer = L.FeatureGroup.extend({
   clustersByRoute: {},
 
   // Markers for each store
-  markerStores: [],
+  markerStores: {},
 
   // Marker options
   markerOptions: {
@@ -584,16 +581,11 @@ var RoutesLayer = L.FeatureGroup.extend({
           }
         }
       }
-    } else if (options.storeId) {
-      for (var i = 0; i < this.markerStores.length; i++) {
-        if (this.markerStores[i].properties['store_id'] == options.storeId) {
-          this.map.setView(this.markerStores[i].getLatLng(), this.map.getZoom(), {
-            reset: true
-          });
-          popupModule.createPopupForLayer(this.markerStores[i], this.map);
-          break;
-        }
-      }
+    } else if (options.storeId && this.markerStores[options.storeId]) {
+      this.map.setView(this.markerStores[options.storeId].getLatLng(), this.map.getZoom(), {
+        reset: true
+      });
+      popupModule.createPopupForLayer(this.markerStores[options.storeId], this.map);
     }
   },
 
@@ -797,8 +789,7 @@ var RoutesLayer = L.FeatureGroup.extend({
         marker.properties.route_color = this.options.colorsByRoute[geoJsonPoint.properties.route_id];
 
         if (storeId) {
-          this._removeStore(storeId);
-          this.markerStores.push(marker);
+          this.markerStores[storeId] = marker;
         } else {
           if (!this.clustersByRoute[routeId]) {
             this.clustersByRoute[routeId] = L.markerClusterGroup(this.markerOptions);
@@ -840,15 +831,6 @@ var RoutesLayer = L.FeatureGroup.extend({
       }
     }.bind(this));
     popupModule.activeClickMarker = false;
-  },
-
-  _removeStore: function(storeId) {
-    for (var i = 0; i < this.markerStores.length; i++) {
-      if (this.markerStores[i] && this.markerStores[i].properties.store_id !== storeId) continue;
-
-      this.removeLayer(this.markerStores[i]);
-      delete this.markerStores[i];
-    }
   },
 
   _removeAllExceptStores: function() {
