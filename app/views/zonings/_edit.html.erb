@@ -10,7 +10,7 @@
       <div class="pull-right">
         <button type="button" class="btn btn-default btn-sm sidebar-close" title="<%= t '.collapse_zoning_panel' %>"><i class="fa fa-caret-right"></i></button>
       </div>
-      <h1><% if @manage_zoning.include? :edit %><%= t '.title' %><% else %><%= @zoning.name %><% end %></h1>
+      <h1><% if @manage_zoning[:manage_edit] %><%= t '.title' %><% else %><%= @zoning.name %><% end %></h1>
 
       <%= render 'zonings/form' %>
     </div>

@@ -344,7 +344,7 @@ class PlanningsController < ApplicationController
   end
 
   def self.manage
-    [:edit, :zoning, :export, :organize, :vehicle, :destination, :store]
+    Hash[[:edit, :zoning, :export, :organize, :vehicle, :destination, :store].map{ |v| ["manage_#{v}".to_sym, true] }]
   end
 
   private

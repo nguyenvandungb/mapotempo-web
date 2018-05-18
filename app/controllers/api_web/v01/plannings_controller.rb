@@ -41,12 +41,16 @@ class ApiWeb::V01::PlanningsController < ApiWeb::V01::ApiWebController
     end
   end
 
+  def self.manage
+    Hash[[:organize, :print].map{ |v| ["manage_#{v}".to_sym, true] }]
+  end
+
   private
 
   # Use callbacks to share common setup or constraints between actions.
   # rights should be checked before thanks to CanCan::Ability
   def manage_planning
-    @manage_planning = [:organize, :print]
+    @manage_planning = ApiWeb::V01::PlanningsController.manage
     @callback_button = true
   end
 

@@ -483,10 +483,7 @@ var plannings_edit = function(params) {
   params.geocoder = true;
 
   var map = mapInitialize(params);
-  var popupOptions = {};
-  $.each(params.manage_planning, function(i, elt) {
-    popupOptions['manage_' + elt] = true;
-  });
+  var popupOptions = params.manage_planning;
   var routesLayer = new RoutesLayer(planning_id, {
     url_click2call: url_click2call,
     unit: prefered_unit,
@@ -1221,9 +1218,7 @@ var plannings_edit = function(params) {
     // 1st case: the whole planning needs to be initialized and displayed
     if (typeof options !== 'object' || !options.partial) {
       data.ref = null; // here to prevent mustache template to get the value
-      $.each(params.manage_planning, function(i, elt) {
-        data['manage_' + elt] = true;
-      });
+      $.extend(data, params.manage_planning);
       data.callback_button = params.callback_button;
       $("#planning").html(SMT['plannings/edit'](data));
 
@@ -1275,9 +1270,7 @@ var plannings_edit = function(params) {
         route.i18n = mustache_i18n;
         route.planning_id = data.id;
         route.routes = routes;
-        $.each(params.manage_planning, function(i, elt) {
-          route['manage_' + elt] = true;
-        });
+        $.extend(route, params.manage_planning);
 
         $(".route[data-route_id='" + route.route_id + "']").html(SMT['routes/edit'](route));
 
@@ -1311,9 +1304,7 @@ var plannings_edit = function(params) {
         route.i18n = mustache_i18n;
         route.planning_id = data.id;
         route.routes = routes;
-        $.each(params.manage_planning, function(i, elt) {
-          route['manage_' + elt] = true;
-        });
+        $.extend(route, params.manage_planning);
 
         $(".route[data-route_id='" + route.route_id + "'] .route-details").html(SMT['stops/list'](route));
 

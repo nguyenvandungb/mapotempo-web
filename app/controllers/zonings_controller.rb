@@ -145,6 +145,10 @@ class ZoningsController < ApplicationController
     end
   end
 
+  def self.manage
+    Hash[[:edit, :organize].map{ |v| ["manage_#{v}".to_sym, true] }]
+  end
+
   private
 
   def capabilities
@@ -172,7 +176,7 @@ class ZoningsController < ApplicationController
   end
 
   def manage_zoning
-    @manage_zoning = [:edit, :organize]
+    @manage_zoning = ZoningsController.manage
   end
 
   # Never trust parameters from the scary internet, only allow the white list through.

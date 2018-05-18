@@ -12,7 +12,7 @@
         <button type="button" class="btn btn-default btn-sm extend" title="<%= t '.open_planning_panel' %>"><i class="fa fa-arrows-alt"></i></button>
         <button type="button" class="btn btn-default btn-sm sidebar-close" title="<%= t '.collapse_planning_panel' %>"><i class="fa fa-caret-right"></i></button>
       </div>
-      <h1><% if @manage_planning.include? :edit %><%= t '.title' %><% else %><%= @planning.name %><% end %></h1>
+      <h1><% if @manage_planning[:manage_edit] %><%= t '.title' %><% else %><%= @planning.name %><% end %></h1>
 
       <% if @callback_button && @planning.customer.enable_external_callback && @planning.customer.external_callback_url %>
         <p class="text-center">
@@ -23,11 +23,11 @@
         </p>
       <% end %>
 
-      <% if @manage_planning.include? :edit %>
+      <% if @manage_planning[:manage_edit] %>
         <%= render 'form' %>
       <% end %>
 
-      <% if @manage_planning.include? :zoning %>
+      <% if @manage_planning[:manage_zoning] %>
         <%= twitter_bootstrap_form_for [:apply_zonings, @planning], { layout: :horizontal, default_div_class: 'col-lg-10 col-md-10', html: { id: "planning_zoning_#{@planning.id}", class: 'form-horizontal update-zonings-form', title: t('plannings.edit.zonings.label') }} do |f| %>
           <%= zoning_select f, @planning, t('plannings.edit.zonings.label') %>
           <%= f.actions do %>
@@ -94,7 +94,7 @@
             </li>
           </ul>
         </div>
-        <% if @manage_planning.include? :export %>
+        <% if @manage_planning[:manage_export] %>
         <div class="btn-group">
           <button type="button" class="btn btn-default btn-sm dropdown-toggle right export" data-toggle="dropdown" title="<%= t '.exports' %>">
             <i class="fa fa-share-square-o"></i>
@@ -146,7 +146,7 @@
         </div>
         <% end %>
 
-        <% if @manage_planning.include? :print %>
+        <% if @manage_planning[:manage_print] %>
           <%= link_to api_web_v01_print_planning_path(@planning), class: 'btn btn-default btn-sm', title: t('.export.print') do %>
             <i class="fa fa-print fa-fw"></i>
           <% end %>

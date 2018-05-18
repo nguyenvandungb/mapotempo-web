@@ -3,12 +3,12 @@ options.merge!(url: "/api-web/0.1/zonings/#{@zoning.id}/#{params[:action]}") if 
 options.merge!(default_div_class: 'col-lg-10 col-md-10') if @zoning.id %>
 <%= twitter_bootstrap_form_for @zoning, options do |f| %>
   <%= render 'shared/error_messages', model: @zoning %>
-  <% if @manage_zoning.include? :edit %>
+  <% if @manage_zoning[:manage_edit] %>
     <div title="<%= t('activerecord.attributes.zoning.name') %>">
       <%= f.text_field :name, required: true %>
     </div>
   <% end %>
-  <% if @manage_zoning.include?(:edit) || @manage_zoning.include?(:organize) %>
+  <% if @manage_zoning[:manage_edit] || @manage_zoning[:manage_organize] %>
     <% if @plannings && !@plannings.empty? %>
       <div class="form-group">
         <label class="col-md-2 control-label" for="planning_id"><%= t '.planning_id' %></label>
@@ -38,7 +38,7 @@ options.merge!(default_div_class: 'col-lg-10 col-md-10') if @zoning.id %>
           <label><input type="checkbox" name="all-destinations"> <%= t '.all_destinations' %> <i class="fa fa-lightbulb-o fa-fw" title="<%= t '.from_planning_help' %>"></i></label>
         </div>
       <% end %>
-      <% if @manage_zoning.include? :organize %>
+      <% if @manage_zoning[:manage_organize] %>
         <div class="col-md-offset-2 col-md-10">
           <button type="button" class="btn btn-primary dropdown-toggle" id="generate" data-toggle="dropdown" aria-expanded="false"<% if @isochrone.empty? && @isodistance.empty? && !@planning %> style="display: none;"<% end %>><i class="fa fa-magic fa-fw"></i> <%= t '.generate' %> <span class="caret"></span></button>
           <ul class="dropdown-menu" role="menu">

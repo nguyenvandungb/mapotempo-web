@@ -44,6 +44,10 @@ class ApiWeb::V01::ZoningsController < ApiWeb::V01::ApiWebController
     end
   end
 
+  def self.manage
+    Hash[[:edit, :organize].map{ |v| ["manage_#{v}".to_sym, true] }]
+  end
+
   private
 
   def capabilities
@@ -55,7 +59,7 @@ class ApiWeb::V01::ZoningsController < ApiWeb::V01::ApiWebController
   # Use callbacks to share common setup or constraints between actions.
   # rights should be checked before thanks to CanCan::Ability
   def manage_zoning
-    @manage_zoning = [:edit, :organize]
+    @manage_zoning = ApiWeb::V01::ZoningsController.manage
   end
 
   def includes_destinations
