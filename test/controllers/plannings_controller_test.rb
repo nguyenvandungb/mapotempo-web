@@ -357,7 +357,9 @@ class PlanningsControllerTest < ActionController::TestCase
       patch :move, planning_id: @planning, route_id: @planning.routes[1], stop_id: @planning.routes[0].stops[0], index: 1, format: :json
       assert_response :success
       assert_equal 2, JSON.parse(response.body)['routes'].size
-
+      @planning.routes.select(&:vehicle_usage).each{ |vu|
+        assert_not vu.outdated
+      }
     ensure
       Stop.class_eval do
         def after_init
@@ -447,7 +449,10 @@ class PlanningsControllerTest < ActionController::TestCase
     assert_response :success, id: @planning
     assert_equal 1, JSON.parse(response.body)['routes'].size
     @planning.reload
-    @planning.routes.select(&:vehicle_usage).each{ |r| assert_equal 1, r.stops.select{ |s| s.is_a?(StopRest) }.size }
+    @planning.routes.select(&:vehicle_usage).each{ |r|
+      assert_equal 1, r.stops.select{ |s| s.is_a?(StopRest) }.size
+      assert_not r.outdated
+    }
   end
 
   test 'should switch' do
@@ -619,6 +624,9 @@ class PlanningsControllerTest < ActionController::TestCase
     patch :automatic_insert, id: @planning.id, format: :json, stop_ids: []
     assert_response :success
     assert @planning.routes.detect{|route| !route.vehicle_usage }.stops.reload.none?
+    @planning.routes.select(&:vehicle_usage).each{ |vu|
+      assert_not vu.outdated
+    }
   end
 
   test 'should automatic insert twice' do

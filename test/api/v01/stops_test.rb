@@ -50,6 +50,9 @@ class V01::StopsTest < ActiveSupport::TestCase
       else
         assert_equal 204, last_response.status, last_response.body
         assert_equal 2, @stop.reload.index
+        @stop.route.planning.routes.select(&:vehicle_usage).each{ |vu|
+          assert_not vu.outdated
+        }
       end
     end
   end

@@ -173,6 +173,9 @@ class V01::PlanningsTest < V01::PlanningsBaseTest
         @planning.reload
         assert_equal initial_second_route, @planning.routes.second.vehicle_usage.id
         assert_equal initial_first_route, @planning.routes.third.vehicle_usage.id
+        @planning.routes.select(&:vehicle_usage).each{ |vu|
+          assert_not vu.outdated
+        }
       end
     end
   end
@@ -214,6 +217,9 @@ class V01::PlanningsTest < V01::PlanningsBaseTest
       else
         assert_equal 204, last_response.status, last_response.body
         assert @planning.routes.reload.select(&:vehicle_usage).any?{ |route| route.stops.select(&:active).map(&:id).include?(unassigned_stop.id) }
+        @planning.routes.select(&:vehicle_usage).each{ |vu|
+          assert_not vu.outdated
+        }
       end
     end
   end

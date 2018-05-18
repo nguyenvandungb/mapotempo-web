@@ -127,6 +127,9 @@ class V01::RoutesTest < V01::RoutesBaseTest
           stops_visit = r.stops.select{ |s| s.is_a? StopVisit }
           assert_equal visits(:visit_two).ref, stops_visit[0].visit.ref
           assert_equal visits(:visit_one).ref, stops_visit[1].visit.ref
+          @route.planning.routes.select(&:vehicle_usage).each{ |vu|
+            assert_not vu.outdated
+          }
         end
       end
     end
