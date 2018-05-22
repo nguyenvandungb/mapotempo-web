@@ -65,29 +65,33 @@
   </tbody>
 </table>
 
-<div class="form-inline">
-  <%= button_tag type: :submit, class: "btn btn-danger btn-sm form-group", data: { confirm: t('all.verb.destroy_confirm') } do %><i class="fa fa-trash-o fa-fw"></i> <%= t('all.verb.destroy_selection') %><% end %>
-  <div class="dropdown form-group">
-    <button id="btn-export" class="btn btn-sm btn-default dropdown-toggle" type="button" data-toggle="dropdown">
-      <i class="fa fa-share-square-o fa-fw"></i> <%= t('.export_selection') %> <span class="caret"></span>
-    </button>
-    <ul class="dropdown-menu" role="menu">
-      <li>
-        <%= link_to api_plannings_calendar_path(api_key: current_user.api_key), id: 'ical_export' do %>
-          <i class="fa fa-calendar fa-fw"></i> <%= t '.export.icalendar' %>
+<div id="multiple_plannings_actions">
+  <div class="form-inline">
+    <%= button_tag type: :submit, class: "btn btn-danger btn-sm form-group", data: { confirm: t('all.verb.destroy_confirm') } do %><i class="fa fa-trash-o fa-fw"></i> <%= t('all.verb.destroy_selection') %><% end %>
+    <div class="dropdown form-group">
+      <button id="btn-export" class="btn btn-sm btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+        <i class="fa fa-share-square-o fa-fw"></i> <%= t('.export_selection') %> <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu" role="menu">
+        <li>
+          <%= link_to api_plannings_calendar_path(api_key: current_user.api_key), id: 'ical_export' do %>
+            <i class="fa fa-calendar fa-fw"></i> <%= t '.export.icalendar' %>
+          <% end %>
+        </li>
+        <% if @customer.vehicles.any?(&:contact_email) %>
+        <li>
+          <%= link_to api_plannings_calendar_path(api_key: current_user.api_key), class:"icalendar_email" do %>
+            <i class="fa fa-envelope fa-fw"></i> <%= t '.export.icalendar_email' %>
+          <% end %>
+        </li>
         <% end %>
-      </li>
-      <% if @customer.vehicles.any?(&:contact_email) %>
-      <li>
-        <%= link_to api_plannings_calendar_path(api_key: current_user.api_key), class:"icalendar_email" do %>
-          <i class="fa fa-envelope fa-fw"></i> <%= t '.export.icalendar_email' %>
-        <% end %>
-      </li>
-      <% end %>
-      <li>
-        <a class="export_spreadsheet" href="#"><i class="fa fa-table fa-fw"></i> <%= t '.export.spreadsheet' %></a>
-      </li>
-    </ul>
+        <li>
+          <a class="export_spreadsheet" href="#"><i class="fa fa-table fa-fw"></i> <%= t '.export.spreadsheet' %></a>
+        </li>
+      </ul>
+    </div>
+    <%= t('.routes_by_vehicles') %>
+    <%= select_tag 'vehicle_id', options_from_collection_for_select(@customer.vehicles, 'id', 'name'), include_blank: true, class: 'form-control' %>
   </div>
 </div>
 <% end %>
@@ -97,6 +101,7 @@
 <%
 controller.js(
   user_api_key: current_user.api_key,
-  spreadsheet_columns: @spreadsheet_columns
+  spreadsheet_columns: @spreadsheet_columns,
+  vehicles: Hash[@customer.vehicles.map{ |v| [v.id, {name: v.name, color: v.color}] }]
 )
 %>

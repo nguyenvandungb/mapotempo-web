@@ -1499,6 +1499,7 @@
       'over_max_limit': 'Vous avez atteint la limite de plans autorisés pour votre
         compte (Limite : %{limit}), veuillez supprimer vos précédents plans ou contacter
         le support si vous avez besoin de plus de plans.'
+      'routes_by_vehicles': 'Afficher toutes les tournées de'
     'edit':
       'vehicles': 'Véhicules'
       'marker_clusters': 'Activer/Désactiver les groupes de points'

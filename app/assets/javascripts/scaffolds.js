@@ -20,6 +20,7 @@ $(document).on('ready page:load', function() {
   $('.index_toggle_selection').click(function() {
     $('input:checkbox').each(function() {
       this.checked = !this.checked;
+      $(this).change();
     });
   });
 

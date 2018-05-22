@@ -1392,6 +1392,7 @@ en:
         spreadsheet: Spreadsheet CSV / Excel
         none_planning: Please select at least one plan to export
       over_max_limit: "You have reached the plans number limit for your account (Account Limit: %{limit})"
+      routes_by_vehicles: 'Show all routes from'
     edit:
       vehicles: Vehicles
       marker_clusters: Switch clusters of stops

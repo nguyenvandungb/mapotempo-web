@@ -1741,6 +1741,28 @@ var plannings_index = function(params) {
 
   iCalendarExport();
   spreadsheetModalExport(params.spreadsheet_columns);
+
+  var templateVehicle = function(vehicle) {
+    if (vehicle.id)
+      return $("<span><span class='color_small' style='background: " + params.vehicles[vehicle.id].color + "'></span>&nbsp;</span>").append($("<span/>").text(vehicle.text));
+  };
+
+  $('#vehicle_id').select2({
+    // theme: 'bootstrap',
+    templateSelection: templateVehicle,
+    templateResult: templateVehicle
+  }).change(function() {
+    window.location = '/routes_by_vehicles/' + $(this).val() + '?planning_ids=' + $('[name^=planning]:checked').map(function(elt) { return $(this).val() } ).toArray().join(',');
+  });
+
+  var onPlanningSelected = function() {
+    if ($('[name^=planning]:checked').length)
+      $('#multiple_plannings_actions button, #multiple_plannings_actions select').attr('disabled', false);
+    else
+      $('#multiple_plannings_actions button, #multiple_plannings_actions select').attr('disabled', true);
+  };
+  $('[name^=planning]').change(onPlanningSelected);
+  onPlanningSelected();
 };
 
 var devicesObservePlanning = (function() {
