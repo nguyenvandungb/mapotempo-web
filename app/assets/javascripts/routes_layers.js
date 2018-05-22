@@ -616,7 +616,12 @@ var RoutesLayer = L.FeatureGroup.extend({
   _load: function(routeIds, includeStores, geojson, callback) {
     if (!geojson) {
       $.ajax({
-        url: '/api/0.1/plannings/' + this.planningId + '/routes.geojson?geojson=' + (this.options.withPolylines ? 'polyline' : 'point') + '&ids=' + routeIds.join(',') + '&stores=' + includeStores,
+        url: '/api/0.1' + (this.planningId ? '/plannings/' + this.planningId : '') + '/routes.geojson',
+        data: {
+          geojson: this.options.withPolylines ? 'polyline' : 'point',
+          ids: routeIds.join(','),
+          stores: includeStores//,
+        },
         beforeSend: beforeSendWaiting,
         success: function(data) {
           this._addRoutes(data);

@@ -1691,6 +1691,11 @@ en:
       annotating:
         hour: 'Passing Time:'
         signature: 'Signature:'
+  routes_by_vehicles:
+    show:
+      title_page: 'Routes by vehicles'
+      title: 'Routes'
+      collapse_routes_panel: 'Collapse routes panel'
   shared:
     error_messages:
       form_contains_error:

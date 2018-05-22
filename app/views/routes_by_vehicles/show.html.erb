@@ -1,0 +1,49 @@
+<% content_for :title, t('.title_page') %>
+
+<div id="show-routes-by-vehicle" class="sidebar">
+  <div class="sidebar-tabs">
+    <ul role="tablist">
+      <li><a href="#routes-by-vehicle-pane" role="tab"><i class="fa fa-caret-left"></i></a></li>
+    </ul>
+  </div>
+  <div class="sidebar-content">
+    <div class="sidebar-pane" id="routes-by-vehicle-pane">
+      <div class="pull-right">
+        <button type="button" class="btn btn-default btn-sm sidebar-close" title="<%= t '.collapse_routes_panel' %>"><i class="fa fa-caret-right"></i></button>
+      </div>
+      <h1><%= t '.title' %></h1>
+      <h2><i class="fa fa-circle" style="color: <%= @vehicle.color %>"></i> <%= @vehicle.name %></h2>
+      <div class="routes">
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="map" class="sidebar-map"></div>
+
+<%= render 'zonings/isoline' %>
+
+<%
+layers = (current_user.customer.profile.layers + [current_user.layer]).sort_by(&:id).uniq.collect{ |layer|
+  {
+    name: layer.translated_name,
+    url: request.ssl? ? layer.urlssl : layer.url,
+    attribution: layer.map_attribution,
+    default: layer == current_user.layer,
+    overlay: layer.overlay
+  }
+}
+
+controller.js(
+  prefered_unit: current_user.prefered_unit,
+  map_layers: Hash[layers.map{ |l| l[:name] }.zip(layers)],
+  map_lat: current_user.customer.default_position[:lat],
+  map_lng: current_user.customer.default_position[:lng],
+  vehicle_id: @vehicle.id,
+  color: @vehicle.color,
+  color_codes: COLORS_TABLE,
+  routes_array: @routes.map{ |r| { route_id: r.id, planning_id: r.planning_id, color: r.default_color, outdated: r.outdated } },
+  colors_by_route: Hash[@routes.map{ |r| [r.id, r.default_color] }],
+  manage_routes: @manage_routes,
+)
+%>

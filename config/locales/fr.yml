@@ -1811,6 +1811,11 @@
       'annotating':
         'hour': 'Heure de passage :'
         'signature': 'Signature :'
+  'routes_by_vehicles':
+    'show':
+      'title_page': 'Tournées par véhicule'
+      'title': 'Tournées'
+      'collapse_routes_panel': 'Minifier le panneau des tournées'
   'shared':
     'error_messages':
       'form_contains_error':

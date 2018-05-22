@@ -93,6 +93,7 @@ class PlanningsController < ApplicationController
 
   def edit
     @spreadsheet_columns = export_columns
+    @with_devices = true
     capabilities
   end
 

@@ -49,6 +49,7 @@ class Ability
           can [:new, :create], Planning
         end
         can :manage, Route, planning: {customer_id: user.customer.id}
+        can :show, Vehicle, customer_id: user.customer.id
         can :manage, Stop, route: {planning: {customer_id: user.customer.id}}
         if user.customer.enable_orders
           can :manage, OrderArray, customer_id: user.customer.id

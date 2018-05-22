@@ -330,7 +330,8 @@ span.color[data-color=''][data-selected]:after {
 [data-controller='api_web_v01_zonings'][data-action='update'],
 [data-controller='api_web_v01_destinations'][data-action='index'],
 [data-controller='api_web_v01_routes'][data-action='index'],
-[data-controller='api_web_v01_zones'][data-action='index'] {
+[data-controller='api_web_v01_zones'][data-action='index'],
+[data-controller='routes_by_vehicles'][data-action='show'] {
   .number {
     margin-top: -3px;
     white-space: nowrap;
@@ -355,7 +356,8 @@ span.color[data-color=''][data-selected]:after {
 [data-controller='zonings'][data-action='edit'],
 [data-controller='api_web_v01_zonings'][data-action='edit'],
 [data-controller='zonings'][data-action='update'],
-[data-controller='api_web_v01_zonings'][data-action='update'] {
+[data-controller='api_web_v01_zonings'][data-action='update'],
+[data-controller='routes_by_vehicles'][data-action='show'] {
   $transition-duration: 0.5s;
 
   #map {
@@ -376,6 +378,11 @@ span.color[data-color=''][data-selected]:after {
 
     .sidebar-tabs {
       width: 0;
+
+      a[role=tab] {
+        top: -22px;
+        position: relative;
+      }
     }
     .sidebar-content {
       right: 0;
@@ -386,7 +393,7 @@ span.color[data-color=''][data-selected]:after {
         min-width: 100%;
 
         h1 {
-          margin-top: 30px;
+          margin-top: 10px;
         }
         .form-horizontal .form-group {
           margin-left: -10px;
@@ -452,7 +459,8 @@ span.color[data-color=''][data-selected]:after {
 [data-controller='plannings'][data-action='edit'],
 [data-controller='plannings'][data-action='update'],
 [data-controller='zonings'][data-action='edit'],
-[data-controller='zonings'][data-action='update'] {
+[data-controller='zonings'][data-action='update'],
+[data-controller='routes_by_vehicles'][data-action='show'] {
   #map {
     top: $navbar-height;
   }

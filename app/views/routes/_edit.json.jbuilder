@@ -1,4 +1,14 @@
 json.route_id route.id
+if @with_planning
+  json.planning_id route.planning_id
+  json.name (route.ref ? "#{route.ref} | " : '') + route.planning.name
+  json.date I18n.l(route.planning.date) if route.planning.date
+  json.tags route.planning.tags do |tag|
+    json.icon tag.default_icon
+    json.label tag.label
+    json.color tag.default_color
+  end
+end
 json.extract! route, :ref, :outdated
 (json.duration (route.start && route.end) ? time_over_day(route.end - route.start) : '00:00')
 (json.hidden true) if route.hidden
@@ -15,7 +25,7 @@ json.color_fake route.color
 json.last_sent_to route.last_sent_to if route.last_sent_to
 json.last_sent_at_formatted l(route.last_sent_at) if route.last_sent_at
 json.optimized_at_formatted l(route.optimized_at) if route.optimized_at
-unless @planning.customer.enable_orders
+unless route.planning.customer.enable_orders
   json.quantities route_quantities(route) do |units|
     json.id units[:id] if units[:id]
     json.quantity units[:quantity] if units[:quantity]
@@ -23,15 +33,18 @@ unless @planning.customer.enable_orders
   end
 end
 if route.vehicle_usage_id
-  json.name (route.ref ? "#{route.ref} " : '') + route.vehicle_usage.vehicle.name
+  json.name (route.ref ? "#{route.ref} " : '') + route.vehicle_usage.vehicle.name unless @with_planning
   json.color route.color || route.vehicle_usage.vehicle.color
   json.contact_email route.vehicle_usage.vehicle.contact_email if route.vehicle_usage.vehicle.contact_email
   json.vehicle_usage_id route.vehicle_usage.id
-  json.devices route_devices(list_devices, route)
+  if @with_devices
+    json.devices route_devices(list_devices, route)
+  end
   json.vehicle_id route.vehicle_usage.vehicle.id
   if route.drive_time != 0 && !route.drive_time.nil?
     json.route_averages do
       json.drive_time time_over_day(route.drive_time)
+      json.prefered_unit current_user.prefered_unit
       json.speed route.speed_average(current_user.prefered_unit)
 
       json.visits_duration time_over_day(route.visits_duration) if route.visits_duration && route.visits_duration > 0
@@ -49,7 +62,7 @@ if route.vehicle_usage_id
   route.planning.customer.device.configured_definitions.each do |key, definition|
     json.set!(key, true) if !definition[:route_operations].empty? && definition[:forms][:vehicle] && definition[:forms][:vehicle].keys.all?{ |k| !route.vehicle_usage.vehicle.devices[k].blank? }
   end
-  if @with_stops
+  if @with_stops && @with_devices
     status_uniq = route.stops.map{ |stop|
         {
           code: stop.status.downcase,
@@ -86,7 +99,7 @@ if @with_stops
     json.stop_id stop.id
     json.stop_index stop.index
     json.extract! stop, :name, :street, :detail, :postalcode, :city, :country, :comment, :phone_number, :lat, :lng, :drive_time, :out_of_window, :out_of_capacity, :out_of_drive_time, :out_of_work_time, :out_of_max_distance, :no_path
-    json.ref stop.ref if @planning.customer.enable_references
+    json.ref stop.ref if route.planning.customer.enable_references
     json.open_close1 !!stop.open1 || !!stop.close1
     (json.open1 stop.open1_time) if stop.open1
     (json.open1_day number_of_days(stop.open1)) if stop.open1
@@ -128,7 +141,7 @@ if @with_stops
           end
         end
       end
-      if @planning.customer.enable_orders
+      if route.planning.customer.enable_orders
         order = stop.order
         if order
           json.orders order.products.collect(&:code).join(', ')
@@ -137,7 +150,7 @@ if @with_stops
         # Hash { id, quantity, icon, label } for deliverable units
         json.quantities visit_quantities(visit, route.vehicle_usage_id && route.vehicle_usage.vehicle)
       end
-      if stop.status && @planning.customer.enable_stop_status
+      if stop.status && route.planning.customer.enable_stop_status
         json.status t("plannings.edit.stop_status.#{stop.status.downcase}", default: stop.status)
         json.status_code stop.status.downcase
       end

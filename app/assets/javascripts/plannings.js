@@ -205,6 +205,7 @@ var plannings_edit = function(params) {
     planning_ref = params.planning_ref,
     user_api_key = params.user_api_key,
     zoning_ids = params.zoning_ids,
+    colorCodes = params.color_codes.slice(),
     vehicles_array = params.vehicles_array,
     vehicles_usages_map = params.vehicles_usages_map,
     withStopsInSidePanel = params.with_stops,
@@ -241,6 +242,7 @@ var plannings_edit = function(params) {
     }).map(function(vehicle) {
       return vehicle.id;
     });
+  colorCodes.unshift('');
 
   function getZonings() {
     return $("#planning_zoning_ids").val() || [];
@@ -666,9 +668,9 @@ var plannings_edit = function(params) {
   });
   stripes.addTo(map);
 
-  var templateSelectionZoning = function(state) {
-    if (state.id)
-      return $('<span><span class="zoning_name">' + state.text + '</span> <a href="/zonings/' + state.id + '/edit/planning/' + planning_id + '?back=true" title="' + I18n.t('plannings.edit.zoning_edit') + '"><i class="fa fa-pencil fa-fw"></i></a></span>');
+  var templateSelectionZoning = function(zoning) {
+    if (zoning.id)
+      return $('<span><span class="zoning_name">' + zoning.text + '</span> <a href="/zonings/' + zoning.id + '/edit/planning/' + planning_id + '?back=true" title="' + I18n.t('plannings.edit.zoning_edit') + '"><i class="fa fa-pencil fa-fw"></i></a></span>');
   };
 
   $('#planning_zoning_ids').select2({
@@ -793,36 +795,20 @@ var plannings_edit = function(params) {
     });
   };
 
-  var templateSelectionColor = function(state) {
-    if (state.id) {
-      return $("<span class='color_small' style='background:" + state.id + "'></span>");
-    } else {
-      return $("<i />").addClass("fa fa-paint-brush").css("color", "#CCC");
-    }
-  };
-
-  var templateResultColor = function(state) {
-    if (state.id) {
-      return $("<span class='color_small' style='background:" + state.id + "'></span>");
-    } else {
-      return $("<span class='color_small' data-color=''></span>");
-    }
-  };
-
-  var templateSelectionVehicles = function(state) {
-    if (state.id) {
-      var color = $('.color_select', $(state.element).parent().parent()).val();
+  var templateSelectionVehicles = function(vehicle) {
+    if (vehicle.id) {
+      var color = $('.color_select', $(vehicle.element).parent().parent()).val();
       if (color) {
-        return $("<span/>").text(vehicles_usages_map[state.id].name);
+        return $("<span/>").text(vehicles_usages_map[vehicle.id].name);
       } else {
-        return $("<span><span class='color_small' style='background:" + vehicles_usages_map[state.id].color + "'></span>&nbsp;</span>").append($("<span/>").text(vehicles_usages_map[state.id].name));
+        return $("<span><span class='color_small' style='background:" + vehicles_usages_map[vehicle.id].color + "'></span>&nbsp;</span>").append($("<span/>").text(vehicles_usages_map[vehicle.id].name));
       }
     }
   };
 
-  var templateResultVehicles = function(state) {
-    if (state.id) {
-      return $("<span><span class='color_small' style='background:" + vehicles_usages_map[state.id].color + "'></span>&nbsp;</span>").append($("<span/>").text(vehicles_usages_map[state.id].name));
+  var templateResultVehicles = function(vehicle) {
+    if (vehicle.id) {
+      return $("<span><span class='color_small' style='background:" + vehicles_usages_map[vehicle.id].color + "'></span>&nbsp;</span>").append($("<span/>").text(vehicles_usages_map[vehicle.id].name));
     }
   };
 
@@ -1129,15 +1115,31 @@ var plannings_edit = function(params) {
     return url;
   };
 
+  var api_route_calendar_path = function(route) {
+    return '/api/0.1/plannings/' + (planning_ref ? 'ref:' + encodeURIComponent(planning_ref) : planning_id) +
+      '/routes/' + (route.ref ? 'ref:' + encodeURIComponent(route.ref) : route.route_id) + '.ics';
+  };
+
+  var updateColorsForRoutesAndStops = function(i, route) {
+    route.colors = $.map(colorCodes, function(color) {
+      return {
+        color: color,
+        selected: route.color === color
+      };
+    });
+    $.each(route.stops, function(i, stop) {
+      if (stop.destination && stop.destination.color) {
+        stop.destination.color_force = true;
+      } else {
+        stop.color = route.color;
+      }
+    });
+  };
+
   // Depending 'options.partial' this function is called for initialization or for pieces of planning
   var displayPlanning = function(data, options) {
     if (!progressDialog(data.optimizer, dialog_optimizer, '/plannings/' + planning_id + '.json' + (options.firstTime ? '?with_stops=' + withStopsInSidePanel : ''), displayPlanning, options)) {
       return;
-    }
-
-    function api_route_calendar_path(route) {
-      return '/api/0.1/plannings/' + (planning_ref ? 'ref:' + encodeURIComponent(planning_ref) : planning_id) +
-        '/routes/' + (route.ref ? 'ref:' + encodeURIComponent(route.ref) : route.route_id) + '.ics';
     }
 
     function setRouteVariables(i, route) {
@@ -1160,25 +1162,6 @@ var plannings_edit = function(params) {
 
     data.i18n = mustache_i18n;
     data.planning_id = data.id;
-
-    var empty_colors = params.vehicle_colors.slice();
-    empty_colors.unshift('');
-
-    var updateColorsForRoutesAndStops = function(i, route) {
-      route.colors = $.map(empty_colors, function(color) {
-        return {
-          color: color,
-          selected: route.color === color
-        };
-      });
-      $.each(route.stops, function(i, stop) {
-        if (stop.destination && stop.destination.color) {
-          stop.destination.color_force = true;
-        } else {
-          stop.color = route.color;
-        }
-      });
-    };
 
     $.each(data.routes, function(i, route) {
       setRouteVariables(i, route);

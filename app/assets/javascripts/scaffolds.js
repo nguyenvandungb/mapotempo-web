@@ -198,6 +198,22 @@ var customColorInitialize = function(selecter) {
   });
 };
 
+var templateSelectionColor = function(state) {
+  if (state.id) {
+    return $("<span class='color_small' style='background:" + state.id + "'></span>");
+  } else {
+    return $("<i />").addClass("fa fa-paint-brush").css("color", "#CCC");
+  }
+};
+
+var templateResultColor = function(state) {
+  if (state.id) {
+    return $("<span class='color_small' style='background:" + state.id + "'></span>");
+  } else {
+    return $("<span class='color_small' data-color=''></span>");
+  }
+};
+
 function decimalAdjust(type, value, exp) {
 
   if (typeof exp === 'undefined' || +exp === 0) {
