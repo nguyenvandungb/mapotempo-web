@@ -20,7 +20,7 @@
 var vehicle_usage_sets_index = function(params) {
   'use strict';
 
-  var show_accordion_check_elements = function(show) {
+  var showAccordionCheckElements = function(show) {
     ['[id^=vehicle_usage_sets_]', '#add', '.btn-destroy'].map(function(str) {
       show ? $(str).removeClass('invisible') : $(str).addClass('invisible');
     });
@@ -30,15 +30,15 @@ var vehicle_usage_sets_index = function(params) {
   $('a.accordion-toggle').click(function() {
     var id = $(this).attr('href');
     window.location.hash = id;
-    var all_collapsed = $('.accordion-body.collapse.in').size() ? true : false;
+    var allCollapsed = $('.accordion-body.collapse.in').size() ? true : false;
     $('.accordion-body.collapse.in').each(function() {
       var $this = $(this);
       if (id !== '#' + $this.attr('id')) {
-        all_collapsed = false;
+        allCollapsed = false;
         $this.collapse('hide');
       }
     });
-    show_accordion_check_elements(all_collapsed);
+    showAccordionCheckElements(allCollapsed);
   });
 
   $('#add').click(function() {
@@ -46,19 +46,31 @@ var vehicle_usage_sets_index = function(params) {
   });
 
   $('.select-unselect-all').click(function() {
-    var vehicle_usage_sets_id = $(this).attr('data-id');
-    var is_checked = $(this).is(':checked');
+    var vehicleUsageSetId = $(this).attr('data-id');
+    var isChecked = $(this).is(':checked');
 
-    if (is_checked) {
+    if (isChecked) {
       $('html, body').animate({
-        scrollTop: $('#multiple-actions-' + vehicle_usage_sets_id).offset().top
+        scrollTop: $('#multiple-actions-' + vehicleUsageSetId).offset().top
       }, 1000);
     }
 
-    $('#accordion-' + vehicle_usage_sets_id + ' tr .vehicle-select').each(function() {
-      $(this).prop('checked', is_checked);
+    $('#accordion-' + vehicleUsageSetId + ' tr .vehicle-select').each(function() {
+      $(this).prop('checked', isChecked).change();
     });
   });
+
+  var onVehicleSelected = function() {
+    $('.select-unselect-all').each(function() {
+      var vehicleUsageSetId = $(this).attr('data-id');
+      if ($('.vehicle-select:checked', $(this).closest('tr')).length)
+        $('#multiple-actions-' + vehicleUsageSetId + ' button, #multiple-actions-' + vehicleUsageSetId + ' select').attr('disabled', false);
+      else
+        $('#multiple-actions-' + vehicleUsageSetId + ' button, #multiple-actions-' + vehicleUsageSetId + ' select').attr('disabled', true);
+    });
+  };
+  $('.vehicle-select').change(onVehicleSelected);
+  onVehicleSelected();
 
   if (window.location.hash) {
     $('.accordion-body.collapse.in').each(function() {
@@ -70,7 +82,7 @@ var vehicle_usage_sets_index = function(params) {
     $(".accordion-toggle[href!='" + window.location.hash + "']").addClass('collapsed');
     $(window.location.hash).addClass('in');
     $(".accordion-toggle[href='" + window.location.hash + "']").removeClass('collapsed');
-    show_accordion_check_elements(false);
+    showAccordionCheckElements(false);
   }
 };
 
@@ -85,7 +97,7 @@ var vehicle_usage_sets_edit = function(params) {
 var vehicle_usage_sets_import = function(params) {
   'use strict';
 
-  var dialog_upload = bootstrap_dialog({
+  var dialogUpload = bootstrap_dialog({
     title: I18n.t('vehicle_usage_sets.import.dialog.import.title'),
     icon: 'fa-upload',
     message: SMT['modals/default_with_progress']({
@@ -109,7 +121,7 @@ var vehicle_usage_sets_import = function(params) {
       return false;
     }
 
-    dialog_upload.modal(modal_options());
+    dialogUpload.modal(modal_options());
   });
 };
 
