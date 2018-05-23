@@ -417,8 +417,8 @@ class Customer < ApplicationRecord
         else
           self.destinations.each{ |destination|
             if !destination.visits.empty?
-              destination.ref = destination.visits[0].ref
-              destination.tags = destination.visits[0].tags | destination.tags
+              destination.ref ||= destination.visits[0].ref
+              destination.tags |= destination.visits[0].tags
               destination.visits.each{ |visit|
                 visit.ref = nil
                 visit.tag_ids = []
