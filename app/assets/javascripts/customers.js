@@ -96,6 +96,37 @@ var customers_index = function(params) {
       map_init();
     }
   });
+
+  var onFilterChanged = function(text) {
+    var customersCount = 0, customersNoTestCount = 0, vehiclesCount = 0, vehiclesNoTestCount = 0;
+    var customersVisibility = {};
+    $('#customers tbody tr').each(function(i, row) {
+      var $row = $(row);
+      var match = !text || $row.text().search(new RegExp(text.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&"), 'i')) > -1;
+      if (match) {
+        var customerId = $row.data('customer_id');
+        customersVisibility[customerId] = true;
+        customersCount++;
+        vehiclesCount += params.customers[customerId]['vehicles_count'];
+        if (!params.customers[customerId]['test']) {
+          customersNoTestCount++;
+          vehiclesNoTestCount += params.customers[customerId]['vehicles_count'];
+        }
+      }
+      $row.css('display', 'none');
+    });
+    for (var i in customersVisibility) {
+      $('[data-customer_id=' + i + ']').css('display', 'table-row');
+    }
+    $('#customers_count').text(customersCount);
+    $('#customers_notest_count').text(customersNoTestCount);
+    $('#vehicles_count').text(vehiclesCount);
+    $('#vehicles_notest_count').text(vehiclesNoTestCount);
+  };
+  $('#customers_filter').keyup(function() {
+    onFilterChanged($(this).val());
+  });
+  onFilterChanged($('#customers_filter').val());
 };
 
 var customers_edit = function(params) {

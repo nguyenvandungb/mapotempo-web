@@ -17,19 +17,20 @@
 </div>
 
 <div class="row row-top">
-  <div class="col-md-6">
+  <div class="col-md-2">
     <%= link_to new_customer_path, class:"btn btn-primary btn-sm" do %><i class="fa fa-plus fa-fw"></i> <%= t '.new' %><% end %>
   </div>
-  <div class="col-md-6">
-    <div class="pull-right">
-      <%= @customers.count %> <%= t 'activerecord.models.customers', count: @customers.count %> (<%= t '.no_test' %> : <%= @customers.select{ |customer| !customer.test }.count %>),
+  <div class="col-md-10">
+    <div class="form-inline pull-right">
+      <%= text_field_tag :customers_filter, nil, placeholder: t('all.verb.filter'), class: 'form-control' %>
+      <span id="customers_count"><%= @customers.count %></span> <%= t 'activerecord.models.customers', count: @customers.count %> (<%= t '.no_test' %> : <span id="customers_notest_count"><%= @customers.select{ |customer| !customer.test }.count %></span>),
       <%
         vehicles_count = Vehicle.for_reseller_id(@current_user.reseller_id).count
         vehicles_no_test_count = Vehicle.for_reseller_id(@current_user.reseller_id).where(customers: {test: false}).count
         behavior_url = analytic_url_for(@current_user.reseller, :behavior_url)
         audience_url = analytic_url_for(@current_user.reseller, :audience_url)
       %>
-      <%= vehicles_count %> <%= t 'activerecord.models.vehicles', count: vehicles_count %> (<%= t '.no_test' %> : <%= vehicles_no_test_count %>)
+      <span id="vehicles_count"><%= vehicles_count %></span> <%= t 'activerecord.models.vehicles', count: vehicles_count %> (<%= t '.no_test' %> : <span id="vehicles_notest_count"><%= vehicles_no_test_count %></span>)
       <%= link_to '<i class="fa fa-bar-chart" aria-hidden="true"></i>'.html_safe, audience_url, target: '_blank', title: t('.audience_url') if audience_url %>
       <%= link_to '<i class="fa fa-pie-chart" aria-hidden="true"></i>'.html_safe, behavior_url, target: '_blank', title: t('.behavior_url') if behavior_url %>
     </div>
@@ -37,11 +38,11 @@
 </div>
 
 <%= form_tag destroy_multiple_customers_path, method: :delete do %>
-<table class="table table-striped table-hover table-responsive table-valign">
+<table id="customers" class="table table-striped table-hover table-responsive table-valign">
   <thead>
     <tr>
       <th class="center">
-        <button id="add" type="button" class="btn btn-default btn-xs index_toggle_selection" title="<%= t 'all.verb.toggle_selection' %>">
+        <button type="button" class="btn btn-default btn-xs" data-toggle="selection" data-target="#customers" title="<%= t 'all.verb.toggle_selection' %>">
           <i class="fa fa-check fa-fw"></i>
         </button>
       </th>
@@ -63,8 +64,8 @@
 
   <tbody>
     <% @customers.each do |customer| %>
-      <tr<% if customer.end_subscription && customer.end_subscription < Time.now %> class="disabled"<% end %>>
-        <td class="center"><%= check_box_tag("customers[#{customer.id}]") %></td>
+      <tr data-customer_id="<%= customer.id %>" <% if customer.end_subscription && customer.end_subscription < Time.now %> class="disabled"<% end %>>
+        <td class="center"><%= check_box_tag("customers[#{customer.id}]", '1', false, 'data-toggle' => 'disable-multiple-actions', 'data-target' => '#multiple-actions') %></td>
         <td class="center"><%= customer.ref %></td>
         <%
           audience_url = analytic_url_for(customer, :customer_audience_url)
@@ -122,7 +123,7 @@
           </div>
         </td>
       </tr>
-      <tr<% if customer.end_subscription && customer.end_subscription < Time.now %> class="disabled"<% end %>>
+      <tr data-customer_id="<%= customer.id %>"<% if customer.end_subscription && customer.end_subscription < Time.now %> class="disabled"<% end %>>
         <td></td>
         <td colspan="9">
           <%= render 'job', customer: customer, job: customer.job_optimizer %>
@@ -135,8 +136,14 @@
   </tbody>
 </table>
 
-<%= button_tag type: :submit, class: "btn btn-danger btn-sm", data: { confirm: t('all.verb.destroy_confirm') } do %><i class="fa fa-trash-o fa-fw"></i> <%= t('all.verb.destroy_selection') %><% end %>
+<% unless @customers.empty? %>
+<div id="multiple-actions">
+  <%= button_tag type: :submit, class: "btn btn-danger btn-sm", data: { confirm: t('all.verb.destroy_confirm') } do %><i class="fa fa-trash-o fa-fw"></i> <%= t('all.verb.destroy_selection') %><% end %>
+</div>
 <% end %>
+
+<% end %>
+
 <%
 layers = Layer.all.sort_by(&:id).uniq.collect{ |layer|
   {
@@ -149,6 +156,7 @@ layers = Layer.all.sort_by(&:id).uniq.collect{ |layer|
   }
 }
 controller.js(
-  map_layers: Hash[layers.map{ |l| l[:name] }.zip(layers)]
+  map_layers: Hash[layers.map{ |l| l[:name] }.zip(layers)],
+  customers: Hash[@customers.map{ |c| [c.id, {test: c.test, vehicles_count: c.vehicles.count}]}]
 )
 %>

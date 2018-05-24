@@ -2484,6 +2484,7 @@
       'import': 'Importer'
       'save': 'Sauvegarder'
       'cancel': 'Annuler'
+      'filter': 'Filtrer'
     'unit':
       'm': 'm'
       'kms': 'km'

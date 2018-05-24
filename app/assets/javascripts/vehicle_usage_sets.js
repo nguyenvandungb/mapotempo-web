@@ -42,7 +42,7 @@ var vehicle_usage_sets_index = function(params) {
   });
 
   $('#add').click(function() {
-    $('.deleter-check').prop('checked', !$('.deleter-check').is(':checked'));
+    $('.deleter-check').prop('checked', !$('.deleter-check').is(':checked')).change();
   });
 
   $('.select-unselect-all').click(function() {

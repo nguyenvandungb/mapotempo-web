@@ -16,13 +16,59 @@
 // <http://www.gnu.org/licenses/agpl.html>
 //
 'use strict';
+
 $(document).on('ready page:load', function() {
-  $('.index_toggle_selection').click(function() {
-    $('input:checkbox').each(function() {
-      this.checked = !this.checked;
-      $(this).change();
+  $('[data-toggle="selection"]').click(function() {
+    var selector = $(this).data('target');
+    $(selector + ' input:checkbox').each(function() {
+      var $this = $(this);
+      if ($this.is(':visible')) {
+        this.checked = !this.checked;
+        $(this).change();
+      }
     });
   });
+
+  var onObjectSelected = function(selector) {
+    if ($('[type="checkbox"][data-toggle="disable-multiple-actions"][data-target="' + selector + '"]:checked').length)
+      $(selector + ' button, ' + selector + ' select').attr('disabled', false);
+    else
+      $(selector + ' button, ' + selector + ' select').attr('disabled', true);
+  };
+  var toggleMultipleActions = $('[type="checkbox"][data-toggle="disable-multiple-actions"]');
+  if (toggleMultipleActions.length) {
+    toggleMultipleActions.change(function() {
+      onObjectSelected($(this).data('target'));
+    });
+    toggleMultipleActions.map(function() {
+      return $(this).data('target');
+    }).toArray().filter(function(elt, i, self) {
+      return self.indexOf(elt) === i;
+    }).forEach(function(id) {
+      onObjectSelected(id);
+    });
+  }
+
+  var onFilterChanged = function(text, selector) {
+    var count = 0;
+    $(selector + ' tbody tr').each(function(i, row) {
+      var $row = $(row);
+      var match = !text || $row.text().search(new RegExp(text.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&"), 'i')) > -1;
+      $row.css('display', match ? 'table-row' : 'none');
+      if (match) count++;
+    });
+    $(selector + '_count').text(count);
+  };
+  var filters = $('input[data-change="filter"]');
+  if (filters.length) {
+    filters.each(function() {
+      var $filter = $(this);
+      $filter.keyup(function() {
+        onFilterChanged($filter.val(), $filter.data('target'));
+      });
+      onFilterChanged($filter.val(), $filter.data('target'));
+    });
+  }
 
   dropdownAutoDirection($('[data-toggle="dropdown"]'));
 

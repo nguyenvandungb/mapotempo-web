@@ -7,17 +7,18 @@
     <%= link_to new_deliverable_unit_path, class:"btn btn-primary btn-sm" do %><i class="fa fa-plus fa-fw"></i> <%= t '.new' %><% end %>
   </div>
   <div class="col-md-6">
-    <div class="pull-right">
-      <%= @deliverable_units.count %> <%= t 'activerecord.models.deliverable_units', count: @deliverable_units.count %>
+    <div class="form-inline pull-right">
+      <%= text_field_tag :deliverable_units_filter, nil, placeholder: t('all.verb.filter'), class: 'form-control', 'data-change' => 'filter', 'data-target' => '#deliverable_units' %>
+      <span id="deliverable_units_count"><%= @deliverable_units.count %></span> <%= t 'activerecord.models.deliverable_units', count: @deliverable_units.count %>
     </div>
   </div>
 </div>
 
 <%= form_tag deliverable_units_path, method: :delete do %>
-<table class="table table-striped table-hover">
+<table id="deliverable_units" class="table table-striped table-hover">
   <thead>
     <tr>
-      <th><button id="add" type="button" class="btn btn-default btn-xs index_toggle_selection" title="<%= t 'all.verb.toggle_selection' %>"><i class="fa fa-check fa-fw"></i></button></th>
+      <th><button type="button" class="btn btn-default btn-xs" data-toggle="selection" data-target="#deliverable_units" title="<%= t 'all.verb.toggle_selection' %>"><i class="fa fa-check fa-fw"></i></button></th>
       <th><%= t 'activerecord.attributes.deliverable_unit.label' %></th>
       <th><%= t 'activerecord.attributes.deliverable_unit.ref' %></th>
       <th><%= t 'activerecord.attributes.deliverable_unit.icon' %></th>
@@ -31,7 +32,7 @@
   <tbody>
     <% @deliverable_units.each do |deliverable_unit| %>
       <tr>
-        <td><%= check_box_tag("deliverable_units[#{deliverable_unit.id}]") %></td>
+        <td><%= check_box_tag("deliverable_units[#{deliverable_unit.id}]", '1', false, 'data-toggle' => 'disable-multiple-actions', 'data-target' => '#multiple-actions') %></td>
         <td><%= deliverable_unit.label %></td>
         <td><%= deliverable_unit.ref %></td>
         <td><%= "<i class=\"fa fa-fw #{deliverable_unit.default_icon}\"></i>".html_safe %></td>
@@ -47,5 +48,10 @@
   </tbody>
 </table>
 
-<%= button_tag type: :submit, class: "btn btn-danger btn-sm", data: { confirm: t('all.verb.destroy_confirm') } do %><i class="fa fa-trash-o fa-fw"></i> <%= t('all.verb.destroy_selection') %><% end %>
+<% unless @deliverable_units.empty? %>
+<div id="multiple-actions">
+  <%= button_tag type: :submit, class: "btn btn-danger btn-sm", data: { confirm: t('all.verb.destroy_confirm') } do %><i class="fa fa-trash-o fa-fw"></i> <%= t('all.verb.destroy_selection') %><% end %>
+</div>
+<% end %>
+
 <% end %>

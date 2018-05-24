@@ -2321,6 +2321,7 @@ en:
       import: Import
       save: Save
       cancel: Cancel
+      filter: Filter
     unit:
       m: m
       kms: km

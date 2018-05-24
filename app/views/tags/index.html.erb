@@ -7,17 +7,18 @@
     <%= link_to new_tag_path, class:"btn btn-primary btn-sm" do %><i class="fa fa-plus fa-fw"></i> <%= t '.new' %><% end %>
   </div>
   <div class="col-md-6">
-    <div class="pull-right">
-      <%= @tags.count %> <%= t 'activerecord.models.tags', count: @tags.count %>
+    <div class="form-inline pull-right">
+      <%= text_field_tag :tags_filter, nil, placeholder: t('all.verb.filter'), class: 'form-control', 'data-change' => 'filter', 'data-target' => '#tags' %>
+      <span id="tags_count"><%= @tags.count %></span> <%= t 'activerecord.models.tags', count: @tags.count %>
     </div>
   </div>
 </div>
 
 <%= form_tag tags_path, method: :delete do %>
-<table class="table table-striped table-hover">
+<table id="tags" class="table table-striped table-hover">
   <thead>
     <tr>
-      <th><button id="add" type="button" class="btn btn-default btn-xs index_toggle_selection" title="<%= t 'all.verb.toggle_selection' %>"><i class="fa fa-check fa-fw"></i></button></th>
+      <th><button type="button" class="btn btn-default btn-xs" data-toggle="selection" data-target="#tags" title="<%= t 'all.verb.toggle_selection' %>"><i class="fa fa-check fa-fw"></i></button></th>
       <th><%= t 'activerecord.attributes.tag.label' %></th>
       <th><%= t 'activerecord.attributes.tag.icon' %></th>
       <th><%= t 'activerecord.attributes.tag.ref' %></th>
@@ -28,7 +29,7 @@
   <tbody>
     <% @tags.each do |tag| %>
       <tr>
-        <td><%= check_box_tag("tags[#{tag.id}]") %></td>
+        <td><%= check_box_tag("tags[#{tag.id}]", '1', false, 'data-toggle' => 'disable-multiple-actions', 'data-target' => '#multiple-actions') %></td>
         <td><%= tag.label %></td>
         <td><%= tag_icon tag %></td>
         <td><%= tag.ref %></td>
@@ -41,5 +42,10 @@
   </tbody>
 </table>
 
-<%= button_tag type: :submit, class: "btn btn-danger btn-sm", data: { confirm: t('all.verb.destroy_confirm') } do %><i class="fa fa-trash-o fa-fw"></i> <%= t('all.verb.destroy_selection') %><% end %>
+<% unless @tags.empty? %>
+<div id="multiple-actions">
+  <%= button_tag type: :submit, class: "btn btn-danger btn-sm", data: { confirm: t('all.verb.destroy_confirm') } do %><i class="fa fa-trash-o fa-fw"></i> <%= t('all.verb.destroy_selection') %><% end %>
+</div>
+<% end %>
+
 <% end %>
