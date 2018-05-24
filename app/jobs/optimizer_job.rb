@@ -41,7 +41,7 @@ class OptimizerJob < Job.new(:planning_id, :route_id, :global, :active_only)
     bars = Array.new(2, 0)
     optimum = unless routes.select(&:vehicle_usage_id).empty?
       begin
-        planning.optimize(routes, global, active_only) do |positions, services, vehicles|
+        planning.optimize(routes, global: global, active_only: active_only) do |positions, services, vehicles|
           optimum = Mapotempo::Application.config.optimize.optimize(
             positions, services, vehicles,
             name: planning.name,

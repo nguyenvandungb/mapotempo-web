@@ -357,7 +357,7 @@ class Planning < ApplicationRecord
     end
   end
 
-  def optimize(routes, option = { global:false, active_only: true, ignore_overload_multipliers: [] }, &optimizer)
+  def optimize(routes, option = { global: false, active_only: true, ignore_overload_multipliers: [] }, &optimizer)
     routes_with_vehicle = routes.select(&:vehicle_usage?)
     stops_on = (routes.find{ |r| !r.vehicle_usage? }.try(:stops) || []) + routes_with_vehicle.flat_map{ |r|
       r.stops_segregate(option[:active_only])[true]

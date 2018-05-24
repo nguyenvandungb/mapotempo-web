@@ -80,11 +80,12 @@
                 </div>
                 <div class="col-xs-5">
                   <label data-toggle="tooltip" title="<%= t('plannings.edit.dialog.optimization.deliverable_units.overload_multiplier_true_help') %>">
-                    <%= radio_button_tag "overload_multiplier_#{du.id}", :yes, :true, 'unit-id' => "#{du.id}" %>
+                    <%= radio_button_tag "overload_multiplier_#{du.id}", du.default_optimization_overload_multiplier != 0 ? :yes : :no, true, 'unit-id' => "#{du.id}" %>
                       <% if du.default_optimization_overload_multiplier != 0 %><%= t 'all.value._yes' %><% else %><%= t 'all.value._no' %><% end %>
                   </label>
+
                   <label data-toggle="tooltip" title="<%= t('plannings.edit.dialog.optimization.deliverable_units.overload_multiplier_ignore_help') %>">
-                    <%= radio_button_tag "overload_multiplier_#{du.id}", :ignore, :false, 'unit-id' => "#{du.id}" %>
+                    <%= radio_button_tag "overload_multiplier_#{du.id}", :ignore, false, 'unit-id' => "#{du.id}" %>
                     <%= t 'plannings.edit.dialog.optimization.deliverable_units.ignore' %>
                   </label>
                 </div>
