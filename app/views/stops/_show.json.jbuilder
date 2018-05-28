@@ -65,11 +65,17 @@ if stop.is_a?(StopVisit)
     (json.eta_formated l(stop.eta, format: :hour_minute)) if stop.eta
   end
   duration = visit.default_take_over_time_with_seconds
-  if @show_isoline && stop.route.vehicle_usage_id
-    json.vehicle_usage_id stop.route.vehicle_usage_id
-    json.isoline stop.route.vehicle_usage.vehicle.default_router.isochrone || stop.route.vehicle_usage.vehicle.default_router.isodistance
-    json.isochrone stop.route.vehicle_usage.vehicle.default_router.isochrone
-    json.isodistance stop.route.vehicle_usage.vehicle.default_router.isodistance
+  json.vehicle_usage_id stop.route.vehicle_usage_id
+  if @show_isoline
+    if stop.route.vehicle_usage_id
+      json.isoline stop.route.vehicle_usage.vehicle.default_router.isochrone || stop.route.vehicle_usage.vehicle.default_router.isodistance
+      json.isochrone stop.route.vehicle_usage.vehicle.default_router.isochrone
+      json.isodistance stop.route.vehicle_usage.vehicle.default_router.isodistance
+    else
+      json.isoline stop.route.planning.customer.router.isochrone || stop.route.planning.customer.router.isodistance
+      json.isochrone stop.route.planning.customer.router.isochrone
+      json.isodistance stop.route.planning.customer.router.isodistance
+    end
   end
 elsif stop.is_a?(StopRest)
   json.rest do
