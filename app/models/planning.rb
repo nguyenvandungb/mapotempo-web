@@ -366,6 +366,12 @@ class Planning < ApplicationRecord
     o = amalgamate_stops_same_position(stops_on, option[:global], routes_with_vehicle.map(&:vehicle_usage)) { |positions|
       services_and_rests = positions.collect{ |position|
         stop_id, open1, close1, open2, close2, priority, duration, vehicle_usage_id, quantities, quantities_operations, skills, rest = position[2..13]
+        if option[:ignore_overload_multipliers] && quantities
+          quantities.select!{ |id, _val|
+            option[:ignore_overload_multipliers].find{ |iom| iom[:unit_id] == id if iom[:ignore] }.nil?
+          }
+        end
+
         {stop_id: stop_id, start1: open1, end1: close1, start2: open2, end2: close2, priority: priority, duration: duration, vehicle_usage_id: vehicle_usage_id, quantities: quantities, quantities_operations: quantities_operations, skills: skills, rest: rest}
       }
 
