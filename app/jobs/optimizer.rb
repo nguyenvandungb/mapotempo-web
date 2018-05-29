@@ -51,7 +51,7 @@ class Optimizer
         planning.optimize(routes, options) do |positions, services, vehicles|
           Mapotempo::Application.config.optimize.optimize(
             positions, services, vehicles,
-            name: planning.name,
+            name: "c#{planning.customer_id} " + planning.name,
             optimize_time: @@optimize_time_force || (optimize_time ? optimize_time * 1000 : nil),
             max_split_size: planning.customer.optimization_max_split_size || @@max_split_size,
             stop_soft_upper_bound: planning.customer.optimization_stop_soft_upper_bound || @@stop_soft_upper_bound,
