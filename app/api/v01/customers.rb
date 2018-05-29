@@ -160,6 +160,21 @@ class V01::Customers < Grape::API
       end
     end
 
+    desc 'Fetch users for customer id',
+      nickname: 'getCustomerUsers',
+      is_array: true,
+      success: V01::Entities::User
+    params do
+    end
+    get ':id/users' do
+      if @current_user.admin?
+        customer = @current_user.reseller.customers.where(ParseIdsRefs.read(params[:id])).first!
+        present customer.users, whith: V01::Entities::User
+      else
+        status 401
+      end
+    end
+
     desc 'Update customer.',
       nickname: 'updateCustomer',
       success: V01::Entities::Customer
