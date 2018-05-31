@@ -68,6 +68,12 @@ class User < ApplicationRecord
       copy.confirmation_token = nil
       copy.confirmation_sent_at = nil
       copy.reset_password_token = nil
+      copy.reset_password_sent_at = nil
+      copy.sign_in_count = 0
+      copy.current_sign_in_at = nil
+      copy.last_sign_in_at = nil
+      copy.current_sign_in_ip = nil
+      copy.last_sign_in_ip = nil
     })
   end
 
