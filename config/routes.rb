@@ -108,6 +108,7 @@ Rails.application.routes.draw do
   resources :plannings do
     patch ':route_id/:stop_id/move' => 'plannings#move'
     patch ':route_id/:stop_id/move/:index' => 'plannings#move'
+    patch ':route_id/move/' => 'plannings#move'
     get 'refresh'
     patch 'switch'
     patch 'duplicate'

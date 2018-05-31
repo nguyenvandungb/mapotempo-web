@@ -143,21 +143,43 @@ class PlanningsController < ApplicationController
     respond_to do |format|
       begin
         Planning.transaction do
-          previous_route_id = Stop.find(Integer(params[:stop_id])).route_id
-          route = @planning.routes.find{ |route| route.id == Integer(params[:route_id]) }
-          stop = @planning.routes.find{ |r| r.id == previous_route_id }.stops.find { |s| s.id == Integer(params[:stop_id]) }
+          route = @planning.routes.find{ |rt| rt.id == Integer(params[:route_id]) }
+
+          if params[:stop_ids].nil?
+            previous_route_id = Stop.find(params[:stop_id]).route_id
+            move_stop(params[:stop_id], route, previous_route_id)
+          else
+            params[:stop_ids].map!(&:to_i)
+            ids = @planning.routes.flat_map{ |ro|
+              ro.stops.select{ |stop| params[:stop_ids].include? stop.id }
+                .collect{ |stop| {stop_id: stop.id, route_id: ro.id} }
+            }
+            ids.each{ |id| move_stop(id[:stop_id], route, id[:route_id]) }
+          end
+
           # save! is used to rollback all the transaction with associations
-          if @planning.move_stop(route, stop, params[:index] ? Integer(params[:index]) : nil) && @planning.compute && @planning.save!
+          if @planning.compute && @planning.save!
             @planning.reload
             # Send in response only modified routes
             @routes = [route]
-            @routes << @planning.routes.find{ |r| r.id == previous_route_id } if previous_route_id != route.id
+            if params[:stop_ids].nil?
+              @routes << @planning.routes.find{ |r| r.id == previous_route_id } if previous_route_id != route.id
+            else
+              ids.uniq{ |id|
+                id[:route_id]
+              }.each{ |id|
+                next if id[:route_id] == route.id
+                @routes << @planning.routes.find{ |r|
+                  r.id == id[:route_id]
+                }
+              }
+            end
             format.json { render action: 'show', location: @planning }
           else
             format.json { render json: @planning.errors, status: :unprocessable_entity }
           end
         end
-      rescue ActiveRecord::RecordInvalid => e
+      rescue ActiveRecord::RecordInvalid
         format.json { render json: @planning.errors, status: :unprocessable_entity }
       end
     end
@@ -350,6 +372,12 @@ class PlanningsController < ApplicationController
   end
 
   private
+
+  def move_stop(stop_id, route, previous_route_id)
+    stop_id = Integer(stop_id) unless stop_id.is_a? Integer
+    stop = @planning.routes.find{ |r| r.id == previous_route_id }.stops.find { |s| s.id == stop_id }
+    @planning.move_stop(route, stop, params[:index] ? Integer(params[:index]) : nil)
+  end
 
   def ignore_overload_multipliers
     if params[:ignore_overload_multipliers]

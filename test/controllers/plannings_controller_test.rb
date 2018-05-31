@@ -368,6 +368,16 @@ class PlanningsControllerTest < ActionController::TestCase
     end
   end
 
+  test 'should move many stops' do
+    stop_ids = @planning.routes.reject { |ro| ro.id == @planning.routes[1].id }.flat_map { |ro| ro.stops.map(&:id) }
+    patch :move, planning_id: @planning, route_id: @planning.routes[1], stop_ids: stop_ids, index: 1, format: :json
+    assert_response :success
+    assert_equal 3, JSON.parse(response.body)['routes'].size
+    @planning.routes.select(&:vehicle_usage).each{ |vu|
+      assert_not vu.outdated
+    }
+  end
+
   test 'should not move with error' do
     ApplicationController.stub_any_instance(:server_error, lambda { |*a| raise }) do
       Route.stub_any_instance(:compute, lambda { |*a| raise }) do
