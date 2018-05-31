@@ -17,9 +17,9 @@
 //
 'use strict';
 
-$(function () {
-  $('[data-toggle="tooltip"]').tooltip()
-})
+$(function() {
+  $('[data-toggle="tooltip"]').tooltip();
+});
 
 var getPlanningsId = function() {
   return $.makeArray($('#plannings').find('input[type=checkbox]:checked').map(function(index, id) { return $(id).val(); }));
@@ -1062,6 +1062,78 @@ var plannings_edit = function(params) {
             error: ajaxError
           });
         });
+
+      $('#planning-move-stops-modal').on('show.bs.modal', function(ev) {
+        $('#planning-move-stops-modal .modal-body').html('').unbind();
+        var routeId = $(ev.relatedTarget).attr('data-route-id');
+
+        var _routes = routes.filter(function(obj) {
+          return obj.route_id != routeId;
+        }).map(function(obj) {
+          if (obj.name === "undefined") {
+            obj.name = I18n.t('plannings.edit.out_of_route');
+            obj.color = '#fff';
+          }
+          return obj;
+        });
+
+        var templateRoute = function(route) {
+          if (route.id) {
+            var obj = _routes.find(function(obj) { return obj.route_id == parseInt(route.id); });
+            return $("<span><span class='color_small' style='background: " + obj.color + "'></span>&nbsp;</span>")
+              .append($("<span/>").text(route.text));
+          }
+        };
+
+        $.ajax({
+          type: 'GET',
+          contentType: 'application/json',
+          url: '/plannings/' + params.planning_id + '.json',
+          data: { "route_ids": routeId },
+          error: ajaxError,
+          success: function(data) {
+            var obj = {
+              color: data.routes[0].color,
+              moveTo: I18n.t('plannings.edit.dialog.move_stops.move_to'),
+              routes: _routes,
+              stops: data.routes[0].stops,
+              moveStopsFilter: I18n.t('web.placeholder_filter'),
+              moveStopsLabel: I18n.t('plannings.edit.stops'),
+              vehicle: data.routes[0].vehicle_id ? true : false
+            };
+            $('#planning-move-stops-modal .modal-body').html(SMT['stops/move'](obj));
+            $('#move-stops [data-toggle="selection"]').toggleSelect();
+            $('[type="checkbox"][data-toggle="disable-multiple-actions"]').toggleMultipleActions();
+            $('#planning-move-stops-modal input[data-change="filter"]').filterTable();
+            $('#move-route-id').select2({ templateSelection: templateRoute, templateResult: templateRoute, minimumResultsForSearch: -1 });
+          }
+        });
+      });
+
+      $('#planning-move-stops-modal').on('hide.bs.modal', function() {
+        $('#planning-move-stops-modal').attr('data-route-id', null);
+      });
+
+      $("#move-stops-modal").click(function() {
+        var stopIds = $("#planning-move-stops-modal")
+          .find('form input[name="stop_ids"]:checked')
+          .map(function() { return $(this).val(); })
+          .toArray();
+        $.ajax({
+          type: 'PATCH',
+          url: '/plannings/' + params.planning_id + '/' + $("#move-route-id").val() + '/move.json',
+          data: {
+            'stop_ids': stopIds
+          },
+          beforeSend: beforeSendWaiting,
+          error: ajaxError,
+          success: function(data) {
+            updatePlanning(data);
+            $('#planning-move-stops-modal').modal('hide');
+          },
+          complete: completeAjaxMap
+        });
+      });
 
       $(".lock", context).click(function() {
         var id = $(this).closest("[data-route_id]").attr("data-route_id");

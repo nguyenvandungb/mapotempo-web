@@ -1,0 +1,74 @@
+<div class="col-md-10 col-md-offset-1 move-stops-options">
+  <div class="form-group">
+    <label >{{moveTo}}</label>
+    <select id="move-route-id" name="route_id" >
+      {{#routes}}
+      <option value="{{route_id}}"><span>{{name}}</span></option>
+      {{/routes}}
+    </select>
+  </div>
+</div>
+
+<hr class="col-md-10 col-md-offset-1"/>
+
+<div class="route col-md-12">
+  <div class="form-inline pull-right">
+    <input id="move-stops-filter" placeholder="{{moveStopsFilter}}" class="form-control" data-change="filter" data-target="#move-stops" type="text">
+    <span id="move-stops_count"></span> {{moveStopsLabel}}
+  </div>
+
+  <table id="move-stops" class="table table-striped table-hover">
+    <thead>
+      <tr>
+        <th >
+          <button type="button" class="btn btn-default btn-xs" data-toggle="selection" data-target="#move-stops" title="Inverser sélection"><i class="fa fa-check fa-fw"></i></button>
+        </th>
+        <th>{{moveStopsLabel}}</th>
+      </tr>
+    </thead>
+    <tbody class="stops list-group" >
+      {{#stops}}
+        {{#destination}}{{#visits}}
+        <tr class="{{type}} {{#error}}ui-state-error{{/error}}">
+          <td>
+           {{#vehicle}}
+            <span class="number label label-default {{^active}}label-empty{{/active}} {{#color_force}}color_force{{/color_force}}" style="background-color: {{color}};">
+              <span class="stop-status{{#status}} stop-status-{{status_code}}{{/status}}" title="{{status}}{{#eta_formated}} - {{#i18n}}plannings.edit.popup.eta{{/i18n}} {{eta_formated}}{{/eta_formated}}"{{^status}} style="display: none;"{{/status}}></span>
+              {{stop_index}}
+            </span>
+            {{/vehicle}}
+
+            <input type="checkbox" name="stop_ids" value="{{stop_id}}" {{#active}} checked="checked" {{/active}} multiple
+              data-toggle="disable-multiple-actions" data-target=".modal-footer" />
+          </td>
+          <td class="title">
+            {{^geocoded}}
+              <i class="fa fa-map-marker fa-fw" title="{{#i18n}}plannings.edit.error.no_geolocalization{{/i18n}}"></i>
+            {{/geocoded}}
+            {{#out_of_window}}
+              <i class="fa fa-clock-o fa-fw" title="{{#i18n}}plannings.edit.error.out_of_window_help{{/i18n}}"></i>
+            {{/out_of_window}}
+            {{#out_of_capacity}}
+              <i class="fa fa-archive fa-fw" title="{{#i18n}}plannings.edit.error.out_of_capacity_help{{/i18n}}"></i>
+            {{/out_of_capacity}}
+            {{#out_of_drive_time}}
+              <i class="fa fa-power-off fa-fw" title="{{#i18n}}plannings.edit.error.out_of_drive_time_help{{/i18n}}"></i>
+            {{/out_of_drive_time}}
+            {{#no_path}}
+              <i class="fa fa-road fa-fw" title="{{#i18n}}plannings.edit.error.no_path_help{{/i18n}}"></i>
+            {{/no_path}}
+            <span class="info">
+              {{#active}}{{#geocoded}}{{^no_path}}
+                <span>{{time}}{{#time_day}}&nbsp;(+{{time_day}}){{/time_day}}</span> -
+              {{/no_path}}{{/geocoded}}{{/active}}
+            </span>
+            <span class="name" title="{{name}}{{#index_visit}} #{{index_visit}}{{/index_visit}}{{#status}} - {{status}}{{/status}}{{#eta_formated}} - {{#i18n}}plannings.edit.popup.eta{{/i18n}} {{eta_formated}}{{/eta_formated}}">{{name}}</span>{{#index_visit}} #{{index_visit}}{{/index_visit}}
+          </td>
+        </tr>
+        {{/visits}}{{/destination}}
+      {{/stops}}
+    </tbody>
+  </table>
+</div>
+
+<div class="clearfix" />

@@ -7,6 +7,13 @@
         <button type="button" class="automatic_insert_all btn btn-default btn-xs" title="{{#i18n}}plannings.edit.automatic_insert_help_multiple{{/i18n}}"><i class="fa fa-lightbulb-o"></i></button>
         <button type="button" class="toggle btn btn-default btn-xs" title="{{#i18n}}plannings.edit.toggle_help{{/i18n}}"><i class="fa fa-eye{{#hidden}}-slash{{/hidden}}"></i></button>
         <button type="button" class="lock btn {{^locked}}btn-default{{/locked}}{{#locked}}btn-warning{{/locked}} btn-xs" title="{{#i18n}}plannings.edit.locked_unplanned_help{{/i18n}}"><i class="fa fa-{{^locked}}un{{/locked}}lock"></i></button>
+        <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" title="{{#i18n}}plannings.edit.move_stops{{/i18n}}"><i class="fa fa-share-square-o"></i><span class="caret"></span></button>
+        <ul class="dropdown-menu pull-right" role="menu">
+          <li>
+            <a href="#" data-toggle="modal" data-target="#planning-move-stops-modal" data-route-id="{{route_id}}"><i class="fa fa-external-link fa-fw"></i> {{#i18n}}plannings.edit.move_stops{{/i18n}}</a>
+          </li>
+        </ul>
+
       </div>
     {{/vehicle}}
     {{#vehicle}}
@@ -33,8 +40,6 @@
         <div class="btn-group">
           <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" title="{{#i18n}}plannings.edit.export_help{{/i18n}}"><i class="fa fa-share-square-o"></i><span class="caret"></span></button>
           <ul class="dropdown-menu pull-right" role="menu">
-            <li><a class="reverse_order" href="/plannings/{{planning_id}}/{{route_id}}/reverse_order"><i class="fa fa-random fa-fw"></i> {{#i18n}}plannings.edit.reverse_order{{/i18n}}</a></li>
-            <li role="separator" class="divider"></li>
             {{^callback_button}}
               {{#customer_enable_external_callback}}
                 {{#customer_external_callback_url}}
@@ -206,6 +211,11 @@
                 <a class="send_sms" href="/api/0.1/plannings/{{planning_id}}/routes/{{route_id}}/send_sms"><i class="fa fa-mobile fa-fw"></i> {{#i18n}}plannings.edit.send_sms{{/i18n}}</a>
               </li>
             {{/customer_enable_sms}}
+              <li role="separator" class="divider"></li>
+              <li><a class="reverse_order" href="/plannings/{{planning_id}}/{{route_id}}/reverse_order"><i class="fa fa-random fa-fw"></i> {{#i18n}}plannings.edit.reverse_order{{/i18n}}</a></li>
+              <li>
+                <a href="#" data-toggle="modal" data-target="#planning-move-stops-modal" data-route-id="{{route_id}}"><i class="fa fa-external-link fa-fw"></i> {{#i18n}}plannings.edit.move_stops{{/i18n}}</a>
+              </li>
           </ul>
         </div>
         {{/manage_export}}

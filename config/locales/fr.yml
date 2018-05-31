@@ -1582,6 +1582,7 @@
         'zoom_in': 'Augmenter le zoom'
         'zoom_out': 'Diminuer le zoom'
       'reverse_order': 'Inverser l''ordre des arrêts'
+      'move_stops': 'Déplacer les arrêts'
       'open_planning_panel': 'Déployer le panneau du plan de tournées'
       'collapse_planning_panel': 'Minifier le panneau du plan de tournées'
       'refresh': 'Actualiser'
@@ -1727,6 +1728,9 @@
         'zoning':
           'title': 'Zonage'
           'in_progress': 'Application du nouveau zonage en cours, merci de patienter'
+        'move_stops':
+          'title': 'Déplacement des arrêts'
+          'move_to': 'Choisir la tournée de destination'
         'vehicle':
           'title': 'Changement de véhicule'
           'in_progress': 'Application du nouveau véhicule en cours, merci de patienter'

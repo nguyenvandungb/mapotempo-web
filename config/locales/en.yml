@@ -1472,6 +1472,7 @@ en:
         zoom_in: Zoom In
         zoom_out: Zoom Out
       reverse_order: Reverse stops order
+      move_stops: Move stops
       open_planning_panel: Open plan panel
       collapse_planning_panel: Collapse plan panel
       refresh: Refresh
@@ -1610,6 +1611,9 @@ en:
         zoning:
           title: Zoning
           in_progress: Please wait, applying new zoning
+        move_stops:
+          title: Moving stops
+          move_to: Choose destination tour
         vehicle:
           title: Switch vehicle
           in_progress: Please wait, applying new vehicle

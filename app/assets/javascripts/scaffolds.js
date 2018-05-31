@@ -18,36 +18,49 @@
 'use strict';
 
 $(document).on('ready page:load', function() {
-  $('[data-toggle="selection"]').click(function() {
-    var selector = $(this).data('target');
-    $(selector + ' input:checkbox').each(function() {
-      var $this = $(this);
-      if ($this.is(':visible')) {
-        this.checked = !this.checked;
-        $(this).change();
-      }
-    });
-  });
+  $('[data-toggle="selection"]').toggleSelect();
+  $('input[data-change="filter"]').filterTable();
+  $('[type="checkbox"][data-toggle="disable-multiple-actions"]').toggleMultipleActions();
 
-  var onObjectSelected = function(selector) {
-    if ($('[type="checkbox"][data-toggle="disable-multiple-actions"][data-target="' + selector + '"]:checked').length)
-      $(selector + ' button, ' + selector + ' select').attr('disabled', false);
-    else
-      $(selector + ' button, ' + selector + ' select').attr('disabled', true);
+  dropdownAutoDirection($('[data-toggle="dropdown"]'));
+
+  $('.modal').on('shown.bs.modal', function() {
+    // Focus first primary button
+    $('.btn-primary', this).first().focus();
+  });
+});
+
+/* global jQuery */
+(function($) {
+  $.fn.toggleSelect = function() {
+    this.click(function() {
+      $($(this).data('target') + ' input:checkbox').each(function() {
+        var $this = $(this);
+        if ($this.is(':visible')) {
+          this.checked = !this.checked;
+          $(this).change();
+        }
+      });
+    });
+    return this;
   };
-  var toggleMultipleActions = $('[type="checkbox"][data-toggle="disable-multiple-actions"]');
-  if (toggleMultipleActions.length) {
-    toggleMultipleActions.change(function() {
-      onObjectSelected($(this).data('target'));
+
+  $.fn.filterTable = function() {
+    var filterTimeoutId = null;
+    this.each(function() {
+      var $filter = $(this);
+      $filter.keyup(function() {
+        if (filterTimeoutId) clearTimeout(filterTimeoutId);
+        filterTimeoutId = setTimeout(function() {
+          filterTimeoutId = null;
+          onFilterChanged($filter.val(), $filter.data('target'));
+        }, 200);
+      });
+      var filterText = $filter.val();
+      if (filterText) onFilterChanged(filterText, $filter.data('target'));
     });
-    toggleMultipleActions.map(function() {
-      return $(this).data('target');
-    }).toArray().filter(function(elt, i, self) {
-      return self.indexOf(elt) === i;
-    }).forEach(function(id) {
-      onObjectSelected(id);
-    });
-  }
+    return this;
+  };
 
   var onFilterChanged = function(text, selector) {
     $('body').addClass('ajax_waiting');
@@ -61,32 +74,29 @@ $(document).on('ready page:load', function() {
     $(selector + '_count').text(count);
     $('body').removeClass('ajax_waiting');
   };
-  var filters = $('input[data-change="filter"]');
-  if (filters.length) {
-    var filterTimeoutId = null;
-    filters.each(function() {
-      var $filter = $(this);
-      $filter.keyup(function() {
-        if (filterTimeoutId)
-          clearTimeout(filterTimeoutId);
-        filterTimeoutId = setTimeout(function() {
-          filterTimeoutId = null;
-          onFilterChanged($filter.val(), $filter.data('target'));
-        }, 200);
+
+  $.fn.toggleMultipleActions = function() {
+    if ($(this)) {
+      $(this).change(function() {
+        onObjectSelected($(this).data('target'));
       });
-      var filterText = $filter.val();
-      if (filterText)
-        onFilterChanged(filterText, $filter.data('target'));
-    });
-  }
+      $(this).map(function() {
+        return $(this).data('target');
+      }).toArray().filter(function(elt, i, self) {
+        return self.indexOf(elt) === i;
+      }).forEach(function(id) {
+        onObjectSelected(id);
+      });
+    }
+  };
 
-  dropdownAutoDirection($('[data-toggle="dropdown"]'));
-
-  $('.modal').on('shown.bs.modal', function() {
-    // Focus first primary button
-    $('.btn-primary', this).first().focus();
-  });
-});
+  var onObjectSelected = function(selector) {
+    if ($('[type="checkbox"][data-toggle="disable-multiple-actions"][data-target="' + selector + '"]:checked').length)
+      $(selector + ' button, ' + selector + ' select').attr('disabled', false);
+    else
+      $(selector + ' button, ' + selector + ' select').attr('disabled', true);
+  };
+})(jQuery);
 
 var modal_options = function() {
   return {
