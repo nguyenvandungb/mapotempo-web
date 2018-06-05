@@ -9,13 +9,11 @@ class ChangeHstoreToJsonb < ActiveRecord::Migration
     change_column_default :routers, :options, nil
     change_column :routers, :options, "JSONB USING CAST(options as JSONB)", default: {}, null: false
 
-    Router.without_callback(:save, :before, :update, :validate) do
-      Router.all.each { |router|
-        next if router.options.blank? || router.options.empty?
-        router = loop_and_assign_typed_values(router, :options)
-        router.save!(validate: false)
-      }
-    end
+    Router.all.each { |router|
+      next if router.options.blank? || router.options.empty?
+      router = loop_and_assign_typed_values(router, :options)
+      router.save!(validate: false)
+    }
 
     Customer.without_callback(:update, :before, :update_outdated) do
       Customer.all.each { |customer|
@@ -57,6 +55,28 @@ class ChangeHstoreToJsonb < ActiveRecord::Migration
     change_column_default :routers, :options, nil
     change_column_null :routers, :options, true
     change_column :routers, :options, "hstore USING jsonb_to_hstore(options)", default: {}
+
+    Customer.without_callback(:update, :before, :update_outdated) do
+      Customer.find_each { |customer|
+        next unless customer.router_options.nil? || customer.router_options.blank? || customer.router_options.empty?
+        customer.router_options = {}
+        customer.save!(validate: false)
+      }
+    end
+
+    Vehicle.without_callback(:update, :before, :update_outdated) do
+      Vehicle.find_each { |vehicle|
+        next unless vehicle.router_options.nil? || vehicle.router_options.blank? || vehicle.router_options.empty?
+        vehicle.router_options = {}
+        vehicle.save!(validate: false)
+      }
+    end
+
+    Router.find_each { |router|
+      next unless router.options.nil? || router.options.blank? || router.options.empty?
+      router.options = {}
+      router.save!(validate: false)
+    }
 
     # Restore null
     change_column_null :customers, :router_options, false

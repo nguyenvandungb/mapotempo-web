@@ -19,7 +19,7 @@ class MoveTraceToRoute < ActiveRecord::Migration
     stop_updated_at_copy = column_exists? :stops, :updated_at_copy
     new_routes = route_updated_at_copy ? "updated_at_copy IS NULL OR (updated_at - interval '10 seconds' > updated_at_copy)" : 'true'
 
-    Route.without_callback(:save, :before, :update_vehicle_usage) do
+    Route.without_callback(:update, :before, :update_vehicle_usage) do
       Route.without_callback(:update, :before, :update_geojson) do
         Route.where(new_routes).includes({stops: {visit: [:tags, {destination: [:visits, :tags, :customer]}]}}).find_each{ |route|
           previous_with_pos = route.vehicle_usage && route.vehicle_usage.default_store_start.try(&:position?)
@@ -115,7 +115,7 @@ class MoveTraceToRoute < ActiveRecord::Migration
     add_column :routes, :stop_trace, :text
     change_column :stops, :index, :integer, null: true
 
-    Route.without_callback(:save, :before, :update_vehicle_usage) do
+    Route.without_callback(:update, :before, :update_vehicle_usage) do
       Route.without_callback(:update, :before, :update_geojson) do
         Route.includes({stops: {visit: [:tags, {destination: [:visits, :tags, :customer]}]}}).find_each{ |route|
           next unless route.geojson_tracks

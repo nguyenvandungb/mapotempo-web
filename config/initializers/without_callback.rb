@@ -6,7 +6,7 @@ module ActiveSupport::Callbacks::ClassMethods
     filters = self.get_callbacks(args[0])
                         .map(&:filter)
 
-    unless filters.to_set.superset?(args[1..args.length].to_set)
+    unless filters.include?(args.last)
       raise Exception.new("Attempt to suppress a non existing callback") if Rails.env.development?
     end
 
