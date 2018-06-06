@@ -548,6 +548,8 @@ class Planning < ApplicationRecord
       self.tags, self.zonings = t, z
       # ActiveRecordImport doesn't call callbacks
       self.routes.each { |route| route.complete_geojson }
+      # Hard fixed: Zonnings relation, call its "after_add" callback twice. It made the property "zoning_ids_changed" wrong.
+      @zoning_ids_changed = false
       save
     end
   end
@@ -565,6 +567,8 @@ class Planning < ApplicationRecord
     self.tags, self.zonings = t, z
     # ActiveRecordImport doesn't call callbacks
     self.routes.each { |route| route.complete_geojson }
+    # Hard fixed: Zonnings relation, call its "after_add" callback twice. It made the property "zoning_ids_changed" wrong.
+    @zoning_ids_changed = false
     save!
   end
 

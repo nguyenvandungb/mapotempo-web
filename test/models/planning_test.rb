@@ -741,6 +741,23 @@ class PlanningTest < ActiveSupport::TestCase
       assert route_ids_valid
     }
   end
+
+  test 'should not set zoning_outdated to true on planning creation' do
+    customer = customers(:customer_one)
+    customer.max_plannings = customer.plannings.count + 1
+
+    params = {
+       name:              'Planning_Zonning',
+       zoning_ids:        [customer.zonings.first.id],
+       vehicle_usage_set: customer.vehicle_usage_sets.first
+    }
+
+    planning = customer.plannings.build(params)
+    planning.default_routes
+
+    assert planning.compute && planning.save_import
+    assert_not planning.zoning_outdated
+  end
 end
 
 class PlanningTestError < ActiveSupport::TestCase
