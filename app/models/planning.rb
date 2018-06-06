@@ -41,7 +41,6 @@ class Planning < ApplicationRecord
   validate_consistency :vehicle_usage_set, :order_array, :zonings, :tags
 
   before_create :update_zonings, :check_max_planning
-  before_save :update_zonings
   before_save :update_vehicle_usage_set
 
   include RefSanitizer
