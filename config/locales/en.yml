@@ -1673,6 +1673,7 @@ en:
       out_of_capacity: out of capacity
       out_of_drive_time: out of vehicle time shift
       out_of_work_time: out of work time
+      out_of_max_distance: maximum achievable distance
       status: status
       eta: eta
     form:

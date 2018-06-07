@@ -1790,6 +1790,7 @@
       'out_of_capacity': 'hors capacité véhicule'
       'out_of_drive_time': 'hors amplitude horaire du véhicule'
       'out_of_work_time': 'hors horaire de travail'
+      'out_of_max_distance': 'distance maximale réalisable'
       'status': 'statut'
       'eta': 'eta'
     'form':
