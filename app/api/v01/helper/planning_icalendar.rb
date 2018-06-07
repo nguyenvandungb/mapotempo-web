@@ -2,7 +2,8 @@ module PlanningIcalendar
   require 'icalendar/tzinfo'
 
   def planning_date(route)
-    route.planning.date ? route.planning.date.beginning_of_day.to_time : Time.zone.now.beginning_of_day
+    # Time.zone is settled in Api root folder
+    route.planning.date ? Time.zone.parse(route.planning.date.to_s) : Time.zone.now.beginning_of_day
   end
 
   def p_time(route, time)
