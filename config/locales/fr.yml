@@ -1995,7 +1995,7 @@
       'unauthenticated': 'Erreur de connexion, veuillez vérifier le lien fournit par
         email'
     'set_password':
-      'action': 'Mettre à jour le mot de passe'
+      'action': 'Définir un mot de passe'
       'success': 'Utilisateur mis à jour avec succès'
   'vehicles':
     'default_name': 'Véhicule %{n}'
