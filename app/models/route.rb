@@ -485,7 +485,14 @@ class Route < ApplicationRecord
             quantities_[du.id] = (quantities_[du.id] || 0) + (stop.visit.default_quantities[du.id] || 0)
           end
 
-          out_of_capacity ||= (vehicle_usage.vehicle.default_capacities[du.id] && quantities_[du.id] > vehicle_usage.vehicle.default_capacities[du.id]) || quantities_[du.id] < 0 if vehicle_usage # FIXME with initial quantity
+          if vehicle_usage
+            # In this case, we reckon the stop as not out of its capacity. Because he's not going to deliver anything.
+            quantity = stop.visit.default_quantities[du.id]
+            skip_quantity = quantity.nil? || quantity == 0
+            # Don't evaluate out_of_capacity if already valuated by the a previous deliverable unit.
+            out_of_capacity ||= !skip_quantity & ((vehicle_usage.vehicle.default_capacities[du.id] && quantities_[du.id] > vehicle_usage.vehicle.default_capacities[du.id]) || quantities_[du.id] < 0)  # FIXME with initial quantity
+          end
+
         end if stop.visit.try(:default_quantities?) # Avoid N+1 queries
 
         stop.out_of_capacity = out_of_capacity

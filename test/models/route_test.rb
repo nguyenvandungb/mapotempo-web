@@ -277,4 +277,30 @@ class RouteTest < ActiveSupport::TestCase
     assert_nil route.drive_time
     assert_nil route.visits_duration
   end
+
+  test 'should compute quantities and let the last stop capable' do
+    route = routes(:route_one_one)
+    kg = deliverable_units(:deliverable_unit_one_two)
+
+    capacities = {}
+    capacities[kg.id] = 5
+
+    route.vehicle_usage.vehicle.capacities = capacities
+    route.vehicle_usage.vehicle.save!
+    route.reload
+
+    visits = route.stops.collect { |s| s.visit if s.is_a?(StopVisit) }.compact
+
+    capacities[kg.id] = 6
+    visits.second.quantities = capacities
+    visits.last.quantities = {}
+
+    route.compute({no_geojson: true})
+    stops_capacities = route.stops.map(&:out_of_capacity)
+
+    # Second stop is out_of_capacity due to previous set up
+    assert_equal true, stops_capacities[1]
+    # Last stop must be false, it doesnt deliver "kg" so it's not affected
+    assert_equal false, stops_capacities[2]
+  end
 end
