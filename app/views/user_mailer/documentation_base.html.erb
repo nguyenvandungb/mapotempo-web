@@ -178,7 +178,7 @@
                           <tr>
                             <td class="info-img">
                               <a target="_blank" href="<%= @help_url + t("user_mailer.#{@template}.panel_one.doc_href") + @parameters[:panel_first][:link] %>">
-                                <img class="info-img" src="<%= t("user_mailer.#{@template}.panel_one.img_src") %>" alt="<%= t("user_mailer.#{@template}.panel_one.title") %>"/>
+                                <img class="info-img" src="<%= panel_url_for(@template.to_sym, :panel_first) %>" alt="<%= t("user_mailer.#{@template}.panel_one.title") %>"/>
                               </a>
                             </td>
                           </tr>
@@ -229,7 +229,7 @@
                           <tr>
                             <td class="info-img">
                               <a target="_blank" href="<%= @help_url + t("user_mailer.#{@template}.panel_two.doc_href") + @parameters[:panel_second][:link] %>">
-                                <img class="info-img" src="<%= t("user_mailer.#{@template}.panel_two.img_src") %>" alt="<%= t("user_mailer.#{@template}.panel_two.title", name: @user.customer.reseller.name) %>"/>
+                                <img class="info-img" src="<%= panel_url_for(@template.to_sym, :panel_second) %>" alt="<%= t("user_mailer.#{@template}.panel_two.title", name: @user.customer.reseller.name) %>"/>
                               </a>
                             </td>
                           </tr>
@@ -279,7 +279,7 @@
                           <tr>
                             <td class="info-img">
                               <a target="_blank" href="<%= @help_url + t("user_mailer.#{@template}.panel_three.doc_href") + @parameters[:panel_third][:link] %>">
-                                <img class="info-img" src="<%= t("user_mailer.#{@template}.panel_three.img_src") %>" alt="<%= t("user_mailer.#{@template}.panel_three.title") %>"/>
+                                <img class="info-img" src="<%= panel_url_for(@template.to_sym, :panel_third) %>" alt="<%= t("user_mailer.#{@template}.panel_three.title") %>"/>
                               </a>
                             </td>
                           </tr>

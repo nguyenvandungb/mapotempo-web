@@ -14,6 +14,11 @@ Rails.application.config.automation = {
           panel_first: { link: '?utm_source=en-automation-1&utm_medium=email&utm_campaign=automation-en-1&utm_content=link-before-start' },
           panel_second: { link: '?utm_source=en-automation-1&utm_medium=email&utm_campaign=automation&utm_content=link-start' },
           panel_third: { link: '?utm_source=en-automation-1&utm_medium=email&utm_campaign=automation-en-1&utm_content=link-global-settings' }
+        },
+        image_links: {
+          panel_first: 'https://www.mapotempo.com/wp-content/uploads/2015/10/éclair.png',
+          panel_second: 'https://www.mapotempo.com/wp-content/uploads/2015/10/key.png',
+          panel_third: 'https://www.mapotempo.com/wp-content/uploads/2015/10/user.png'
         }
       },
       features: {
@@ -65,6 +70,11 @@ Rails.application.config.automation = {
               second: 'https://www.youtube.com/watch?v=ynFcGnznJcI&utm_source=en-automation-1&utm_medium=email&utm_campaign=automation-en-2&utm_content=link-video-change-zone'
             }
           }
+        },
+        image_links: {
+          panel_first: 'https://www.mapotempo.com/wp-content/uploads/2015/10/truck.png',
+          panel_second: 'https://www.mapotempo.com/wp-content/uploads/2015/10/map-marker.png',
+          panel_third: 'https://www.mapotempo.com/wp-content/uploads/2015/10/ungroup.png'
         }
       },
       advanced_options: {
@@ -113,6 +123,11 @@ Rails.application.config.automation = {
           panel_third: {
             link: '?utm_source=en-automation-1&utm_medium=email&utm_campaign=automation-en-3&utm_content=link-options'
           }
+        },
+        image_links: {
+          panel_first: 'https://www.mapotempo.com/wp-content/uploads/2015/10/calendar.png',
+          panel_second: 'https://www.mapotempo.com/wp-content/uploads/2015/10/globe.png',
+          panel_third: 'https://www.mapotempo.com/wp-content/uploads/2015/10/cog.png'
         }
       },
       accompanying_message: {
@@ -131,5 +146,10 @@ Rails.application.config.automation = {
           link: '?utm_source=en-automation-1&utm_medium=email&utm_campaign=automation-en-5&utm_content=link-subscribe'
         }
       }
+    },
+    network_icons: {
+      facebook: "https://www.mapotempo.com/wp-content/uploads/2018/06/facebook.png",
+      linkedin: "https://www.mapotempo.com/wp-content/uploads/2018/06/linkedin.png",
+      twitter: "https://www.mapotempo.com/wp-content/uploads/2018/06/twitter.png"
     }
   }

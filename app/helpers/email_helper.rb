@@ -17,4 +17,24 @@ module EmailHelper
 
     image_tag "data:image/png;base64,#{imageB64}", **options
   end
+
+  def reseller_logo_path(reseller)
+    url = "#{reseller.url_protocol}://#{reseller.host}"
+    if reseller.logo_small.url
+      url += reseller.logo_small.url
+    elsif reseller.logo_large.url
+      url += reseller.logo_large.url
+    else
+      url += '/assets/logo_mapotempo.png'
+    end
+    url
+  end
+
+  def network_icon_url(image_name)
+    Rails.application.config.automation[:network_icons][image_name]
+  end
+
+  def panel_url_for(mail_type, panel_name)
+    Rails.application.config.automation[:parameters][mail_type][:image_links][panel_name]
+  end
 end
