@@ -288,26 +288,26 @@
                   <tr>
                     <td class="pull-left mobile-header-padding-left" style="vertical-align: middle;">
                       <a target="_blank" href="<%= @home_link %>">
-                        <%= email_image_tag(@user.customer.reseller.logo_small.url || @user.customer.reseller.logo_large.url || 'logo_mapotempo.png', alt: "Logo #{@user.customer.reseller.name}", width: '137px', height: '47px') %>
+                        <img src="<%= reseller_logo_path(@user.customer.reseller) %>" alt="<%= "Logo #{@user.customer.reseller.name}" %>" width="137px" height="47px" />
                       </a>
                     </td>
 
                     <td class="pull-right mobile-header-padding-right" style="color: #4d4d4d;">
                       <% if @user.customer.reseller.facebook_url %>
                         <a target='_blank' href="<%= @user.customer.reseller.facebook_url %>" style="text-decoration:none;">
-                            <%= email_image_tag('icon_facebook.png', alt: I18n.t('user_mailer.layout.links.facebook'), width: '30', height: '30', style: 'margin-right:30px;') %>
+                          <img src="<%= network_icon_url(:facebook) %>" alt="<%= I18n.t('user_mailer.layout.links.facebook') %>" width="30px" height="30px" style="margin-right:30px;" />
                         </a>
                       <% end %>
 
                       <% if @user.customer.reseller.linkedin_url %>
                         <a target='_blank' href="<%= @user.customer.reseller.linkedin_url %>" data-default="placeholder" style="text-decoration:none;">
-                            <%= email_image_tag('icon_linkedin.png', alt: I18n.t('user_mailer.layout.links.linkedin'), width: '30', height: '30', style: 'margin-right:30px;') %>
+                          <img src="<%= network_icon_url(:linkedin) %>" alt="<%= I18n.t('user_mailer.layout.links.linkedin') %>" width="30px" height="30px" style="margin-right:30px;" />
                         </a>
                       <% end %>
 
                       <% if @user.customer.reseller.twitter_url %>
                         <a target='_blank' href="<%= @user.customer.reseller.twitter_url %>" data-default="placeholder" style="text-decoration:none;">
-                            <%= email_image_tag('icon_twitter.png', alt: I18n.t('user_mailer.layout.links.twitter'), width: '30', height: '30', style: 'margin-right:30px;') %>
+                          <img src="<%= network_icon_url(:twitter) %>" alt="<%= I18n.t('user_mailer.layout.links.twitter') %>" width="30px" height="30px" style="margin-right:30px;" />
                         </a>
                       <% end %>
                     </td>

@@ -1564,7 +1564,6 @@
         'time': '⏱3min.'
         'doc_link': 'Doc - Antes de começar'
         'doc_href': '/manual/00-before_start.html'
-        'img_src': 'https://www.mapotempo.com/wp-content/uploads/2015/10/éclair.png'
       'panel_two':
         'title': 'Inicio com %{name}'
         'content': 'saiba como se ligar ao software %{name} e os respetivos principios
@@ -1573,7 +1572,6 @@
         'time': '⏱2min.'
         'doc_link': 'Doc - Início com %{name}'
         'doc_href': '/manual/01-start.html'
-        'img_src': 'https://www.mapotempo.com/wp-content/uploads/2015/10/key.png'
       'panel_three':
         'title': 'Parâmetros globais e de utilizador'
         'content': 'parâmetros da conta com palavra passe e utilizador. De atividade
@@ -1583,7 +1581,6 @@
         'time': '⏱6min.'
         'doc_link': 'Doc - Parâmetros globais e de utilizador'
         'doc_href': '/manual/02-global_settings_users.html'
-        'img_src': 'https://www.mapotempo.com/wp-content/uploads/2015/10/user.png'
       'footer': 'Recebe este email como utilizador de %{name}'
       'preheader': 'Descubra a primeira parte dos recursos para começar.'
     'features':
@@ -1603,7 +1600,6 @@
         'time': '⏱15min.'
         'doc_link': 'Doc - Gestão de veículos'
         'doc_href': '/manual/03-vehicles_configuration.html'
-        'img_src': 'https://www.mapotempo.com/wp-content/uploads/2015/10/truck.png'
       'panel_two':
         'title': 'Gestão de destinos'
         'content': 'criar ou importar dados dos destinos (referencia, quantidade,
@@ -1612,7 +1608,6 @@
         'time': '⏱9min.'
         'doc_link': 'Doc - Gestão de destinos'
         'doc_href': '/manual/04-destinations.html'
-        'img_src': 'https://www.mapotempo.com/wp-content/uploads/2015/10/map-marker.png'
       'panel_three':
         'title': 'Gestão de zoneamentos'
         'content': 'criar manualmente um zoneamento. Criar automaticamente um zoneamento
@@ -1621,7 +1616,6 @@
         'time': '⏱5min.'
         'doc_link': 'Doc - Gestão de zoneamentos'
         'doc_href': '/manual/05-zonings.html'
-        'img_src': 'https://www.mapotempo.com/wp-content/uploads/2015/10/ungroup.png'
       'footer': 'Recebe este email como utilizador de %{name}'
       'adds':
         'video': 'Vídeos'
@@ -1648,7 +1642,6 @@
         'time': '⏱20min.'
         'doc_link': 'Doc - Gestão dos planos de rotas'
         'doc_href': '/manual/06-plans.html'
-        'img_src': 'https://www.mapotempo.com/wp-content/uploads/2015/10/calendar.png'
       'panel_two':
         'title': 'TomTom WEBFLEET (opcional)'
         'content': 'Utiliza TomTom WEBFLEET? Veja como ligar %{name} com TomTom WEBFLEET.
@@ -1664,7 +1657,6 @@
           com configurações diferentes etc.'
         'time': '⏱4min.'
         'doc_link': 'Doc - Opções avançadas'
-        'img_src': 'https://www.mapotempo.com/wp-content/uploads/2015/10/cog.png'
       'footer': 'Recebeu este email na qualidade de utilizador de %{name}'
       'adds':
         'videos': 'Vídeos'
