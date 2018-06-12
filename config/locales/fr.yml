@@ -756,8 +756,8 @@
         'success': 'Email envoyé à l''utilisateur avec succès'
     'vehicles':
       'devices':
-        'create_company': 'Fleet: Créer la compagnie avec les utilisateurs'
-        'create_drivers': 'Fleet: Mettre à jour les utilisateurs mobiles'
+        'create_company': 'App mobile Mapotempo Live : Créer la compagnie avec les utilisateurs'
+        'create_drivers': 'App mobile Mapotempo Live : Mettre à jour les utilisateurs mobiles'
   'customers':
     'duplicate':
       'success': 'Compte client dupliqué avec succès'

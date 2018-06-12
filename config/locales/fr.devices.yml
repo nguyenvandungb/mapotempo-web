@@ -70,7 +70,7 @@ fr:
       vehicle:
         devices:
           fleet:
-            fleet_user: "Nom de l'utilisateur fleet"
+            fleet_user: "Nom de l'utilisateur Mapotempo Live"
           locster:
             locster_ref: "Ref. véhicule Locster"
           masternaut:
@@ -94,11 +94,11 @@ fr:
       invalid_account: Utilisateur invalide (non existant)
       list: Impossible de lister les appareils
       create_company:
-        no_admin_api_key: Pas de clé admin API Fleet renseignée
+        no_admin_api_key: Pas de clé admin API Mapotempo Live renseignée
         already_created: Compagnie déjà existante
         error: Impossible de créer la compagnie
       create_drivers:
-        no_api_key: Pas de clé API Fleet renseignée pour ce compte client
+        no_api_key: Pas de clé API Mapotempo Live renseignée pour ce compte client
         already_created: Utilisateurs déjà existants
       get_vehicles_pos: Impossible de lister la position des véhicules
       fetch_stops: Impossible de récupérer la liste des missions
@@ -166,9 +166,9 @@ fr:
           help: "(DEMONSTRATEUR) Simule la position des véhicules et le statut des visites (si ces options sont actives)
             pour le dernier plan modifié."
         fleet:
-          help: "Permet d'envoyer les tournées vers Mapotempo fleet."
-          company_created: "Fleet compagnie créée :"
-          drivers_created: "Fleet utilisateurs créés :"
+          help: "Permet d'envoyer les tournées vers l'app mobile Mapotempo Live."
+          company_created: "Compagnie créée dans Mapotempo Live :"
+          drivers_created: "Utilisateurs créés dans Mapotempo Live :"
         alyacom:
           help: "Permet d'envoyer les tournées vers l'application AlyaCom."
         tomtom:
@@ -194,13 +194,13 @@ fr:
         success: Les interventions Fleet (Demo) ont été vidées avec succès
         fail: Échec lors de la suppression des interventions Fleet (Demo)
       fleet_send:
-        action: Envoyer à Mapotempo fleet
-        success: Envoyé à Mapotempo fleet avec succès
-        fail: Échec lors de l'envoi vers Mapotempo fleet
+        action: "Envoyer à l'app mobile Mapotempo Live"
+        success: "Envoyé à l'app mobile Mapotempo Live avec succès"
+        fail: "Échec lors de l'envoi vers Mapotempo l'app mobile Mapotempo Live"
       fleet_clear:
-        action: Vider Mapotempo fleet
-        success: Mapotempo fleet a été vidé avec succès
-        fail: Échec lors de la suppression de Mapotempo fleet
+        action: "Vider l'app mobile Mapotempo Live"
+        success: "L'app mobile Mapotempo Live a été vidé avec succès"
+        fail: "Échec lors de la suppression dans l'app mobile Mapotempo Live"
       teksat_send:
         action: Envoyer à Teksat
         success: Envoi vers Teksat terminé avec succès
@@ -275,7 +275,7 @@ fr:
           title: Fleet (Demo)
           in_progress: Veuillez patienter
         fleet:
-          title: Mapotempo fleet
+          title: App mobile Mapotempo Live
           in_progress: Veuillez patienter
         orange:
           title: Orange Fleet Performance

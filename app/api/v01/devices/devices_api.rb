@@ -64,7 +64,7 @@ class V01::Devices::DevicesApi < Grape::API
           Route.transaction do
             route = Route.for_customer_id(@current_customer.id).find params[:route_id]
             device.send_route(@current_customer, route, params.slice(:type))
-            route.set_send_to(device.definition[:label_small])
+            route.set_send_to(device.definition[:label_small]) # TODO: set_send_to already performed in device_services.rb
             route.save!
             present route, with: V01::Entities::DeviceRouteLastSentAt
           end

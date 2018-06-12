@@ -51,7 +51,7 @@ class V01::Devices::FleetTest < ActiveSupport::TestCase
       assert_equal 201, last_response.status, last_response.body
       route.reload
       assert route.reload.last_sent_at
-      assert_equal({ 'id' => route.id, 'last_sent_to' => 'Fleet', 'last_sent_at' => route.last_sent_at.iso8601(3), 'last_sent_at_formatted' => I18n.l(route.last_sent_at) }, JSON.parse(last_response.body))
+      assert_equal({ 'id' => route.id, 'last_sent_to' => 'Mapo. Live', 'last_sent_at' => route.last_sent_at.iso8601(3), 'last_sent_at_formatted' => I18n.l(route.last_sent_at) }, JSON.parse(last_response.body))
     end
   end
 
@@ -84,7 +84,7 @@ class V01::Devices::FleetTest < ActiveSupport::TestCase
       routes = planning.routes.select(&:vehicle_usage_id)
       routes.each(&:reload)
       routes.each { |route|
-        assert_equal([{ 'id' => route.id, 'last_sent_to' => 'Fleet', 'last_sent_at' => route.last_sent_at.iso8601(3), 'last_sent_at_formatted' => I18n.l(route.last_sent_at) }], JSON.parse(last_response.body)) if route.ref == 'route_one'
+        assert_equal([{ 'id' => route.id, 'last_sent_to' => 'Mapo. Live', 'last_sent_at' => route.last_sent_at.iso8601(3), 'last_sent_at_formatted' => I18n.l(route.last_sent_at) }], JSON.parse(last_response.body)) if route.ref == 'route_one'
       }
     end
   end

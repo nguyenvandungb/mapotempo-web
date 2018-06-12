@@ -731,8 +731,8 @@ en:
         success: E-Mail sent to user successfully
     vehicles:
       devices:
-        create_company: 'Fleet: Create company with mobile drivers'
-        create_drivers: 'Fleet: Update mobile drivers'
+        create_company: 'Mobile app Mapotempo Live: Create company with mobile drivers'
+        create_drivers: 'Mobile app Mapotempo Live: Update mobile drivers'
   customers:
     duplicate:
       success: Customer account duplicated successfully

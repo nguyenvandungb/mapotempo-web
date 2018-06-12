@@ -26,8 +26,8 @@ class Fleet < DeviceBase
   def definition
     {
       device: 'fleet',
-      label: 'Mapotempo Fleet',
-      label_small: 'Fleet',
+      label: 'Mapotempo Live',
+      label_small: 'Mapo. Live',
       route_operations: [:send, :clear],
       has_sync: true,
       has_create_device: true,
