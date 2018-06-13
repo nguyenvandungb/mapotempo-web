@@ -156,23 +156,28 @@
     }
   }
 
-  .barcode {
-    padding-right: 2em;
-    padding-left: 2em;
-    white-space: nowrap;
-    background-color: white;
+  .barcode_coverer {
+    display: table-cell;
+    width: 100%;
 
-    .barcode_x {
-      height: 4em;
-      display: inline-block;
-      border-right: solid 0.2em;
-    }
+    .barcode {
+      padding: 1em;
+      white-space: nowrap;
+      background-color: white !important;
 
-    .barcode_0 {
-      border-right: solid 0.21em white;
-    }
-    .barcode_1 {
-      border-right: solid 0.21em black;
+      .barcode_x {
+        height: 4em;
+        display: inline-block;
+        border-right: solid 0.2em;
+        vertical-align: middle;
+      }
+
+      .barcode_0 {
+        border-right: solid 0.21em white;
+      }
+      .barcode_1 {
+        border-right: solid 0.21em black;
+      }
     }
   }
 }
