@@ -1546,6 +1546,8 @@ en:
         out_of_window_help: Stop planned out of specified time windows
         out_of_capacity: Out of capacity
         out_of_capacity_help: Vehicle capacity exceeded
+        unmanageable_capacity: Deliverable unit not manageable
+        unmanageable_capacity_help: Deliverable unit not managed by the vehicle
         out_of_drive_time: Out of vehicle shift time
         out_of_drive_time_help: Vehicle shift time exceeded
         out_of_work_time: Out of work time
