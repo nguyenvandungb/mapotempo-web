@@ -359,7 +359,7 @@ class Fleet < DeviceBase
   end
 
   def send_missions(user, api_key, destinations)
-    rest_client_post(set_missions_url(user), api_key, destinations)
+    rest_client_put(set_missions_url(user), api_key, destinations)
   end
 
   def delete_missions(user, api_key, destination_ids)
@@ -391,6 +391,18 @@ class Fleet < DeviceBase
     raise DeviceServiceError.new("Fleet: #{I18n.t('errors.fleet.timeout')}")
   end
 
+  def rest_client_put(url, api_key, params)
+    RestClient::Request.execute(
+      method: :put,
+      url: url,
+      headers: { content_type: :json, accept: :json, Authorization: "Token token=#{api_key}" },
+      payload: params.to_json,
+      timeout: TIMEOUT_VALUE
+    )
+  rescue RestClient::RequestTimeout
+    raise DeviceServiceError.new("Fleet: #{I18n.t('errors.fleet.timeout')}")
+  end
+
   def rest_client_delete(url, api_key)
     RestClient::Request.execute(
       method: :delete,
@@ -403,7 +415,7 @@ class Fleet < DeviceBase
   end
 
   def set_company_url
-    URI.encode("#{api_url}/api/0.1/companies")
+    URI.encode("#{api_url}/api/0.1/admin/companies")
   end
 
   def get_users_url(params = {})
@@ -423,19 +435,19 @@ class Fleet < DeviceBase
   end
 
   def get_missions_url(user = nil)
-    user ? URI.encode("#{api_url}/api/0.1/users/#{convert_user(user)}/missions") : URI.encode("#{api_url}/api/0.1/missions")
+    user ? URI.encode("#{api_url}/api/0.1/missions/?user_id=#{convert_user(user)}") : URI.encode("#{api_url}/api/0.1/missions")
   end
 
   def set_missions_url(user)
-    URI.encode("#{api_url}/api/0.1/users/#{convert_user(user)}/missions/create_multiples")
+    URI.encode("#{api_url}/api/0.1/missions?user_id=#{convert_user(user)}&")
   end
 
   def delete_missions_url(user, destination_ids)
-    URI.encode("#{api_url}/api/0.1/users/#{convert_user(user)}/missions/destroy_multiples?#{destination_ids.to_query('ids')}")
+    URI.encode("#{api_url}/api/0.1/missions/?user_id=#{convert_user(user)}&#{destination_ids.to_query('ids')}")
   end
 
   def delete_missions_by_date_url(user, start_date, end_date)
-    URI.encode("#{api_url}/api/0.1/users/#{convert_user(user)}/missions/destroy_multiples?start_date=#{start_date}&end_date=#{end_date}")
+    URI.encode("#{api_url}/api/0.1/missions?user_id=#{convert_user(user)}&start_date=#{start_date}&end_date=#{end_date}")
   end
 
   def generate_store_id(store, route, date, options)
