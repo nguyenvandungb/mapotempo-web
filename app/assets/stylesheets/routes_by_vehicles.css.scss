@@ -75,6 +75,10 @@ $sidebar-margins: 10px;
           }
         }
 
+        .stops li .title {
+          max-width: 210px; // on Windows available width is shorter than Linux
+        }
+
         .planning-infos {
           padding-bottom: 10px;
 
