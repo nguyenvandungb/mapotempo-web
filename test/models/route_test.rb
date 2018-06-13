@@ -303,4 +303,28 @@ class RouteTest < ActiveSupport::TestCase
     # Last stop must be false, it doesnt deliver "kg" so it's not affected
     assert_equal false, stops_capacities[2]
   end
+
+  test 'should set stops as unmanageable capacity' do
+    route = routes(:route_one_one)
+    c_hash = route.vehicle_usage.vehicle.capacities[1] = 0.0
+    route.compute_quantities
+
+    route.stops.each { |s|
+      if s.is_a?(StopVisit) && s.visit.quantities.key?(1)
+        assert !!s.unmanageable_capacity
+      end
+    }
+  end
+
+  test 'should not set stops as unmanageable capacity' do
+    route = routes(:route_one_one)
+    c_hash = route.vehicle_usage.vehicle.capacities[1] = nil
+    route.compute_quantities
+
+    route.stops.each { |s|
+      if s.is_a?(StopVisit) && s.visit.quantities.key?(1)
+        assert_not !!s.unmanageable_capacity
+      end
+    }
+  end
 end

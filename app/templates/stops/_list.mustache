@@ -105,9 +105,14 @@
           {{#route_out_of_window}}
             <li title="{{#i18n}}plannings.edit.error.out_of_window_help{{/i18n}}"><i class="fa fa-clock-o fa-fw"></i> {{#i18n}}plannings.edit.error.out_of_window{{/i18n}}</li>
           {{/route_out_of_window}}
-          {{#route_out_of_capacity}}
-            <li title="{{#i18n}}plannings.edit.error.out_of_capacity_help{{/i18n}}"><i class="fa fa-archive fa-fw"></i> {{#i18n}}plannings.edit.error.out_of_capacity{{/i18n}}</li>
-          {{/route_out_of_capacity}}
+          {{^route_unmanageable_capacity}}
+            {{#route_out_of_capacity}}
+              <li title="{{#i18n}}plannings.edit.error.out_of_capacity_help{{/i18n}}"><i class="fa fa-archive fa-fw"></i> {{#i18n}}plannings.edit.error.out_of_capacity{{/i18n}}</li>
+            {{/route_out_of_capacity}}
+          {{/route_unmanageable_capacity}}
+          {{#route_unmanageable_capacity}}
+            <li title="{{#i18n}}plannings.edit.error.unmanageable_capacity_help{{/i18n}}"><i class="fa fa-times fa-fw"></i>{{#i18n}}plannings.edit.error.unmanageable_capacity{{/i18n}}</li>
+          {{/route_unmanageable_capacity}}
           {{#route_out_of_drive_time}}
             <li title="{{#i18n}}plannings.edit.error.out_of_drive_time_help{{/i18n}}"><i class="fa fa-power-off fa-fw"></i> {{#i18n}}plannings.edit.error.out_of_drive_time{{/i18n}}</li>
           {{/route_out_of_drive_time}}
@@ -215,12 +220,15 @@
           {{#out_of_window}}
             <i class="fa fa-clock-o fa-fw" title="{{#i18n}}plannings.edit.error.out_of_window_help{{/i18n}}"></i>
           {{/out_of_window}}
-          {{#out_of_capacity}}
+          {{^unmanageable_capacity}}{{#out_of_capacity}}
             <i class="fa fa-archive fa-fw" title="{{#i18n}}plannings.edit.error.out_of_capacity_help{{/i18n}}"></i>
-          {{/out_of_capacity}}
+          {{/out_of_capacity}}{{/unmanageable_capacity}}
           {{#out_of_drive_time}}
             <i class="fa fa-power-off fa-fw" title="{{#i18n}}plannings.edit.error.out_of_drive_time_help{{/i18n}}"></i>
           {{/out_of_drive_time}}
+          {{#unmanageable_capacity}}
+            <i class="fa fa-times fa-fw" title="{{#i18n}}plannings.edit.error.unmanageable_capacity_help{{/i18n}}"></i>
+          {{/unmanageable_capacity}}
           {{#no_path}}
             <i class="fa fa-road fa-fw" title="{{#i18n}}plannings.edit.error.no_path_help{{/i18n}}"></i>
           {{/no_path}}

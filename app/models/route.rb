@@ -452,7 +452,7 @@ class Route < ApplicationRecord
         stops.select(:no_path).where(type: 'StopVisit', no_path: true).count > 0))
   end
 
-  [:out_of_window, :out_of_capacity, :out_of_drive_time, :out_of_work_time, :out_of_max_distance].each do |s|
+  [:unmanageable_capacity, :out_of_window, :out_of_capacity, :out_of_drive_time, :out_of_work_time, :out_of_max_distance].each do |s|
     define_method "#{s}" do
       vehicle_usage_id && (respond_to?("stop_#{s}") && send("stop_#{s}") ||
         if stops.loaded?
@@ -475,6 +475,7 @@ class Route < ApplicationRecord
     (stops_sort || stops).each do |stop|
       if stop.active && stop.position? && stop.is_a?(StopVisit)
         out_of_capacity = nil
+        unmanageable_capacity = nil
 
         stop.route.planning.customer.deliverable_units.each do |du|
           if vehicle_usage && stop.visit.quantities_operations[du.id] == 'fill'
@@ -491,10 +492,12 @@ class Route < ApplicationRecord
             skip_quantity = quantity.nil? || quantity == 0
             # Don't evaluate out_of_capacity if already valuated by the a previous deliverable unit.
             out_of_capacity ||= !skip_quantity & ((vehicle_usage.vehicle.default_capacities[du.id] && quantities_[du.id] > vehicle_usage.vehicle.default_capacities[du.id]) || quantities_[du.id] < 0)  # FIXME with initial quantity
+            unmanageable_capacity ||= !quantity.nil? && (quantity != 0 && vehicle_usage.vehicle.default_capacities[du.id] == 0)
           end
 
         end if stop.visit.try(:default_quantities?) # Avoid N+1 queries
 
+        stop.unmanageable_capacity = unmanageable_capacity
         stop.out_of_capacity = out_of_capacity
       end
     end
