@@ -17,7 +17,7 @@
   <div title="<%= t('activerecord.attributes.planning.ref') %>">
     <% if @planning.customer.enable_references %>
       <% if @planning.id %>
-        <%= f.text_field :ref, t('activerecord.attributes.planning.ref_small') %>
+        <%= f.text_field :ref, t('activerecord.attributes.planning.ref') %>
       <% else %>
         <%= f.text_field :ref do %>
           <p class="help-block"><%= t '.ref_help' %></p>
