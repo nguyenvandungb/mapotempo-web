@@ -157,8 +157,10 @@ a.disabled {
   border-radius: 0;
 }
 
-.select2-search__field {
-  min-width: 100px !important;
+#planning_tag_ids_input, #vehicle_usage_vehicle_tag_ids_input, .destination_visits_attributes_tag_ids_input {
+  .select2-search__field {
+    min-width: 100px !important;
+  }
 }
 
 /* Tables */
