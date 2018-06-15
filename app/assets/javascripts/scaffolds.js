@@ -50,6 +50,7 @@ $(document).on('ready page:load', function() {
   }
 
   var onFilterChanged = function(text, selector) {
+    $('body').addClass('ajax_waiting');
     var count = 0;
     $(selector + ' tbody tr').each(function(i, row) {
       var $row = $(row);
@@ -58,15 +59,24 @@ $(document).on('ready page:load', function() {
       if (match) count++;
     });
     $(selector + '_count').text(count);
+    $('body').removeClass('ajax_waiting');
   };
   var filters = $('input[data-change="filter"]');
   if (filters.length) {
+    var filterTimeoutId = null;
     filters.each(function() {
       var $filter = $(this);
       $filter.keyup(function() {
-        onFilterChanged($filter.val(), $filter.data('target'));
+        if (filterTimeoutId)
+          clearTimeout(filterTimeoutId);
+        filterTimeoutId = setTimeout(function() {
+          filterTimeoutId = null;
+          onFilterChanged($filter.val(), $filter.data('target'));
+        }, 200);
       });
-      onFilterChanged($filter.val(), $filter.data('target'));
+      var filterText = $filter.val();
+      if (filterText)
+        onFilterChanged(filterText, $filter.data('target'));
     });
   }
 

@@ -98,6 +98,7 @@ var customers_index = function(params) {
   });
 
   var onFilterChanged = function(text) {
+    $('body').addClass('ajax_waiting');
     var customersCount = 0, customersNoTestCount = 0, vehiclesCount = 0, vehiclesNoTestCount = 0;
     var customersVisibility = {};
     $('#customers tbody tr').each(function(i, row) {
@@ -105,16 +106,18 @@ var customers_index = function(params) {
       var match = !text || $row.text().search(new RegExp(text.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&"), 'i')) > -1;
       if (match) {
         var customerId = $row.data('customer_id');
-        customersVisibility[customerId] = true;
-        customersCount++;
-        vehiclesCount += params.customers[customerId]['vehicles_count'];
-        if (!params.customers[customerId]['test']) {
-          customersNoTestCount++;
-          vehiclesNoTestCount += params.customers[customerId]['vehicles_count'];
+        if (!customersVisibility[customerId]) {
+          customersCount++;
+          vehiclesCount += params.customers[customerId]['vehicles_count'];
+          if (!params.customers[customerId]['test']) {
+            customersNoTestCount++;
+            vehiclesNoTestCount += params.customers[customerId]['vehicles_count'];
+          }
         }
+        customersVisibility[customerId] = true;
       }
-      $row.css('display', 'none');
     });
+    $('#customers tbody tr').css('display', 'none');
     for (var i in customersVisibility) {
       $('[data-customer_id=' + i + ']').css('display', 'table-row');
     }
@@ -122,11 +125,20 @@ var customers_index = function(params) {
     $('#customers_notest_count').text(customersNoTestCount);
     $('#vehicles_count').text(vehiclesCount);
     $('#vehicles_notest_count').text(vehiclesNoTestCount);
+    $('body').removeClass('ajax_waiting');
   };
+  var filterTimeoutId = null;
   $('#customers_filter').keyup(function() {
-    onFilterChanged($(this).val());
+    if (filterTimeoutId)
+      clearTimeout(filterTimeoutId);
+    filterTimeoutId = setTimeout(function() {
+      filterTimeoutId = null;
+      onFilterChanged($('#customers_filter').val());
+    }, 200);
   });
-  onFilterChanged($('#customers_filter').val());
+  var filterText = $('#customers_filter').val();
+  if (filterText)
+    onFilterChanged(filterText);
 };
 
 var customers_edit = function(params) {
