@@ -132,11 +132,20 @@ As postgres user:
 
     sudo -i -u postgres
 
- Create user and databases:
+Create user and databases:
 
     createuser -s [username]
     createdb -E UTF8 -T template0 -O [username] mapotempo-dev
     createdb -E UTF8 -T template0 -O [username] mapotempo-test
+
+Create a `config/application.yml` file and set variables :
+
+```
+PG_USERNAME: "[username]"
+PG_PASSWORD: "[userpassword]"
+```
+
+By default, the *user*/*password* variables are set to *mapotempo*/*mapotempo*
 
 For informations, to __delete a user__ use :
 

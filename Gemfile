@@ -62,6 +62,7 @@ group :development, :test do
   gem 'awesome_print'
 
   gem 'brakeman'
+  gem 'figaro'
 end
 
 group :test do

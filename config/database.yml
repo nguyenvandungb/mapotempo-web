@@ -2,8 +2,8 @@ default: &default
   adapter: postgresql
   pool: 5
   timeout: 5000
-  username: mapotempo
-  password: mapotempo
+  username: <%= ENV.key?('PG_USERNAME') ? ENV['PG_USERNAME'] : 'mapotempo' %>
+  password: <%= ENV.key?('PG_PASSWORD') ? ENV['PG_PASSWORD'] : 'mapotempo' %>
 
 development:
   <<: *default
