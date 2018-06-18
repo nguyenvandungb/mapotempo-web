@@ -638,7 +638,7 @@ en:
       geocoding_fail: 'Geocoding has failed:'
       reversegeocoding_fail: 'Reverse geocoding has failed:'
     planning:
-      import_too_routes: Tried to import more routes than available vehicles
+      import_too_many_routes: Tried to import more routes than available vehicles
       already_optimizing: A plan optimization is already in progress
       deadlock: 'Warning: Failed to update data. Another update was realized simultaneously,
         you may performed several operations too fast or multiple times.'

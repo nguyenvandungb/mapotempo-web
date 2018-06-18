@@ -91,8 +91,9 @@ class Planning < ApplicationRecord
           tags_compatible?(visit[0].tags.to_a | visit[0].destination.tags.to_a)
         }, recompute, ignore_errors)
       }
+      true
     else
-      raise I18n.t('errors.planning.import_too_routes')
+      false
     end
   end
 

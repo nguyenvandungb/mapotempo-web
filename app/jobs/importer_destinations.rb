@@ -250,9 +250,9 @@ class ImporterDestinations < ImporterBase
     if !row[:ref].nil? && !row[:ref].strip.empty?
       destination = @destinations_by_ref[row[:ref]]
       if destination
-        destination.assign_attributes (destination_attributes.key?(:lat) || destination_attributes.key?(:lng) ?
+        destination.assign_attributes((destination_attributes.key?(:lat) || destination_attributes.key?(:lng) ?
           {lat: nil, lng: nil} :
-          {}).merge(destination_attributes.compact) # FIXME: don't use compact to overwrite database with row containing nil
+          {}).merge(destination_attributes.compact)) # FIXME: don't use compact to overwrite database with row containing nil
       else
         destination = @customer.destinations.build(destination_attributes)
         @destinations_by_ref[destination.ref] = destination if destination.ref
@@ -374,7 +374,9 @@ class ImporterDestinations < ImporterBase
         tags: @common_tags || []
       }.merge(@planning_hash))
 
-      @planning.set_routes @routes, false, true
+      unless @planning.set_routes @routes, false, true
+        raise ImportTooManyRoutes.new(I18n.t('errors.planning.import_too_many_routes')) if @routes.keys.size > @planning.routes.size
+      end
       @planning.split_by_zones(nil) if @planning_hash.key?(:zonings) || @planning_hash.key?(:zoning_ids)
     end
   end
