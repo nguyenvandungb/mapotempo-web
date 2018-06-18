@@ -142,10 +142,7 @@ class PlanningTest < ActiveSupport::TestCase
   test 'should not set_routes for size' do
     planning = plannings(:planning_one)
 
-    assert_raises(RuntimeError) {
-      planning.set_routes(Hash[0.upto(planning.routes.size).collect{ |i| ["route#{i}", {visits: [visits(:visit_one)]}] }])
-    }
-    planning.save!
+    assert !planning.set_routes(Hash[0.upto(planning.routes.size).collect{ |i| ["route#{i}", {visits: [visits(:visit_one)]}] }])
   end
 
   test 'should vehicle_usage_add' do

@@ -19,6 +19,7 @@ require 'csv'
 
 class ImportBaseError < StandardError; end
 class ImportEmpty < ImportBaseError; end
+class ImportTooManyRoutes < ImportBaseError; end
 class ImportInvalidRow < ImportBaseError; end
 class ImportInvalidRef < ImportBaseError; end
 
