@@ -512,4 +512,19 @@ class ImporterDestinationsTest < ActionController::TestCase
     assert @customer.plannings.last.routes.first.outdated?
   end
 
+  test 'should import several plans from one file' do
+    Planning.all.each(&:destroy)
+    @customer.destinations.destroy_all
+    assert_difference('Planning.count', 3) do
+      stops_count = 5 + 3 + 3 + 3 # visits plan1 + plan2 + plan3 + rests
+      assert_difference('Stop.count', stops_count) do
+        assert ImportCsv.new(importer: ImporterDestinations.new(@customer), replace: true, file: tempfile('test/fixtures/files/import_destinations_several_plans.csv', 'text.csv')).import
+
+        @customer.reload
+
+        assert_equal [['été'], ['été', 'hiver'], ['été', 'hiver']], @customer.plannings.map{ |p| p.tags.map(&:label) }
+      end
+    end
+  end
+
 end

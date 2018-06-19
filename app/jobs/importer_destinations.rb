@@ -30,6 +30,13 @@ class ImporterDestinations < ImporterBase
     @customer.default_max_destinations
   end
 
+  def columns_planning
+    {
+      planning_ref: {title: I18n.t('destinations.import_file.planning_ref'), desc: I18n.t('destinations.import_file.planning_ref_desc'), format: I18n.t('destinations.import_file.format.string')},
+      planning_name: {title: I18n.t('destinations.import_file.planning_name'), desc: I18n.t('destinations.import_file.planning_name_desc'), format: I18n.t('destinations.import_file.format.string')},
+    }
+  end
+
   def columns_route
     {
       route: {title: I18n.t('destinations.import_file.route'), desc: I18n.t('destinations.import_file.route_desc'), format: I18n.t('destinations.import_file.format.string')},
@@ -83,7 +90,7 @@ class ImporterDestinations < ImporterBase
   end
 
   def columns
-    columns_route.merge(columns_destination).merge(columns_visit).merge(
+    columns_planning.merge(columns_route).merge(columns_destination).merge(columns_visit).merge(
       without_visit: {title: I18n.t('destinations.import_file.without_visit'), desc: I18n.t('destinations.import_file.without_visit_desc'), format: I18n.t('destinations.import_file.format.yes_no')},
       quantities: {}, # only for json import
       quantities_operations: {}, # only for json import
@@ -122,7 +129,7 @@ class ImporterDestinations < ImporterBase
   end
 
   def before_import(_name, data, options)
-    @common_tags = nil
+    @common_tags = {}
     @tag_labels = Hash[@customer.tags.collect{ |tag| [tag.label, tag] }]
     @tag_ids = Hash[@customer.tags.collect{ |tag| [tag.id, tag] }]
     @routes = Hash.new{ |h, k|
@@ -156,11 +163,13 @@ class ImporterDestinations < ImporterBase
     @destinations_by_ref = Hash[@customer.destinations.select(&:ref).collect{ |destination| [destination.ref, destination] }]
     # @visits_by_ref must contains ref with and without destination since destination ref could not be present in imported data
     @visits_by_ref = Hash[@customer.destinations.flat_map(&:visits).select(&:ref).flat_map{ |visit| [["#{visit.destination.ref}/#{visit.ref}", visit], ["/#{visit.ref}", visit]] }.uniq]
-
+    # @plannings_by_ref set in import_row in order to have internal row title
+    @plannings_by_ref = nil
     @@col_dest_keys ||= columns_destination.keys
     @col_visit_keys = columns_visit.keys + [:quantities, :quantities_operations]
     @@slice_attr ||= (@@col_dest_keys - [:customer_id, :lat, :lng, :geocoding_accuracy, :geocoding_level]).collect(&:to_s)
     @destinations_by_attributes = Hash[@customer.destinations.collect{ |destination| [destination.attributes.slice(*@@slice_attr), destination] }]
+    @plannings = []
   end
 
   def uniq_ref(row)
@@ -242,6 +251,23 @@ class ImporterDestinations < ImporterBase
     prepare_quantities row
     [:tags, :tags_visit].each{ |key| prepare_tags row, key }
 
+    if row[:planning_ref]
+      @plannings_by_ref = Hash[@customer.plannings.map{ |p| [p.ref, p] }] unless @plannings_by_ref
+      unless @plannings_by_ref.key? row[:planning_ref]
+        # Do not link the planning to has_many of the customer, to avoid cascading while saving from customer.
+        # The following save_import does not re-synchr the object in memory from database, unless explicitly requested.
+        planning = Planning.new
+        planning.assign_attributes({
+          ref: row[:planning_ref],
+          name: row[:planning_name],
+          customer: @customer,
+          vehicle_usage_set: @customer.vehicle_usage_sets[0]})
+        planning.default_empty_routes
+        @plannings_by_ref[row[:planning_ref]] = planning
+      end
+      @plannings.push(@plannings_by_ref[row[:planning_ref]]) unless @plannings.include? @plannings_by_ref[row[:planning_ref]]
+    end
+
     destination_attributes = row.slice(*@@col_dest_keys)
     visit_attributes = row.slice(*@col_visit_keys)
     visit_attributes[:ref] = visit_attributes.delete :ref_visit
@@ -308,10 +334,10 @@ class ImporterDestinations < ImporterBase
     valid_row visit ? visit.destination : destination
     if visit
       # Instersection of tags of all rows for tags of new planning
-      if !@common_tags
-        @common_tags = (visit.tags.to_a | visit.destination.tags.to_a)
+      if !@common_tags[row[:planning_ref]]
+        @common_tags[row[:planning_ref]] = (visit.tags.to_a | visit.destination.tags.to_a)
       else
-        @common_tags &= (visit.tags | visit.destination.tags)
+        @common_tags[row[:planning_ref]] &= (visit.tags | visit.destination.tags)
       end
 
       visit.destination.delay_geocode
@@ -329,7 +355,6 @@ class ImporterDestinations < ImporterBase
         @routes[ref_route][:visits] << [visit, ValueToBoolean.value_to_boolean(row[:active], true)]
         @visit_ids << visit.id
       end
-
       visit.destination # For subclasses
     else
       destination.delay_geocode
@@ -358,46 +383,51 @@ class ImporterDestinations < ImporterBase
 
     @customer.save!
 
-    unless @routes.keys.compact.empty? && @planning_hash.values.all?(&:blank?)
-      @planning = @customer.plannings.find{ |p| p.ref == @planning_hash['ref'] } if @planning_hash.key?('ref') && !@planning_hash['ref'].blank?
-      unless @planning
+    unless @routes.keys.compact.empty? && @planning_hash.values.all?(&:blank?) || @plannings_by_ref
+      planning = @customer.plannings.find{ |p| p.ref == @planning_hash['ref'] } if !@planning_hash['ref'].blank?
+      unless planning
         # Do not link the planning to has_many of the customer, to avoid cascading while saving from customer.
         # The following save_import does not re-synchr the object in memory from database, unless explicitly requested.
-        @planning = Planning.new
-        @planning.assign_attributes({
+        planning = Planning.new
+        planning.assign_attributes({
           customer: @customer,
           vehicle_usage_set: @planning_hash[:vehicle_usage_set_id] && @customer.vehicle_usage_sets.find{ |vu| vu.id == @planning_hash[:vehicle_usage_set_id] } || @customer.vehicle_usage_sets[0]})
-        @planning.default_empty_routes
+        planning.default_empty_routes
       end
-      @planning.assign_attributes({
-        name: name || I18n.t('activerecord.models.planning') + ' ' + I18n.l(Time.zone.now, format: :long),
-        tags: @common_tags || []
+      planning.assign_attributes({
+        name: name || I18n.t('activerecord.models.planning') + ' ' + I18n.l(Time.zone.now, format: :long)
       }.merge(@planning_hash))
-
-      unless @planning.set_routes @routes, false, true
-        raise ImportTooManyRoutes.new(I18n.t('errors.planning.import_too_many_routes')) if @routes.keys.size > @planning.routes.size
-      end
-      @planning.split_by_zones(nil) if @planning_hash.key?(:zonings) || @planning_hash.key?(:zoning_ids)
+      @plannings.push(planning)
     end
+
+    @plannings.each{ |planning|
+      planning.assign_attributes({tags: (@common_tags[planning.ref] || @common_tags[nil] || [])})
+      unless planning.set_routes @routes, false, true
+        raise ImportTooManyRoutes.new(I18n.t('errors.planning.import_too_many_routes')) if @routes.keys.size > planning.routes.size
+      end
+      planning.split_by_zones(nil) if @planning_hash.key?(:zonings) || @planning_hash.key?(:zoning_ids)
+    }
   end
 
-  def save_planning
-    if @planning
-      if !@planning.id
-        @planning.save_import!
+  def save_plannings
+    @plannings.each { |planning|
+      if !planning.id
+        planning.save_import!
       else
-        @planning.save!
+        planning.save!
       end
-    end
+    }
   end
 
   def finalize_import(_name, _options)
     if !@destinations_to_geocode.empty? && !@synchronous && Mapotempo::Application.config.delayed_job_use
-      save_planning
-      @customer.job_destination_geocoding = Delayed::Job.enqueue(GeocoderDestinationsJob.new(@customer.id, @planning ? @planning.id : nil))
-    elsif @planning
-      @planning.compute(ignore_errors: true)
-      save_planning
+      save_plannings
+      @customer.job_destination_geocoding = Delayed::Job.enqueue(GeocoderDestinationsJob.new(@customer.id, !@plannings.empty? ? @plannings.map(&:id) : nil))
+    elsif !@plannings.empty?
+      @plannings.each{ |planning|
+        planning.compute(ignore_errors: true)
+      }
+      save_plannings
     end
 
     @customer.save!
