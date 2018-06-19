@@ -102,9 +102,6 @@ var popupModule = (function() {
         data.routes = _context.options.routes.filter(function(route) { return route.vehicle_usage_id; }); // unnecessary to load all for each stop
         data.out_of_route_id = _context.options.outOfRouteId;
         data.number = marker.properties.number;
-        if (marker.properties.tomtom) {
-          data.tomtom = marker.properties.tomtom;
-        }
         if (_context.options.url_click2call) {
           phoneNumberCall(data, _context.options.url_click2call);
         }
