@@ -1032,16 +1032,19 @@ en:
     new:
       title: New destination
     import_file:
-      refs_duplicate: 'The reference : "%{refs}" is duplicated.'
-      refs_visit_duplicate: 'The "visit reference" : "%{refs}" is duplicated.'
       ref: reference
-      ref_desc: a stable, unique, constant reference id, allowing non-destructive
-        update of this item when the next import happens
+      ref_desc: 'destination reference: stable, unique, constant reference id, allowing non-destructive
+        update of this item when the next import happens'
       route: route
-      route_desc: index or reference of the route in the plan.
+      route_desc: index or reference of the route in the plan created if this field is filled.
       ref_vehicle: vehicle
       ref_vehicle_desc: reference or name of the vehicle which is used to perform
         the stop in the plan.
+      planning_ref: plan reference
+      planning_ref_desc: plan reference for creation/update (if you want to import several plans,
+        or update a specific one)
+      planning_name: plan name
+      planning_name_desc: plan name for creation/update
       stop_type: stop type
       stop_type_desc: stop type in the plan. The default value is [visit]
       stop_type_visit: visit
@@ -1137,6 +1140,8 @@ en:
         deprecated: deprecated
       not_csv: Imported file is not a CSV
       empty_file: content is blank
+      refs_duplicate: 'The reference "%{refs}" is duplicated.'
+      refs_visit_duplicate: 'The visit reference "%{refs}" is duplicated.'
       too_many_lines: 'Stop import, too many lines (max: %{n}).'
       none_column: No matched column found
       missing_name: '"name" missing.'

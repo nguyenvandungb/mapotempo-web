@@ -1083,18 +1083,20 @@
     'new':
       'title': 'Nouveau client'
     'import_file':
-      'refs_duplicate': 'La "référence" : "%{refs}" est présente en double dans le
-        fichier.'
-      'refs_visit_duplicate': 'La "référence visite" : "%{refs}" est présente en double
-        dans le fichier.'
       'ref': 'référence'
-      'ref_desc': 'un identifiant stable, constant et unique permettant la mise à
-        jour non-destructrice de cet élément lors du prochain import'
+      'ref_desc': 'référence client : identifiant stable, constant et unique permettant la
+        mise à jour non-destructrice de cet élément lors du prochain import'
       'route': 'tournée'
-      'route_desc': 'numéro ou référence de la tournée dans le plan de tournées.'
+      'route_desc': 'numéro ou référence de la tournée dans le plan de tournées créé
+        lorsque ce champs est renseigné.'
       'ref_vehicle': 'véhicule'
       'ref_vehicle_desc': 'référence ou nom du véhicule effectuant l''arrêt dans la
         tournée.'
+      'planning_ref': 'référence plan'
+      'planning_ref_desc': 'référence plan à créer/modifier (si vous souhaitez importer
+        plusieurs plans à la fois, ou remplacer un plan existant)'
+      'planning_name': 'nom plan'
+      'planning_name_desc': 'nom du plan à créer/modifier'
       'stop_type': 'type arrêt'
       'stop_type_desc': 'type d''arrêt dans la tournée. La valeur par défaut est [visite]'
       'stop_type_visit': 'visite'
@@ -1198,6 +1200,10 @@
         'deprecated': 'déprécié'
       'not_csv': 'Le fichier importé n''est pas au format CSV'
       'empty_file': 'ne contient aucune donnée'
+      'refs_duplicate': 'La référence « %{refs} » est présente en double dans le
+        fichier.'
+      'refs_visit_duplicate': 'La référence visite « %{refs} » est présente en double
+        dans le fichier.'
       'too_many_lines': 'Import stoppé, trop de lignes (max: %{n}).'
       'none_column': 'Aucune correspondance de colonne trouvée'
       'missing_name': '« nom » manquant.'

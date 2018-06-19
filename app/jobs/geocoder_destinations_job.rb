@@ -15,7 +15,7 @@
 # along with Mapotempo. If not, see:
 # <http://www.gnu.org/licenses/agpl.html>
 #
-class GeocoderDestinationsJob < Job.new(:customer_id, :planning_id)
+class GeocoderDestinationsJob < Job.new(:customer_id, :planning_ids)
   def perform
     customer = Customer.find(customer_id)
     Delayed::Worker.logger.info "GeocoderDestinationsJob customer_id=#{customer_id} perform"
@@ -40,12 +40,13 @@ class GeocoderDestinationsJob < Job.new(:customer_id, :planning_id)
     }
 
     Destination.transaction do
-      if planning_id
-        planning = customer.plannings.find(planning_id)
-        if planning
-          planning.compute
-          planning.save!
-        end
+      unless !planning_ids || planning_ids.empty?
+        customer.plannings.each{ |planning|
+          if planning_ids.include? planning.id
+            planning.compute
+            planning.save!
+          end
+        }
       end
     end
   rescue => e
