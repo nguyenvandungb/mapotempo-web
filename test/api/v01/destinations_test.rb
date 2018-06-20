@@ -708,8 +708,25 @@ class V01::DestinationsTest < ActiveSupport::TestCase
   end
 
   test 'should destroy multiple destinations' do
-    assert_difference('Destination.count', -2) do
-      delete api + "&ids=#{destinations(:destination_one).id},#{destinations(:destination_two).id}"
+    assert_difference('Destination.count', -3) do
+      # destination_four is from another customer
+      delete api + "&ids=#{destinations(:destination_one).id},#{destinations(:destination_two).id},#{destinations(:destination_three).id},#{destinations(:destination_four).id}"
+      assert_equal 204, last_response.status, last_response.body
+    end
+  end
+
+  test 'should destroy all destinations without params' do
+    assert_difference('Destination.count', -4) do
+      delete api
+      assert_equal 204, last_response.status, last_response.body
+    end
+  end
+
+  test 'should destroy all destinations when all ids/ref in params' do
+    assert_difference('Destination.count', -4) do
+      ids = @customer.destinations[0..@customer.destinations.count/2-1].map(&:id)
+      refs = @customer.destinations[@customer.destinations.count/2..@customer.destinations.count].map(&:ref)
+      delete api + "&ids=#{ids.join(',')},ref:#{refs.join(',ref:')}"
       assert_equal 204, last_response.status, last_response.body
     end
   end
