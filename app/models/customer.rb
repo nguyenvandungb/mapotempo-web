@@ -413,6 +413,12 @@ class Customer < ApplicationRecord
             }
             destination.ref = nil
             destination.tag_ids = []
+            # Don't load all plans to update them...
+            Destination.without_callback(:save, :before, :update_tags) do
+              Visit.without_callback(:save, :before, :update_tags) do
+                destination.save!
+              end
+            end
           }
         else
           self.destinations.each{ |destination|
@@ -423,6 +429,12 @@ class Customer < ApplicationRecord
                 visit.ref = nil
                 visit.tag_ids = []
               }
+              # Don't load all plans to update them...
+              Destination.without_callback(:save, :before, :update_tags) do
+                Visit.without_callback(:save, :before, :update_tags) do
+                  destination.save!
+                end
+              end
             end
           }
         end
