@@ -3,11 +3,12 @@ require 'set'
 module ActiveSupport::Callbacks::ClassMethods
   def without_callback(*args, &block)
     # Get all Filters (meaning all callback names as symboles)
-    filters = self.get_callbacks(args[0])
+    filters = get_callbacks(args.first)
+                        .select { |c| c.kind == args.second }
                         .map(&:filter)
 
     unless filters.include?(args.last)
-      raise Exception.new("Attempt to suppress a non existing callback") if Rails.env.development?
+      raise Exception.new("Attempt to suppress a non existing callback") if Rails.env.development? || Rails.env.test?
     end
 
     begin
