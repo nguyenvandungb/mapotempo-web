@@ -73,14 +73,6 @@ class Destination < Location
 
   private
 
-  def update_outdated
-    if @tag_ids_changed
-      outdated
-    else
-      super
-    end
-  end
-
   def update_tags_track(_tag)
     @tag_ids_changed = true
   end
@@ -112,6 +104,7 @@ class Destination < Location
         end
       end
     end
+    outdated if @tag_ids_changed && !new_record?
 
     true
   end
