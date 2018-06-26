@@ -34,6 +34,7 @@ class ImporterVehicleUsageSets < ImporterBase
       ref_vehicle: { title: I18n.t('vehicles.import.ref_vehicle'), desc: I18n.t('vehicles.import.ref_desc'), format: I18n.t('vehicles.import.format.string') },
       name_vehicle: { title: I18n.t('vehicles.import.name_vehicle'), desc: I18n.t('vehicles.import.name_desc'), format: I18n.t('vehicles.import.format.string'), required: I18n.t('vehicle_usage_sets.import.format.required') },
       contact_email: { title: I18n.t('vehicles.import.contact_email'), desc: I18n.t('vehicles.import.contact_email_desc'), format: I18n.t('vehicles.import.format.string') },
+      phone_number: { title: I18n.t('vehicles.import.phone_number'), desc: I18n.t('vehicles.import.phone_number_desc'), format: I18n.t('vehicles.import.format.string') },
       emission: { title: I18n.t('vehicles.import.emission'), desc: I18n.t('vehicles.import.emission_desc'), format: '[' + ::Vehicle.emissions_table.map { |emission| emission[0] }.join(' | ') + ']' },
       consumption: { title: I18n.t('vehicles.import.consumption'), desc: I18n.t('vehicles.import.consumption_desc'), format: I18n.t('vehicles.import.format.float') },
       max_distance: { title: I18n.t('vehicles.import.max_distance'), desc: I18n.t('vehicles.import.max_distance_desc'), format: I18n.t('vehicles.import.format.integer') }

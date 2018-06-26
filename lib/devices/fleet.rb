@@ -142,9 +142,9 @@ class Fleet < DeviceBase
 
   def create_drivers(customer, current_admin)
     api_key = customer.devices[:fleet][:api_key]
-    user = customer.users.first
     raise DeviceServiceError.new("Fleet: #{I18n.t('errors.fleet.create_drivers.no_api_key')}") unless api_key
 
+    user = customer.users.first
     vehicles_with_email = customer.vehicles.select(&:contact_email)
 
     cache_drivers = {}
@@ -156,6 +156,7 @@ class Fleet < DeviceBase
           name: vehicle.name,
           email: vehicle.contact_email,
           password: driver_password,
+          phone: vehicle.phone_number,
           roles: USER_DEFAULT_ROLES,
         }
 

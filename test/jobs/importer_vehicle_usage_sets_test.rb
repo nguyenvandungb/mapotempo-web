@@ -77,6 +77,7 @@ class ImporterVehicleUsageSetsTest < ActionController::TestCase
         assert_equal imported_data.first.contact_email, 'toto@toto.toto'
         assert_equal imported_data.first.consumption, 1.5
         assert_nil imported_data.second.contact_email
+        assert_nil imported_data.second.phone_number
         assert_equal imported_data.second.consumption, 1.5
       end
     end
@@ -88,6 +89,7 @@ class ImporterVehicleUsageSetsTest < ActionController::TestCase
         assert imported_data
         assert_equal imported_data.first.contact_email, 'vehicle1@mapotempo.com'
         assert_equal imported_data.first.consumption, 10
+        assert_equal imported_data.first.phone_number, '0548484953'
         assert_equal imported_data.second.contact_email, 'vehicle2@mapotempo.com'
         assert_equal imported_data.second.consumption, 15
       end

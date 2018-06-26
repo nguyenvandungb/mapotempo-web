@@ -400,6 +400,7 @@
         'customised_color': 'Couleur personnalisée'
         'ref': 'Référence'
         'contact_email': 'Email'
+        'phone_number': 'Numéro de téléphone'
         'capacities': 'Capacités'
         'tag_ids': 'Compétences du véhicule'
       'vehicles':
@@ -896,7 +897,7 @@
         pas comporter de caractères non standards (GSM 03.38) et ne devrait pas dépasser
         160 caractères (ou 70 en cas de caractères spéciaux).'
       'sms_keys_help': 'Chaines de remplacements disponibles : {NAME} {REF} {VISIT_REF}
-        {DATE} {TIME} {STREET} {CITY} {QUANTITIES} {COMMENT} {VEHICLE_NAME}.'
+        {DATE} {TIME} {STREET} {CITY} {QUANTITIES} {COMMENT} {VEHICLE_NAME} {PHONE_NUMBER}.'
       'sms_concat_help': 'Si coché vos SMS seront complets (mais facturés le prix
         de plusieurs SMS en cas de dépassement), si non coché vos SMS seront tronqués
         en cas de dépassement.'
@@ -2020,6 +2021,8 @@
       'name_desc': 'nom du véhicule'
       'contact_email': 'email'
       'contact_email_desc': 'email du terminal du chauffeur'
+      'phone_number': 'numéro de téléphone'
+      'phone_number_desc': 'numéro de téléphone du chauffeur'
       'emission': 'émission'
       'emission_desc': 'émission du véhicule'
       'consumption': 'consommation'
@@ -2086,6 +2089,8 @@
           global au niveau du paramétrage est également utilisé lors des calculs.'
       'contact_email':
         'help': 'Email du terminal du chauffeur'
+      'contact_phone':
+        'help': 'Numéro de téléphone du terminal du chauffeur'
       'tags_empty': 'Pas de compétences trouvées'
       'tags_help': 'Compétences associées au véhicule. (Attention : si un seul véhicule
         possède des compétences alors tous les autres véhicules ne pourront utiliser
@@ -2124,6 +2129,8 @@
         'legend': 'Véhicule'
         'help': 'Les informations ci-dessous sur le véhicule sont communes à toutes
           les configurations de véhicules'
+      'driver':
+        'legend': 'Chauffeur'
       'vehicle_usage':
         'legend': 'Configuration du véhicule : « %{s} »'
         'help': 'Les informations ci-dessous sont spécifiques à la configuration du

@@ -26,6 +26,7 @@ module PlanningsHelperApi
       api_secret: route.planning.customer.reseller.sms_api_secret,
       from: route.planning.customer.sms_from_customer_name ? route.planning.customer.name : route.planning.customer.reseller.name,
       logger: Mapotempo::Application.config.logger_sms)
+
     route.stops.select{ |s| s.active && s.is_a?(StopVisit) && s.visit.destination.phone_number }.map{ |s|
       date = route.planning.date || Time.zone.today
       template = route.planning.customer.sms_template || route.planning.customer.name + '. ' + I18n.t('notifications.sms.alert_plan')
@@ -34,7 +35,8 @@ module PlanningsHelperApi
         time: date.beginning_of_day + s.time,
         visit_ref: s.visit.ref,
         quantities: VisitQuantities.normalize(s.visit, nil).map{ |q| q[:quantity] }.join(' ').tr("\u202F", ' '),
-        vehicle_name: route.vehicle_usage.vehicle.name
+        vehicle_name: route.vehicle_usage.vehicle.name,
+        phone_number: route.vehicle_usage.vehicle.phone_number
       }.merge(s.visit.destination.attributes.slice('name', 'ref', 'street', 'city', 'comment'))
 
       notif.send_sms(

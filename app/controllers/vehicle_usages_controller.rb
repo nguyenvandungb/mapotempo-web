@@ -95,6 +95,7 @@ class VehicleUsagesController < ApplicationController
       tag_ids: [],
       vehicle: [
         :contact_email,
+        :phone_number,
         :ref,
         :name,
         :emission,
