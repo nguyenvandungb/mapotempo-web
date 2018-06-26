@@ -326,4 +326,10 @@ class V01::VehiclesTest < ActiveSupport::TestCase
       Mapotempo::Application.config.manage_vehicles_only_admin = manage_vehicles_only_admin
     end
   end
+
+  test 'should update phone number' do
+    put api("/#{@vehicle.id}", phone_number: '0578986548')
+    assert last_response.ok?
+    assert_not_nil @vehicle.reload.phone_number
+  end
 end

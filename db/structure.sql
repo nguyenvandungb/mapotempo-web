@@ -1006,7 +1006,8 @@ CREATE TABLE vehicles (
     capacities hstore,
     router_options jsonb DEFAULT '{}'::jsonb NOT NULL,
     devices jsonb DEFAULT '{}'::jsonb NOT NULL,
-    max_distance integer
+    max_distance integer,
+    phone_number character varying
 );
 
 
@@ -2747,4 +2748,6 @@ INSERT INTO schema_migrations (version) VALUES ('20180316104056');
 INSERT INTO schema_migrations (version) VALUES ('20180420075039');
 
 INSERT INTO schema_migrations (version) VALUES ('20180531123821');
+
+INSERT INTO schema_migrations (version) VALUES ('20180628141723');
 

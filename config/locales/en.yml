@@ -399,6 +399,7 @@ en:
         customised_color: Select a custom color
         ref: Reference
         contact_email: E-Mail
+        phone_number: Driver's phone number
         capacities: Capacities
         tag_ids: Vehicle skills
       vehicles:
@@ -863,7 +864,7 @@ en:
         name filled in app. Your text should not contain non standard characters (GSM 03.38) and not
         exceed 160 characters (or 70 in case of special characters).
       sms_keys_help: "Available replacement strings: {NAME} {REF} {VISIT_REF} {DATE} {TIME}
-        {STREET} {CITY} {QUANTITIES} {COMMENT} {VEHICLE_NAME}."
+        {STREET} {CITY} {QUANTITIES} {COMMENT} {VEHICLE_NAME} {PHONE_NUMBER}."
       sms_concat_help: If checked your SMS will be complete (but charged several SMS for price when
         exceeding), if not checked your SMS will be truncated.
       sms_from_customer_name_help: If checked "%{c}" will be used for SMS sender name
@@ -1888,6 +1889,8 @@ en:
       name_desc: vehicle name
       contact_email: e-mail
       contact_email_desc: driver's device e-mail
+      phone_number: phone number
+      phone_number_desc: driver's phone number
       emission: emission
       emission_desc: fuel type
       consumption: consumption
@@ -1950,6 +1953,8 @@ en:
           on settings is also used on computation.
       contact_email:
         help: Driver's device E-Mail
+      contact_phone:
+        help: Driver's device phone number
       tags_empty: No skills found
       tags_help: 'Skills associated to vehicle. (Warning: if only one vehicle has skills so all other vehicles could not use this skill unless declared)'
   vehicle_usages:
@@ -1986,6 +1991,8 @@ en:
         legend: Vehicle
         help: The following informations on the vehicle are common to all vehicles
           configurations
+      driver:
+        legend: Driver
       vehicle_usage:
         legend: 'Vehicle configuration: "%{s}"'
         help: The following informations are specific to the configuration of the

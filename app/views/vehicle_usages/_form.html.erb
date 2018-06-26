@@ -27,9 +27,6 @@
           </div>
         </div>
         <%= f.text_field :name, required: true %>
-        <%= f.text_field :contact_email, {input_group: '@'} do %>
-          <p class="help-block"><%= t 'vehicles.form.contact_email.help' %></p>
-        <% end %>
         <div id="vehicle_usage_vehicle_consumption_input" class="form-group">
           <label class="sr-only" for="vehicle_usage_vehicle_emission"><%= t 'activerecord.attributes.vehicle.emission' %></label>
           <label class="sr-only" for="vehicle_usage_vehicle_consumption"><%= t 'activerecord.attributes.vehicle.consumption' %></label>
@@ -362,6 +359,26 @@
             <% end %>
           <% end %>
         <% end %>
+
+        <legend class="scheduler-border"><%= t 'vehicle_usages.form.driver.legend' %></legend>
+        <%= f.text_field :contact_email, {input_group: '@'} do %>
+          <p class="help-block"><%= t 'vehicles.form.contact_email.help' %></p>
+        <% end %>
+
+        <div id="vehicle_usage_vehicle_phone_number" class="form-group">
+          <label class="sr-only" for="vehicle_usage_vehicle_phone_number"><%= t 'activerecord.attributes.vehicle.phone_number' %></label>
+          <label class="col-md-2 control-label"><%= t 'activerecord.attributes.vehicle.phone_number' %></label>
+          <div class="col-md-6">
+            <div class="input-group">
+              <%= text_field 'vehicle_usage[vehicle]',
+                :phone_number,
+                value: @vehicle_usage.vehicle.phone_number,
+                class: 'form-control'%>
+              <span class="input-group-addon"><i class="fa fa-phone fa-fw"></i></span>
+            </div>
+            <p class="help-block"><%= t('vehicles.form.contact_phone.help') %></p>
+          </div>
+        </div>
 
       <% end %>
     </div>
