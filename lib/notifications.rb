@@ -90,7 +90,7 @@ class Notifications
         }
       end
     else
-      raise CountryCodeNotFoundError("Country code could not be identified: #{to} #{country_code}")
+      raise CountryCodeNotFoundError.new("Country code could not be identified: #{to} #{country_code}")
     end
   end
 
