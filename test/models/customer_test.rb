@@ -424,4 +424,28 @@ class CustomerTest < ActiveSupport::TestCase
     @customer.update(optimization_force_start: true)
     assert_equal [[true, true, true], [true, true, true]], @customer.plannings.collect{ |p| p.routes.collect(&:outdated) }
   end
+
+  test 'should not load plans on enable multi-visits' do
+    customer = customers(:customer_one)
+
+    begin
+      Planning.class_eval do
+        after_initialize :after_init_enable_multi_visits
+
+        def after_init_enable_multi_visits
+          raise
+        end
+      end
+
+      customer.update_attribute(:enable_multi_visits, !customer.enable_multi_visits)
+
+    rescue StandardError => e
+      puts e.message
+      assert_not e
+    ensure
+      Planning.class_eval do
+        def after_init_enable_multi_visits; end
+      end
+    end
+  end
 end
