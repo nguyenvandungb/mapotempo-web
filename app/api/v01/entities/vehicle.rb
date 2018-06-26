@@ -21,9 +21,10 @@ class V01::Entities::VehicleWithoutVehicleUsage < Grape::Entity
   end
 
   expose(:id, documentation: { type: Integer })
-  expose(:contact_email, documentation: { type: String })
   expose(:ref, documentation: { type: String })
   expose(:name, documentation: { type: String })
+  expose(:contact_email, documentation: { type: String })
+  expose(:phone_number, documentation: { type: String })
   expose(:emission, documentation: { type: Float })
   expose(:consumption, documentation: { type: Integer })
   expose(:capacity, documentation: { type: Integer, desc: 'Deprecated, use capacities instead.' }) { |m|

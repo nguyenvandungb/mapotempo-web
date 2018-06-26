@@ -99,4 +99,10 @@ class VehicleUsagesControllerTest < ActionController::TestCase
     assert_redirected_to vehicle_usage_sets_path + "#collapseUsageSet#{vehicle_usage_sets(:vehicle_usage_set_one).id}"
   end
 
+  test 'should set phone number' do
+    phone_number = '0578986548'
+    patch :update, id: @vehicle_usage, vehicle_usage: { vehicle: { phone_number: phone_number } }
+    assert @vehicle_usage.vehicle.reload.phone_number == phone_number
+  end
+
 end

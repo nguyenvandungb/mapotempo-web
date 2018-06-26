@@ -1,0 +1,4 @@
+Hello,
+Your visit ref is {VISIT_REF} for quantities {QUANTITIES}
+The vehicle comming is {VEHICLE_NAME} at {DATE} and {TIME+5}
+Contact us at {PHONE_NUMBER}
