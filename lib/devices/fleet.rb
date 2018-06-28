@@ -21,7 +21,20 @@ class Fleet < DeviceBase
 
   TIMEOUT_VALUE ||= 600 # Only for post and delete
 
-  USER_DEFAULT_ROLES = %w(mission.creating mission.updating mission.deleting user_current_location.creating user_current_location.updating user_track.updating user_track.updating)
+  # TODO: use empty roles and fleet API should define default roles...
+  USER_DEFAULT_ROLES = [
+    # 'mission.creating',
+    'mission.updating',
+    # 'mission.deleting',
+    'mission_action.creating',
+    'mission_action.updating',
+    'user_settings.creating',
+    'user_settings.updating',
+    'user_current_location.creating',
+    'user_current_location.updating',
+    'user_track.creating',
+    'user_track.updating'
+  ]
 
   def definition
     {
