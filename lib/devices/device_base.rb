@@ -54,6 +54,20 @@ class DeviceBase
       suffix.to_i(36).to_s
     end
   end
+
+  class << self
+    def is_fleet_hash?(obj)
+      obj.key? :mission_type
+    end
+
+    def is_a_store?(order_id)
+      order_id.to_i != 0
+    end
+
+    def is_arrival?(mission)
+      mission.key?(:mission_type) && mission[:mission_type] == 'arrival'
+    end
+  end
 end
 
 class DeviceServiceError < StandardError

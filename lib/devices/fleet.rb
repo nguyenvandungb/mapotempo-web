@@ -229,12 +229,14 @@ class Fleet < DeviceBase
     if response.code == 200 && data['missions']
       data['missions'].map do |mission|
         # As planning only display status for today, ignore mission status different than today
-        order_id, date = decode_mission_id(mission['external_ref'])
+        order_id, date = decode_mission_id(mission['external_ref'], mission['mission_type'])
         date = Date.parse(date.gsub('_', '-')) rescue nil
         next unless date == Date.today
 
         {
+          mission_type: mission['mission_type'],
           order_id: order_id,
+          route_id: decode_store_route_id(mission['external_ref']),
           status: @@order_status[mission['status_type_reference']],
           color: mission['status_type_color'],
           eta: mission['eta']
@@ -450,19 +452,18 @@ class Fleet < DeviceBase
     URI.encode("#{api_url}/api/0.1/users/#{convert_user(user)}/missions/destroy_multiples?start_date=#{start_date}&end_date=#{end_date}")
   end
 
-  def generate_store_id(destination, route, date, options)
-    order_id = destination.id
-    route_id = route.id
-    "#{options[:type]}-#{order_id}-#{date.strftime('%Y_%m_%d')}-#{route_id}"
+  def generate_store_id(store, route, date, options)
+    "#{options[:type]}-#{store.id}-#{date.strftime('%Y_%m_%d')}-#{route.id}"
   end
 
-  def generate_mission_id(destination, date)
-    order_id = if destination.is_a?(StopVisit)
-      ref = [destination.visit.ref, destination.ref].compact.join('-')
-      (ref.blank? ? '' : ref + '-') + "v#{destination.visit_id}"
+  def generate_mission_id(stop, date)
+    order_id = if stop.is_a?(StopVisit)
+      ref = [stop.visit.ref, stop.ref].compact.join('-')
+      (ref.blank? ? '' : ref + '-') + "v#{stop.visit_id}"
     else
-      "r#{destination.id}"
+      "r#{stop.id}"
     end
+
     "mission-#{order_id}-#{date.strftime('%Y_%m_%d')}"
   end
 
@@ -471,8 +472,17 @@ class Fleet < DeviceBase
     user && user.include?('@') ? Digest::SHA256.hexdigest(user) : user
   end
 
-  def decode_mission_id(mission_ref)
-    mission_ref.split('-')[-2..-1]
+  def decode_mission_id(mission_ref, type)
+    # Mission formatting : "mission-<order_id>-<date(%Y_%m_%d)>"
+    # Stores  formatting : "<type>-<order_id>-<date(%Y_%m_%d)>-<route_id>"
+    if type == 'mission'
+      mission_ref.split('-')[-2..-1]
+    else
+      mission_ref.split('-')[1..2]
+    end
   end
 
+  def decode_store_route_id(mission_ref)
+    mission_ref.split('-').last
+  end
 end

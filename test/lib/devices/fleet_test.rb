@@ -92,4 +92,28 @@ class FleetTest < ActionController::TestCase
       end
     end
   end
+
+  test 'should update routes status' do
+    planning = plannings(:planning_one)
+    with_stubs [:fetch_stops] do
+      planning.fetch_stops_status
+      planning.save
+      planning.reload
+
+      assert_equal '2000-01-01 00:00:00 UTC', planning.routes.second.arrival_eta.to_s
+      assert_equal 'Finished', planning.routes.second.arrival_status
+    end
+  end
+
+  test 'should clear routes status' do
+    planning = plannings(:planning_one)
+    with_stubs [:fetch_stops] do
+      planning.routes.second.clear_eta_data
+      planning.save
+      planning.reload
+
+      assert_nil planning.routes.second.arrival_eta
+      assert_nil planning.routes.second.departure_eta
+    end
+  end
 end

@@ -83,6 +83,12 @@ if route.vehicle_usage_id
 end
 json.store_start do
   json.extract! route.vehicle_usage.default_store_start, :id, :name, :street, :postalcode, :city, :country, :lat, :lng, :color, :icon, :icon_size
+  if route.departure_status && route.planning.customer.enable_stop_status
+    json.status_code route.departure_status.downcase
+    json.status t("plannings.edit.stop_status.#{route.departure_status.downcase}", default: route.departure_status.downcase)
+    json.eta_formated l(route.departure_eta, format: :hour_minute) if route.departure_eta
+    json.eta route.departure_eta
+  end
   (json.time route.start_time) if route.start
   (json.time_day number_of_days(route.start)) if route.start
   (json.geocoded true) if route.vehicle_usage.default_store_start.position?
@@ -171,6 +177,12 @@ end
 
 json.store_stop do
   json.extract! route.vehicle_usage.default_store_stop, :id, :name, :street, :postalcode, :city, :country, :lat, :lng, :color, :icon, :icon_size
+  if route.arrival_status && route.planning.customer.enable_stop_status
+    json.status_code route.arrival_status.downcase
+    json.status t("plannings.edit.stop_status.#{route.arrival_status.downcase}", default: route.arrival_status.downcase)
+    json.eta_formated l(route.arrival_eta, format: :hour_minute) if route.arrival_eta
+    json.eta route.arrival_eta
+  end
   (json.time route.end_time) if route.end
   (json.time_day number_of_days(route.end)) if route.end
   (json.geocoded true) if route.vehicle_usage.default_store_stop.position?

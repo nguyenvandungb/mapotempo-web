@@ -53,4 +53,9 @@ class FleetService < DeviceService
   def create_or_update_drivers(current_admin)
     service.create_or_update_drivers(customer, current_admin) if customer.devices[service_name] && customer.devices[:fleet][:user]
   end
+
+  def clear_route(route)
+    super(route)
+    route.clear_eta_data
+  end
 end

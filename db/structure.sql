@@ -642,7 +642,11 @@ CREATE TABLE routes (
     wait_time integer,
     drive_time integer,
     stop_out_of_work_time boolean,
-    stop_out_of_max_distance boolean
+    stop_out_of_max_distance boolean,
+    departure_eta time without time zone,
+    departure_status character varying,
+    arrival_eta time without time zone,
+    arrival_status character varying
 );
 
 
@@ -2753,4 +2757,6 @@ INSERT INTO schema_migrations (version) VALUES ('20180531123821');
 INSERT INTO schema_migrations (version) VALUES ('20180628141723');
 
 INSERT INTO schema_migrations (version) VALUES ('20180628142222');
+
+INSERT INTO schema_migrations (version) VALUES ('20180629081835');
 

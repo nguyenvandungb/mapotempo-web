@@ -494,8 +494,29 @@ class Planning < ApplicationRecord
             device.fetch_stops(self.customer, device.planning_date(self), self)
           end
         }.compact.select { |s|
-          # Remove stores
-          s[:order_id].to_i == 0
+
+          # Update ETA on Routes
+          if !DeviceBase.is_a_store?(s[:order_id])
+            true
+          else
+            if DeviceBase.is_fleet_hash?(s)
+              attr = if DeviceBase.is_arrival?(s)
+                {
+                  arrival_eta: s[:eta],
+                  arrival_status: s[:status]
+                }
+              else
+                {
+                  departure_eta: s[:eta],
+                  departure_status: s[:status]
+                }
+              end
+              route = routes.select { |r| r.id == s[:route_id].to_i }.first
+              route && route.assign_attributes(attr)
+            end
+
+            false
+          end
         }.each { |s|
           if stops_map.key?(s[:order_id])
             if s[:quantities].is_a?(Array)

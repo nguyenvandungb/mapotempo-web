@@ -385,33 +385,31 @@ var plannings_edit = function(params) {
 
   var updateStopsStatus = function(data) {
 
-    var updateStopStatusContent = function(content, stop) {
-      var $elt = content.find('.toggle-status, .number .stop-status');
-      var hadStatus = ($elt.css('display') == 'none') ? false : true;
-      if (stop.status) {
-        if ($elt.css('display') == 'none') $elt.show();
-      }
-      else {
-        if ($elt.css('display') != 'none') $elt.hide();
-      }
-      $elt = content.find('.stop-status');
+    var updateStopAndStoreStatusContent = function(content, el) {
+      var klass = (el.store) ? 'store-status' : 'stop-status';
+      var $elt = content.find('.toggle-status, .' + klass);
+      var hadStatus = !($elt.css('display') == 'none');
+
+      if (el.status) { $elt.show(); } else { $elt.hide(); }
+      $elt = content.find('.' + klass);
+
       $.each($elt, function(i, elt) {
         $elt = $(elt);
-        if (!stop.status || stop.status && !$elt.hasClass('stop-status-' + stop.status_code)) {
-          $elt.removeClass().addClass('stop-status' + (stop.status_code ? ' stop-status-' + stop.status_code : ''));
+        if (!el.status || el.status && !$elt.hasClass('stop-status-' + el.status_code)) {
+          $elt.removeClass().addClass(klass + (el.status_code ? ' stop-status-' + el.status_code : ''));
           $elt.attr({
-            title: stop.status + (stop.eta_formated ? ' - ' + I18n.t('plannings.edit.popup.eta') + ' ' + stop.eta_formated : '')
+            title: el.status + (el.eta_formated ? ' - ' + I18n.t('plannings.edit.popup.eta') + ' ' + el.eta_formated : '')
           });
         }
       });
       var name = content.find('.title .name');
-      name.attr('title') && (!stop.status || name.attr('title').search(stop.status) == -1) && name.attr({
-        title: name.attr('title').substr(0, hadStatus ? name.attr('title').lastIndexOf(' - ') : name.attr('title').length) + (stop.status ? ' - ' + stop.status : '')
+      name.attr('title') && (!el.status || name.attr('title').search(el.status) == -1) && name.attr({
+        title: name.attr('title').substr(0, hadStatus ? name.attr('title').lastIndexOf(' - ') : name.attr('title').length) + (el.status ? ' - ' + el.status : '')
       });
       name = content.find('.status');
-      if (name.text() != stop.status) name.text(stop.status);
+      if (name.text() != el.status) name.text(el.status);
       name = content.find('.eta');
-      if (name.text() != stop.eta_formated) name.text(stop.eta_formated);
+      if (name.text() != el.eta_formated) name.text(el.eta_formated);
       return content;
     };
 
@@ -421,6 +419,14 @@ var plannings_edit = function(params) {
       data.forEach(function(route) {
         if (route.vehicle_usage_id) {
           var $route = $("[data-route_id='" + route.id + "']");
+          var startStop = $route.find('[data-store_id]');
+
+          // Adapter pattern for stores
+          var startAdapter = { store: true, status: route.departure_status, status_code: route.departure_status_code, eta_formated: route.departure_eta_formated };
+          var stopAdapter  = { store: true, status: route.arrival_status, status_code: route.arrival_status_code, eta_formated: route.arrival_eta_formated };
+
+          updateStopAndStoreStatusContent(startStop.first(), startAdapter);
+          updateStopAndStoreStatusContent(startStop.last(), stopAdapter);
 
           route.stops.forEach(function(stop) {
             var sort = function(element) {
@@ -439,7 +445,7 @@ var plannings_edit = function(params) {
             $.each($("[data-stop_id='" + stop.id + "']"), function(i, item) {
               // update list, active popup in map and active popover
               $item = $(item);
-              updateStopStatusContent($item, stop);
+              updateStopAndStoreStatusContent($item, stop);
             });
           });
         }

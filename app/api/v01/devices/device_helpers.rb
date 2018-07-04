@@ -33,7 +33,7 @@ module Devices
     def device_clear_route(_options = {})
       Route.transaction do
         route = Route.for_customer_id(@current_customer.id).find params[:route_id]
-        service.clear_route route
+        service.clear_route(route)
         route.save!
         present route, with: V01::Entities::DeviceRouteLastSentAt
       end

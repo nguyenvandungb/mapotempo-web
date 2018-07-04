@@ -92,6 +92,14 @@ module FleetBase
                   status_type_reference: 'mission_completed',
                   status_type_label: 'Completed',
                   status_type_color: '#000'
+                },
+                {
+                  mission_type: 'arrival',
+                  external_ref: "arrival-#{planning.routes.second.vehicle_usage.default_store_start.id}-#{planning_date}-#{planning.routes.second.id}",
+                  status_type_reference: 'mission_completed',
+                  status_type_label: 'To do',
+                  status_type_color: '#fff',
+                  eta: '2000-01-01 00:00:00.00'
                 }
               ]
             }.to_json
