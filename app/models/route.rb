@@ -654,6 +654,13 @@ class Route < ApplicationRecord
     ((self.distance / (self.drive_time | 1)) * converter).round
   end
 
+  def clear_eta_data
+    self.departure_eta = nil
+    self.departure_status = nil
+    self.arrival_eta = nil
+    self.arrival_status = nil
+  end
+
   private
 
   def assign_defaults

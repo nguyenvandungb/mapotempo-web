@@ -34,6 +34,7 @@ module Devices
       Route.transaction do
         route = Route.for_customer_id(@current_customer.id).find params[:route_id]
         service.clear_route route
+        route.clear_eta_data
         route.save!
         present route, with: V01::Entities::DeviceRouteLastSentAt
       end
@@ -46,6 +47,7 @@ module Devices
       routes.each{ |route|
         Route.transaction do
           service.clear_route(route)
+          route.clear_eta_data
           route.save!
         end
       }

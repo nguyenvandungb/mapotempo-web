@@ -605,3 +605,55 @@ input.form-control.number-of-days {
 .dropdown-spacing {
   padding: 5px 10px;
 }
+
+[data-controller='routes_by_vehicles'][data-action='show'],
+[data-controller='plannings'],
+[data-controller='api_web_v01_plannings'] {
+
+  %base-status {
+    background: gray;
+    display: inline-block;
+    position: absolute;
+    left: 23px;
+    top: 4px;
+    width: 11px;
+    height: 11px;
+    border: 1px solid #2C3539;
+    border-radius: 1px;
+  }
+
+  .stop-status {
+    @extend %base-status;
+  }
+
+  .store-status {
+    @extend %base-status;
+    left: 19px;
+    width: 7px;
+    height: 7px;
+    top: 6;
+  }
+
+  .active_status .stop-status, .stop-popup .stop-status {
+    position: relative;
+    left: 0px;
+    top: 0px;
+    margin: 0px 5px;
+  }
+
+  .stop-status-planned {
+    background: #357EC7;
+  }
+  .stop-status-started {
+    background: #FBB117;
+  }
+  .stop-status-finished {
+    background: #58BE13;
+  }
+  .stop-status-rejected {
+    background: red;
+  }
+  .stop-status-none {
+    background: none;
+  }
+}

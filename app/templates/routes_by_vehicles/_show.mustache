@@ -80,6 +80,7 @@
       {{#store_start}}
       <ul class="stops list-group" {{#hidden}}style="display: none;"{{/hidden}}>
         <li data-store_id="{{id}}" class="{{type}}{{#error}} ui-state-error{{/error}} list-group-item">
+          <span class="store-status stop-status-{{status_code}}" title="{{status}}{{#eta_formated}} - {{#i18n}}plannings.edit.popup.eta{{/i18n}} {{eta_formated}}{{/eta_formated}}" {{^status}} style="display: none;" {{/status}}></span>
           <i class="fa {{icon}}{{^icon}}fa-home{{/icon}} fa-fw" style="color: {{#color_fake}}{{color_fake}}{{/color_fake}}{{^color_fake}}{{color}}{{^color}}black{{/color}}{{/color_fake}};"></i>
           <div class="title">
             {{^geocoded}}
@@ -209,6 +210,7 @@
       {{#store_stop}}
       <ul class="stops list-group" {{#hidden}}style="display: none;"{{/hidden}}>
         <li data-store_id="{{id}}" class="{{type}}{{#error}} ui-state-error{{/error}} list-group-item">
+          <span class="store-status stop-status-{{status_code}}" title="{{status}}{{#eta_formated}} - {{#i18n}}plannings.edit.popup.eta{{/i18n}} {{eta_formated}}{{/eta_formated}}" {{^status}} style="display: none;" {{/status}}></span>
           <i class="fa {{icon}}{{^icon}}fa-home{{/icon}} fa-fw" style="color: {{#color_fake}}{{color_fake}}{{/color_fake}}{{^color_fake}}{{color}}{{^color}}black{{/color}}{{/color_fake}};"></i>
           <div class="title">
             {{^geocoded}}

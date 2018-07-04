@@ -71,40 +71,6 @@ $sidebar-margins: 10px;
     }
   }
 
-  .stop-status {
-    background: gray;
-    display: inline-block;
-    position: absolute;
-    left: 23px;
-    top: 4px;
-    width: 11px;
-    height: 11px;
-    border: 1px solid #2C3539;
-    border-radius: 1px;
-  }
-  .active_status .stop-status, .stop-popup .stop-status {
-    position: relative;
-    left: 0px;
-    top: 0px;
-    margin: 0px 5px;
-  }
-
-  .stop-status-planned {
-    background: #357EC7;
-  }
-  .stop-status-started {
-    background: #FBB117;
-  }
-  .stop-status-finished {
-    background: #58BE13;
-  }
-  .stop-status-rejected {
-    background: red;
-  }
-  .stop-status-none {
-    background: none;
-  }
-
   .pulse {
     -webkit-animation: pulse 1s linear infinite;
     -moz-animation: pulse 1s linear infinite;
