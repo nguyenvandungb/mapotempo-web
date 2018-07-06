@@ -389,7 +389,7 @@ var devicesObserveCustomer = (function() {
 
       $.ajax({
         type: 'GET',
-        url: '/api/0.1/devices/fleet/create_drivers.json',
+        url: '/api/0.1/devices/fleet/create_or_update_drivers.json',
         data: {
           customer_id: params.customer_id
         },
@@ -405,9 +405,13 @@ var devicesObserveCustomer = (function() {
             return;
           }
 
-          var drivers = [I18n.t('customers.form.devices.fleet.drivers_created')];
-          data.map(function(driver) {
-            drivers.push(driver.email + ' : ' + driver.password);
+          var drivers = [I18n.t((data.updated) ? 'customers.form.devices.fleet.drivers_updated' : 'customers.form.devices.fleet.drivers_created')];
+          data.drivers.map(function(driver) {
+            if (data.updated) {
+              drivers.push(driver.email);
+            } else {
+              drivers.push(driver.email + ' : ' + driver.password);
+            }
           });
 
           notice(drivers.join('\r\n'));

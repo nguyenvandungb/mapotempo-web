@@ -51,8 +51,17 @@ class FleetService < DeviceService
   end
 
   def create_drivers(current_admin)
+    service.create_drivers(customer, current_admin) if customer.devices[service_name] && customer.devices[:fleet][:user]
+  end
+
+  def create_or_update_drivers(current_admin)
+    result = {}
     if customer.devices[service_name] && customer.devices[:fleet][:user]
-      service.create_drivers(customer, current_admin)
+      result[:drivers] = service.update_drivers(customer, current_admin)
+      result[:updated] = true
+    else
+      result[:drivers] = create_drivers(current_admin)
     end
+    result
   end
 end

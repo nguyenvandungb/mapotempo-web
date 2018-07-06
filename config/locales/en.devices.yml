@@ -100,6 +100,8 @@ en:
       create_drivers:
         no_api_key: No Mapotempo Live API key given for this customer
         already_created: Users already created
+      update_drivers:
+        update_failed: Failed to update user
       get_vehicles_pos: Cannot get vehicles position
       fetch_stops: Cannot get missions list
       no_missions: No missions to send
@@ -167,6 +169,7 @@ en:
           help: "Allows sending routes to Mapotempo Live mobile app."
           company_created: "Mapotempo Live company created:"
           drivers_created: "Mapotempo Live drivers created:"
+          drivers_updated: "Mapotempo Live drivers updated:"
         alyacom:
           help: "Allows sending routes to AlyaCom application."
         tomtom:

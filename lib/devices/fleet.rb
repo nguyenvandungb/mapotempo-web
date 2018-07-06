@@ -113,7 +113,7 @@ class Fleet < DeviceBase
         user_email: user_email
       }
 
-      company = rest_client_post(set_company_url, admin_api_key, company_params)
+      company = rest_client_with_method(set_company_url, admin_api_key, company_params)
       company = JSON.parse(company)['company']
 
       # Associate to customer
@@ -140,12 +140,18 @@ class Fleet < DeviceBase
     end
   end
 
-  def create_drivers(customer, current_admin)
+  def base_create_or_update(customer)
     api_key = customer.devices[:fleet][:api_key]
     raise DeviceServiceError.new("Fleet: #{I18n.t('errors.fleet.create_drivers.no_api_key')}") unless api_key
 
     user = customer.users.first
     vehicles_with_email = customer.vehicles.select(&:contact_email)
+
+    [api_key, user, vehicles_with_email]
+  end
+
+  def create_drivers(customer, current_admin)
+    api_key, user, vehicles_with_email = base_create_or_update(customer)
 
     cache_drivers = {}
     drivers = vehicles_with_email.map do |vehicle|
@@ -161,7 +167,7 @@ class Fleet < DeviceBase
         }
 
         begin
-          response = rest_client_post(set_user_url, api_key, driver_params)
+          response = rest_client_with_method(set_user_url, api_key, driver_params)
           driver = JSON.parse(response)['user']
           cache_drivers[vehicle.contact_email] = {password: driver_password, fleet_user: driver}
           vehicle.update!(devices: {fleet_user: driver['sync_user']})
@@ -182,6 +188,25 @@ class Fleet < DeviceBase
       UserMailer.send_fleet_drivers(user, I18n.locale, drivers, current_admin).deliver_now
 
       drivers
+    end
+  end
+
+  def update_drivers(customer, current_admin)
+    api_key, user, vehicles_with_email = base_create_or_update(customer)
+
+    vehicles_with_email.map do |vehicle|
+      driver_params = {
+        name: vehicle.name,
+        # email: vehicle.contact_email, waiting for sync_user duplication on fleet
+        phone: vehicle.phone_number
+      }
+
+      begin
+        rest_client_with_method(get_user_url(vehicle.contact_email), api_key, driver_params, :put)
+        { email: vehicle.contact_email }
+      rescue RestClient::UnprocessableEntity, RestClient::Unauthorized, RestClient::InternalServerError, RestClient::ResourceNotFound
+        raise DeviceServiceError.new("Fleet: #{I18n.t('errors.fleet.update_drivers.update_failed.')}")
+      end
     end
   end
 
@@ -357,7 +382,7 @@ class Fleet < DeviceBase
   end
 
   def send_missions(user, api_key, destinations)
-    rest_client_post(set_missions_url(user), api_key, destinations)
+    rest_client_with_method(set_missions_url(user), api_key, destinations)
   end
 
   def delete_missions(user, api_key, destination_ids)
@@ -377,9 +402,9 @@ class Fleet < DeviceBase
     raise DeviceServiceError.new("Fleet: #{I18n.t('errors.fleet.timeout')}")
   end
 
-  def rest_client_post(url, api_key, params)
+  def rest_client_with_method(url, api_key, params, method = :post)
     RestClient::Request.execute(
-      method: :post,
+      method: method,
       url: url,
       headers: { content_type: :json, accept: :json, Authorization: "Token token=#{api_key}" },
       payload: params.to_json,
