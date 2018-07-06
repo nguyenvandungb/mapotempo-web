@@ -121,6 +121,18 @@ module FleetBase
               url = FleetService.new(customer: @customer).service.send(:delete_missions_by_date_url, 'driver1', start_date, end_date)
               stubs << stub_request(:delete, url).to_return(status: 204, body: nil)
             end
+          when :route_actions_url
+            Time.zone = 'Hawaii'
+            fs = FleetService.new(customer: @customer)
+            ext_ref = "#{@route.id}-#{fs.service.planning_date(@route.planning).strftime('%Y_%m_%d')}-#{fs.p_time(@route, @route.start).in_time_zone.strftime('%HH_%mm_%ss')}"
+
+            url = fs.service.send(:get_route_url, @vehicle.devices[:fleet_user], ext_ref)
+            post = fs.service.send(:post_routes_url, 'driver1')
+            put =  fs.service.send(:put_routes_url, 'driver1', true, ext_ref)
+
+            stubs << stub_request(:get, url).to_return(status: 404, body: nil, headers: {})
+            stubs << stub_request(:post, post).to_return(status: 200, body: nil, headers: {})
+            stubs << stub_request(:any, put).to_return(status: 200, body: nil, headers: {})
         end
       end
       yield

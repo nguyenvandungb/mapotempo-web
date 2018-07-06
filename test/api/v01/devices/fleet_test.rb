@@ -45,7 +45,7 @@ class V01::Devices::FleetTest < ActiveSupport::TestCase
 
   test 'should send route' do
     set_route
-    with_stubs [:set_missions_url] do
+    with_stubs [:route_actions_url] do
       route = routes(:route_one_one)
       post api('devices/fleet/send', { customer_id: @customer.id, route_id: route.id })
       assert_equal 201, last_response.status, last_response.body
@@ -77,7 +77,7 @@ class V01::Devices::FleetTest < ActiveSupport::TestCase
 
   test 'should send multiple routes' do
     set_route
-    with_stubs [:set_missions_url] do
+    with_stubs [:route_actions_url] do
       planning = plannings(:planning_one)
       post api('devices/fleet/send_multiple', { customer_id: @customer.id, planning_id: planning.id })
       assert_equal 201, last_response.status, last_response.body
@@ -91,7 +91,7 @@ class V01::Devices::FleetTest < ActiveSupport::TestCase
 
   test 'should clear' do
     set_route
-    with_stubs [:delete_missions_by_date_url] do
+    with_stubs [:route_actions_url] do
       route = routes(:route_one_one)
       delete api('devices/fleet/clear', { customer_id: @customer.id, route_id: route.id })
       assert_equal 200, last_response.status
@@ -103,7 +103,7 @@ class V01::Devices::FleetTest < ActiveSupport::TestCase
 
   test 'should clear multiple' do
     set_route
-    with_stubs [:delete_missions_by_date_url] do
+    with_stubs [:route_actions_url] do
       planning = plannings(:planning_one)
       delete api('devices/fleet/clear_multiple', { customer_id: @customer.id, planning_id: planning.id })
       assert_equal 204, last_response.status, last_response.body

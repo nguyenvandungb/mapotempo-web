@@ -77,7 +77,7 @@ class FleetTest < ActionController::TestCase
 
   test 'should send route' do
     set_route
-    with_stubs [:set_missions_url] do
+    with_stubs [:route_actions_url] do
       assert_nothing_raised do
         assert @service.send_route(@customer, routes(:route_one_one))
       end
@@ -86,7 +86,7 @@ class FleetTest < ActionController::TestCase
 
   test 'should clear route' do
     set_route
-    with_stubs [:delete_missions_by_date_url] do
+    with_stubs [:route_actions_url] do
       assert_nothing_raised do
         @service.clear_route(@customer, routes(:route_one_one))
       end
