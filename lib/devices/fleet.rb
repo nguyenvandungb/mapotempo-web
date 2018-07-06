@@ -239,8 +239,8 @@ class Fleet < DeviceBase
     raise DeviceServiceError.new("Fleet: #{I18n.t('errors.fleet.past_missions')}") if route.planning.date && route.planning.date < Date.today
 
     destinations = []
-
     departure = route.vehicle_usage.default_store_start
+
     destinations << {
       mission_type: 'departure',
       external_ref: generate_store_id(departure, route, planning_date(route.planning), type: 'departure'),
@@ -328,9 +328,17 @@ class Fleet < DeviceBase
       }
     } if arrival
 
+    fleet_route = {
+      user_id: convert_user(route.vehicle_usage.vehicle.devices[:fleet_user]),
+      name: route.ref || route.vehicle_usage.vehicle.name,
+      date: p_time(route, route.start).strftime('%FT%T.%L%:z'),
+      external_ref: generate_route_id(route, planning_date(route.planning), p_time(route, route.start)),
+      missions: destinations
+    }
+
     raise DeviceServiceError.new("Fleet: #{I18n.t('errors.fleet.no_missions')}") if destinations.empty?
 
-    send_missions(route.vehicle_usage.vehicle.devices[:fleet_user], customer.devices[:fleet][:api_key], destinations)
+    send_fleet_route(route.vehicle_usage.vehicle.devices[:fleet_user], customer.devices[:fleet][:api_key], fleet_route)
   rescue RestClient::Unauthorized, RestClient::InternalServerError, RestClient::ResourceNotFound, RestClient::UnprocessableEntity
     raise DeviceServiceError.new("Fleet: #{I18n.t('errors.fleet.set_missions')}")
   end
@@ -358,8 +366,8 @@ class Fleet < DeviceBase
     rest_client_get(get_missions_url(user), api_key)
   end
 
-  def send_missions(user, api_key, destinations)
-    rest_client_put(set_missions_url(user), api_key, destinations)
+  def send_fleet_route(user, api_key, route)
+    rest_client_post(get_route_url(user), api_key, route)
   end
 
   def delete_missions(user, api_key, destination_ids)
@@ -380,6 +388,7 @@ class Fleet < DeviceBase
   end
 
   def rest_client_post(url, api_key, params)
+
     RestClient::Request.execute(
       method: :post,
       url: url,
@@ -450,6 +459,10 @@ class Fleet < DeviceBase
     URI.encode("#{api_url}/api/0.1/missions?user_id=#{convert_user(user)}&start_date=#{start_date}&end_date=#{end_date}")
   end
 
+  def get_route_url(user)
+    URI.encode("#{api_url}/api/0.1/routes?user_id=#{convert_user(user)}")
+  end
+
   def generate_store_id(store, route, date, options)
     "#{options[:type]}-#{store.id}-#{date.strftime('%Y_%m_%d')}-#{route.id}"
   end
@@ -463,6 +476,10 @@ class Fleet < DeviceBase
     end
 
     "mission-#{order_id}-#{date.strftime('%Y_%m_%d')}"
+  end
+
+  def generate_route_id(route, date, route_date)
+    "#{route.id}-#{date.strftime('%Y_%m_%d')}-#{route_date.strftime('%HH_%mm_%ss')}"
   end
 
   def convert_user(user)
