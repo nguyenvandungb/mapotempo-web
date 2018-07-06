@@ -100,6 +100,8 @@ fr:
       create_drivers:
         no_api_key: Pas de clé API Mapotempo Live renseignée pour ce compte client
         already_created: Utilisateurs déjà existants
+      update_drivers:
+        update_failed: Échec lors de la mise à jour de l'utilisateur
       get_vehicles_pos: Impossible de lister la position des véhicules
       fetch_stops: Impossible de récupérer la liste des missions
       no_missions: Aucune mission à envoyer
@@ -169,6 +171,7 @@ fr:
           help: "Permet d'envoyer les tournées vers l'app mobile Mapotempo Live."
           company_created: "Compagnie créée dans Mapotempo Live :"
           drivers_created: "Utilisateurs créés dans Mapotempo Live :"
+          drivers_updated: "Utilisateurs mis à jour dans Mapotempo Live:"
         alyacom:
           help: "Permet d'envoyer les tournées vers l'application AlyaCom."
         tomtom:
