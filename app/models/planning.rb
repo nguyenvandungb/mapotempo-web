@@ -492,7 +492,7 @@ class Planning < ApplicationRecord
 
         stops_status = Mapotempo::Application.config.devices.each_pair.flat_map { |key, device|
           if device.respond_to?(:fetch_stops) && customer.device.configured?(key)
-            device.fetch_stops(self.customer, device.planning_date(self), self)
+            device.fetch_stops(self.customer, device.planning_date(self), self) rescue nil
           end
         }.compact.select { |s|
 

@@ -16,8 +16,10 @@
 # <http://www.gnu.org/licenses/agpl.html>
 #
 require 'addressable'
+require_relative './fleet_modules/fleet_builder.rb'
 
 class Fleet < DeviceBase
+  include FleetBuilder
 
   TIMEOUT_VALUE ||= 600 # Only for post and delete
 
@@ -238,124 +240,18 @@ class Fleet < DeviceBase
   def send_route(customer, route, _options = {})
     raise DeviceServiceError.new("Fleet: #{I18n.t('errors.fleet.past_missions')}") if route.planning.date && route.planning.date < Date.today
 
-    destinations = []
-    departure = route.vehicle_usage.default_store_start
-
-    destinations << {
-      mission_type: 'departure',
-      external_ref: generate_store_id(departure, route, planning_date(route.planning), type: 'departure'),
-      name: departure.name,
-      date: p_time(route, route.start).strftime('%FT%T.%L%:z'),
-      duration: route.vehicle_usage.default_service_time_start,
-      location: {
-        lat: departure.lat,
-        lon: departure.lng
-      },
-      address: {
-        city: departure.city,
-        country: departure.country || customer.default_country,
-        postalcode: departure.postalcode,
-        state: departure.state,
-        street: departure.street
-      }
-    } if departure
-
-    destinations += route.stops.select(&:active?).sort_by(&:index).map do |destination|
-      visit = destination.is_a?(StopVisit)
-      labels = visit ? (destination.visit.tags + destination.visit.destination.tags).map(&:label).join(', ') : nil
-      quantities = visit ? destination.is_a?(StopVisit) ? (customer.enable_orders ? (destination.order ? destination.order.products.collect(&:code).join(',') : '') : destination.visit.default_quantities ? VisitQuantities.normalize(destination.visit, route.vehicle_usage.try(&:vehicle)).map { |d| "\u2022 #{d[:quantity]}" }.join("\r\n") : '') : nil : nil
-      time_windows = []
-      time_windows << {
-        start: p_time(route, destination.open1).strftime('%FT%T.%L%:z'),
-        end: p_time(route, destination.close1).strftime('%FT%T.%L%:z')
-      } if visit && destination.open1 && destination.close1
-      time_windows << {
-        start: p_time(route, destination.open2).strftime('%FT%T.%L%:z'),
-        end: p_time(route, destination.close2).strftime('%FT%T.%L%:z')
-      } if visit && destination.open2 && destination.close2
-
-      {
-        mission_type: visit ? 'mission' : 'rest',
-        external_ref: generate_mission_id(destination, planning_date(route.planning)),
-        name: destination.name,
-        date: destination.time ? p_time(route, destination.time).strftime('%FT%T.%L%:z') : nil,
-        duration: destination.duration,
-        planned_travel_time: destination.drive_time,
-        planned_distance: destination.distance,
-        location: {
-          lat: destination.lat,
-          lon: destination.lng
-        },
-        comment: visit ? [
-          destination.comment,
-          # destination.priority ? I18n.t('activerecord.attributes.visit.priority') + I18n.t('text.separator') + destination.priority_text : nil,
-          # labels.present? ? I18n.t('activerecord.attributes.visit.tags') + I18n.t('text.separator') + labels : nil,
-          # quantities.present? ? I18n.t('activerecord.attributes.visit.quantities') + I18n.t('text.separator') + "\r\n" + quantities : nil
-        ].compact.join("\r\n\r\n").strip : nil,
-        phone: visit ? destination.phone_number : nil,
-        reference: visit ? destination.visit.destination.ref : nil,
-        address: {
-          city: destination.city,
-          country: destination.country || customer.default_country,
-          detail: destination.detail,
-          postalcode: destination.postalcode,
-          state: destination.state,
-          street: destination.street
-        },
-        time_windows: visit ? time_windows : nil
-      }.compact
-    end
-
-    arrival = route.vehicle_usage.default_store_stop
-    destinations << {
-      mission_type: 'arrival',
-      external_ref: generate_store_id(arrival, route, planning_date(route.planning), type: 'arrival'),
-      name: arrival.name,
-      date: p_time(route, route.end).strftime('%FT%T.%L%:z'),
-      duration: route.vehicle_usage.default_service_time_end,
-      planned_travel_time: route.stop_drive_time,
-      planned_distance: route.stop_distance,
-      location: {
-        lat: arrival.lat,
-        lon: arrival.lng
-      },
-      address: {
-        city: arrival.city,
-        country: arrival.country || customer.default_country,
-        postalcode: arrival.postalcode,
-        state: arrival.state,
-        street: arrival.street
-      }
-    } if arrival
-
-    fleet_route = {
-      user_id: convert_user(route.vehicle_usage.vehicle.devices[:fleet_user]),
-      name: route.ref || route.vehicle_usage.vehicle.name,
-      date: p_time(route, route.start).strftime('%FT%T.%L%:z'),
-      external_ref: generate_route_id(route, planning_date(route.planning), p_time(route, route.start)),
-      missions: destinations
-    }
-
-    raise DeviceServiceError.new("Fleet: #{I18n.t('errors.fleet.no_missions')}") if destinations.empty?
-
+    fleet_route = build_route_with_missions(route, customer)
+    raise DeviceServiceError.new("Fleet: #{I18n.t('errors.fleet.no_missions')}") if fleet_route[:missions].empty?
     send_fleet_route(route.vehicle_usage.vehicle.devices[:fleet_user], customer.devices[:fleet][:api_key], fleet_route)
   rescue RestClient::Unauthorized, RestClient::InternalServerError, RestClient::ResourceNotFound, RestClient::UnprocessableEntity
     raise DeviceServiceError.new("Fleet: #{I18n.t('errors.fleet.set_missions')}")
   end
 
-  def clear_route(customer, route, use_date = true)
+  def clear_route(customer, route, delete_missions = true)
     raise DeviceServiceError.new("Fleet: #{I18n.t('errors.fleet.past_missions')}") if route.planning.date && route.planning.date < Date.today
 
-    if use_date
-      start_date = (planning_date(route.planning) + (route.start || 0)).strftime('%Y-%m-%d')
-      end_date = (planning_date(route.planning) + (route.end || 0) + 2.day).strftime('%Y-%m-%d')
-      delete_missions_by_date(route.vehicle_usage.vehicle.devices[:fleet_user], customer.devices[:fleet][:api_key], start_date, end_date)
-    else
-      destination_ids = route.stops.select(&:active?).select(&:position?).sort_by(&:index).map do |destination|
-        generate_mission_id(destination, planning_date(route.planning))
-      end
-      delete_missions(route.vehicle_usage.vehicle.devices[:fleet_user], customer.devices[:fleet][:api_key], destination_ids)
-    end
+    fleet_route = build_route(route, nil)
+    update_fleet_route(route.vehicle_usage.vehicle.devices[:fleet_user], customer.devices[:fleet][:api_key], fleet_route, delete_missions)
   rescue RestClient::Unauthorized, RestClient::InternalServerError, RestClient::ResourceNotFound, RestClient::UnprocessableEntity
     raise DeviceServiceError.new("Fleet: #{I18n.t('errors.fleet.clear_missions')}")
   end
@@ -368,6 +264,10 @@ class Fleet < DeviceBase
 
   def send_fleet_route(user, api_key, route)
     rest_client_post(get_route_url(user), api_key, route)
+  end
+
+  def update_fleet_route(user, api_key, route, delete_missions)
+    rest_client_put(put_route_url(user, delete_missions, route[:external_ref]), api_key, route)
   end
 
   def delete_missions(user, api_key, destination_ids)
@@ -387,25 +287,24 @@ class Fleet < DeviceBase
     raise DeviceServiceError.new("Fleet: #{I18n.t('errors.fleet.timeout')}")
   end
 
-  def rest_client_post(url, api_key, params)
-
+  def rest_client_post(url, api_key, payload)
     RestClient::Request.execute(
       method: :post,
       url: url,
       headers: { content_type: :json, accept: :json, Authorization: "Token token=#{api_key}" },
-      payload: params.to_json,
+      payload: payload.to_json,
       timeout: TIMEOUT_VALUE
     )
   rescue RestClient::RequestTimeout
     raise DeviceServiceError.new("Fleet: #{I18n.t('errors.fleet.timeout')}")
   end
 
-  def rest_client_put(url, api_key, params)
+  def rest_client_put(url, api_key, payload)
     RestClient::Request.execute(
       method: :put,
       url: url,
       headers: { content_type: :json, accept: :json, Authorization: "Token token=#{api_key}" },
-      payload: params.to_json,
+      payload: payload.to_json,
       timeout: TIMEOUT_VALUE
     )
   rescue RestClient::RequestTimeout
@@ -461,6 +360,10 @@ class Fleet < DeviceBase
 
   def get_route_url(user)
     URI.encode("#{api_url}/api/0.1/routes?user_id=#{convert_user(user)}")
+  end
+
+  def put_route_url(user, delete_missions, route)
+    URI.encode("#{api_url}/api/0.1/routes/#{route}?delete_missions=#{delete_missions}")
   end
 
   def generate_store_id(store, route, date, options)
