@@ -83,8 +83,9 @@ class V01::Devices::Fleet < Grape::API
            detail: 'Create company with a driver by vehicle',
            nickname: 'deviceFleetCreateCompanyAndDrivers'
       get '/create_company' do
-        service.create_company
-        service.create_drivers(@current_user)
+        data = service.create_company['admin_user'].slice('email', 'api_key')
+        data['drivers'] = service.create_or_update_drivers(@current_user)
+        data
       end
 
       desc 'Create drivers',
