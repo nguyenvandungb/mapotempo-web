@@ -505,10 +505,7 @@
                     </div>
                   <% } %>
                   <% if definition[:has_sync] %>
-                  <div class="btn btn-default btn-sm <%= key %>-api-sync" disabled="disabled">
-                    <i class="fa fa-bolt fa-fw"></i>
-                    <%= t 'customers.form.devices.sync.action' %>
-                  </div>
+                    <!-- SYNC BUTTON TODO IMPLEMENTATION -->
                   <% end %>
                   <% if current_user.admin? %>
                     <% if definition[:has_create_device] %>

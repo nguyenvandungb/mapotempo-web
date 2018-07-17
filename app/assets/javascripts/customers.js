@@ -211,6 +211,8 @@ var customers_edit = function(params) {
 var devicesObserveCustomer = (function() {
   'use strict';
 
+  var FLEET = 'fleet';
+
   function _devicesInitCustomer(base_name, config, params) {
     var requests = [];
 
@@ -222,6 +224,11 @@ var devicesObserveCustomer = (function() {
     function successCallback() {
       $('.' + config.name + '-api-sync').removeAttr('disabled');
       $('#' + config.name + '_container').removeClass('panel-default panel-danger').addClass('panel-success');
+
+      if (config.name == FLEET) {
+        $('#create-customer-device').attr('disabled', true);
+        $('#create-user-device').attr('disabled', false);
+      }
     }
 
     // maybe need rework on this one - WARNING -
@@ -229,6 +236,11 @@ var devicesObserveCustomer = (function() {
       stickyError(apiError);
       $('.' + config.name + '-api-sync').attr('disabled', 'disabled');
       $('#' + config.name + '_container').removeClass('panel-default panel-success').addClass('panel-danger');
+
+      if (config.name == FLEET) {
+        $('#create-customer-device').attr('disabled', false);
+        $('#create-user-device').attr('disabled', true);
+      }
     }
 
     function _userCredential() {
@@ -349,6 +361,19 @@ var devicesObserveCustomer = (function() {
       _devicesInitCustomer('customer_devices', config, params);
     });
 
+    var requestCompleted = function(data) {
+      if (data.error) {
+        stickyError(data.error);
+        return;
+      }
+
+      data.forEach(function(driver, index) {
+        var msg = I18n.t((driver.updated) ? 'customers.form.devices.fleet.drivers_updated' : 'customers.form.devices.fleet.drivers_created');
+        var email = (driver.updated) ? driver.email : driver.email + ' : ' + driver.password;
+        notice(msg + "\r\n" + email);
+      });
+    }
+
     // Create company with mobile users for each vehicle with email
     $('#create-customer-device').on('click', function(event) {
       event.preventDefault();
@@ -365,14 +390,17 @@ var devicesObserveCustomer = (function() {
         success: function(data) {
           $('#create-customer-device').attr('disabled', false);
 
-          if (!data) {
-            return;
-          } else if (data.error) {
-            stickyError(data.error);
-            return;
+          if (data.error) {
+             requestCompleted(data);
+             return;
           }
 
-          location.reload();
+          requestCompleted(data.drivers);
+          $('#customer_devices_fleet_user').val(data.email);
+          $('#customer_devices_fleet_api_key').val(data.api_key);
+          $('#fleet_container').removeClass('panel-default panel-danger').addClass('panel-success');
+          $('#create-customer-device').attr('disabled', true);
+          $('#create-user-device').attr('disabled', false);
         },
         error: function(error) {
           $('#create-customer-device').attr('disabled', false);
@@ -397,24 +425,7 @@ var devicesObserveCustomer = (function() {
         beforeSend: beforeSendWaiting,
         success: function(data) {
           $('#create-user-device').attr('disabled', false);
-
-          if (!data) {
-            return;
-          } else if (data.error) {
-            stickyError(data.error);
-            return;
-          }
-
-          var drivers = [I18n.t((data.updated) ? 'customers.form.devices.fleet.drivers_updated' : 'customers.form.devices.fleet.drivers_created')];
-          data.drivers.map(function(driver) {
-            if (data.updated) {
-              drivers.push(driver.email);
-            } else {
-              drivers.push(driver.email + ' : ' + driver.password);
-            }
-          });
-
-          notice(drivers.join('\r\n'));
+          requestCompleted(data);
         },
         error: function(error) {
           $('#create-user-device').attr('disabled', false);

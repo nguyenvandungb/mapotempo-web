@@ -140,73 +140,62 @@ class Fleet < DeviceBase
     end
   end
 
-  def base_create_or_update(customer)
+  def create_or_update_drivers(customer, current_admin)
     api_key = customer.devices[:fleet][:api_key]
     raise DeviceServiceError.new("Fleet: #{I18n.t('errors.fleet.create_drivers.no_api_key')}") unless api_key
 
     user = customer.users.first
     vehicles_with_email = customer.vehicles.select(&:contact_email)
 
-    [api_key, user, vehicles_with_email]
-  end
-
-  def create_drivers(customer, current_admin)
-    api_key, user, vehicles_with_email = base_create_or_update(customer)
-
-    cache_drivers = {}
-    drivers = vehicles_with_email.map do |vehicle|
-      if !cache_drivers.key? vehicle.contact_email
-        driver_password = Digest::MD5.hexdigest([vehicle.name, vehicle.contact_email].join(','))[0..3]
-
-        driver_params = {
-          name: vehicle.name,
-          email: vehicle.contact_email,
-          password: driver_password,
-          phone: vehicle.phone_number,
-          roles: USER_DEFAULT_ROLES,
-        }
-
-        begin
-          response = rest_client_with_method(set_user_url, api_key, driver_params)
-          driver = JSON.parse(response)['user']
-          cache_drivers[vehicle.contact_email] = {password: driver_password, fleet_user: driver}
-          vehicle.update!(devices: {fleet_user: driver['sync_user']})
-          driver.merge('password' => driver_password)
-        rescue RestClient::UnprocessableEntity
-          nil
-        end
+    cache_drivers = {} # Used when multiple vehicle have the same email (When creation)
+    vehicles_with_email.map do |vehicle|
+      if vehicle.devices.key?(:fleet_user) && !vehicle.devices[:fleet_user].nil?
+        update_driver(vehicle, api_key)
       else
-        vehicle.update!(devices: {fleet_user: cache_drivers[vehicle.contact_email][:fleet_user]['sync_user']})
-        nil
+        create_driver(vehicle, api_key, cache_drivers)
       end
-    end.compact
-
-    if drivers.empty? && !vehicles_with_email.empty?
-      raise DeviceServiceError.new("Fleet: #{I18n.t('errors.fleet.create_drivers.already_created')}")
-    else
-      # Temporary send email to customer to get drivers with password
-      UserMailer.send_fleet_drivers(user, I18n.locale, drivers, current_admin).deliver_now
-
-      drivers
     end
   end
 
-  def update_drivers(customer, current_admin)
-    api_key, user, vehicles_with_email = base_create_or_update(customer)
+  def create_driver(vehicle, api_key, cache_drivers)
+    if !cache_drivers.key?(vehicle.contact_email)
+      driver_password = Digest::MD5.hexdigest([vehicle.name, vehicle.contact_email].join(','))[0..3]
 
-    vehicles_with_email.map do |vehicle|
       driver_params = {
         name: vehicle.name,
-        # email: vehicle.contact_email, waiting for sync_user duplication on fleet
-        phone: vehicle.phone_number
+        email: vehicle.contact_email,
+        password: driver_password,
+        phone: vehicle.phone_number,
+        roles: USER_DEFAULT_ROLES,
       }
 
       begin
-        rest_client_with_method(get_user_url(vehicle.contact_email), api_key, driver_params, :put)
-        { email: vehicle.contact_email }
-      rescue RestClient::UnprocessableEntity, RestClient::Unauthorized, RestClient::InternalServerError, RestClient::ResourceNotFound
-        raise DeviceServiceError.new("Fleet: #{I18n.t('errors.fleet.update_drivers.update_failed.')}")
+        response = rest_client_with_method(set_user_url, api_key, driver_params)
+        driver = JSON.parse(response)['user']
+        cache_drivers[vehicle.contact_email] = {password: driver_password, fleet_user: driver}
+
+        vehicle.update!(devices: {fleet_user: driver['sync_user']})
+        { email: vehicle.contact_email, password: driver_password }
+      rescue RestClient::UnprocessableEntity
+        nil
       end
+    else
+      vehicle.update!(devices: {fleet_user: cache_drivers[vehicle.contact_email][:fleet_user]['sync_user']})
+      nil
+    end
+  end
+
+  def update_driver(vehicle, api_key)
+    driver_params = {
+      name: vehicle.name,
+      # email: vehicle.contact_email, waiting for sync_user duplication on fleet
+      phone: vehicle.phone_number
+    }
+    begin
+      rest_client_with_method(get_user_url(vehicle.contact_email), api_key, driver_params, :put)
+      { email: vehicle.contact_email, updated: true }
+    rescue RestClient::UnprocessableEntity, RestClient::Unauthorized, RestClient::InternalServerError, RestClient::ResourceNotFound
+      raise DeviceServiceError.new("Fleet: #{I18n.t('errors.fleet.update_drivers.update_failed.')}")
     end
   end
 
