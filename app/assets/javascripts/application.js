@@ -36,16 +36,18 @@
 //= require bootstrap-wysihtml5
 //= require bootstrap-wysihtml5/locales/fr-FR.js
 //= require bootstrap-wysihtml5/locales/en-US.js
-// require bootstrap-wysihtml5/locales/he-.js // Not available, yet
-// pt-PT not available, yet
+// require bootstrap-wysihtml5/locales/id.js // Not available, yet
+// require bootstrap-wysihtml5/locales/he.js // Not available, yet
+// require bootstrap-wysihtml5/locales/pt-PT.js // Not available, yet
 //= require bootstrap-wysihtml5/locales/pt-BR.js
 //= require bootstrap-wysihtml5/locales/es-ES.js
 //= require bootstrap-datepicker/core.js
 //= require bootstrap-datepicker/locales/bootstrap-datepicker.fr.js
 //= require bootstrap-datepicker/locales/bootstrap-datepicker.fr-CH.js
 //= require bootstrap-datepicker/locales/bootstrap-datepicker.en-GB.js
-// require bootstrap-datepicker/locales/bootstrap-datepicker.he.js // Not available, yet
-// pt-PT not available, yet
+//= require bootstrap-datepicker/locales/bootstrap-datepicker.id.js
+//= require bootstrap-datepicker/locales/bootstrap-datepicker.he.js
+// require bootstrap-datepicker/locales/bootstrap-datepicker.pt-PT.js // Not available, yet
 //= require bootstrap-datepicker/locales/bootstrap-datepicker.pt-BR.js
 //= require bootstrap-datepicker/locales/bootstrap-datepicker.es.js
 //= require bootstrap-slider
@@ -81,6 +83,7 @@
 //= require select2_locale_he
 //= require select2_locale_pt
 //= require select2_locale_es
+//= require select2_locale_id
 //= require bootstrap-select
 //= require_tree ../../templates
 //= require paloma
