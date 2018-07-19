@@ -229,14 +229,14 @@ class Fleet < DeviceBase
     if response.code == 200 && data['missions']
       data['missions'].map do |mission|
         # As planning only display status for today, ignore mission status different than today
-        order_id, date = decode_mission_id(mission['external_ref'], mission['mission_type'])
+        order_id, date = decode_mission_id(mission['external_ref'])
         date = Date.parse(date.gsub('_', '-')) rescue nil
         next unless date == Date.today
 
         {
           mission_type: mission['mission_type'],
           order_id: order_id,
-          route_id: decode_store_route_id(mission['external_ref']),
+          route_id: decode_route_id(mission['external_ref']),
           status: @@order_status[mission['status_type_reference']],
           color: mission['status_type_color'],
           eta: mission['eta']
@@ -463,8 +463,7 @@ class Fleet < DeviceBase
     else
       "r#{stop.id}"
     end
-
-    "mission-#{order_id}-#{date.strftime('%Y_%m_%d')}"
+    "mission-#{order_id}-#{date.strftime('%Y_%m_%d')}-#{stop.route.id}"
   end
 
   def convert_user(user)
@@ -472,17 +471,14 @@ class Fleet < DeviceBase
     user && user.include?('@') ? Digest::SHA256.hexdigest(user) : user
   end
 
-  def decode_mission_id(mission_ref, type)
-    # Mission formatting : "mission-<order_id>-<date(%Y_%m_%d)>"
-    # Stores  formatting : "<type>-<order_id>-<date(%Y_%m_%d)>-<route_id>"
-    if type == 'mission'
-      mission_ref.split('-')[-2..-1]
-    else
-      mission_ref.split('-')[1..2]
-    end
+  def decode_mission_id(mission_ref)
+    # Return the Order_id and the date
+    mission_ref.split('-')[1..2]
   end
 
-  def decode_store_route_id(mission_ref)
-    mission_ref.split('-').last
+  # Return the route_id only if the current external ref isn't obsolete
+  def decode_route_id(mission_ref)
+    parts = mission_ref.split('-')
+    mission_ref.split('-').last if parts.length > 3
   end
 end
