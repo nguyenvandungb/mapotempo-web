@@ -519,7 +519,7 @@ class Planning < ApplicationRecord
           end
         }.each { |s|
           if stops_map.key?(s[:order_id])
-            if s[:quantities].is_a?(Array)
+            if !s[:quantities].nil? && s[:quantities].is_a?(Array)
               quantities = {}
               du_by_label = {}
               customer.deliverable_units.map { |du| du_by_label[du.label] = du.id }

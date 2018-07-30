@@ -38,8 +38,10 @@ module RoutesHelper
       q += "\u202F" + unit.label if unit.label
       {
         id: id,
-        quantity: q,
-        unit_icon: unit.default_icon
+        quantity: v,
+        label: unit.label,
+        unit_icon: unit.default_icon,
+        quantity_formatted: q
       }
     }.compact
   end

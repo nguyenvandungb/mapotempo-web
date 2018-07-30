@@ -28,12 +28,12 @@ class VisitQuantities
         q = I18n.t("activerecord.attributes.deliverable_unit.operation_#{visit.quantities_operations[du.id]}") + " (#{q})" if visit.quantities_operations[du.id]
         {
           deliverable_unit_id: du.id,
-          quantity: q,
-          quantity_float: quantities[du.id],
-          unit_icon: du.default_icon
+          quantity: quantities[du.id], # FLOAT
+          label: du.label,
+          unit_icon: du.default_icon,
+          quantity_formatted: q # STRING
         }
       end
     }.compact
   end
-
 end

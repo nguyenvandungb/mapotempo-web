@@ -42,7 +42,10 @@ module FleetBuilder
       destinations += route.stops.select(&:active?).sort_by(&:index).map do |destination|
       visit = destination.is_a?(StopVisit)
       labels = visit ? (destination.visit.tags + destination.visit.destination.tags).map(&:label).join(', ') : nil
-      quantities = visit ? destination.is_a?(StopVisit) ? (customer.enable_orders ? (destination.order ? destination.order.products.collect(&:code).join(',') : '') : destination.visit.default_quantities ? VisitQuantities.normalize(destination.visit, route.vehicle_usage.try(&:vehicle)).map { |d| "\u2022 #{d[:quantity]}" }.join("\r\n") : '') : nil : nil
+
+      quantities = []
+      quantities = VisitQuantities.normalize(destination.visit, route.vehicle_usage.try(&:vehicle)) if destination.is_a?(StopVisit)
+
       time_windows = []
       time_windows << {
         start: p_time(route, destination.open1).strftime('%FT%T.%L%:z'),
@@ -81,7 +84,8 @@ module FleetBuilder
           state: destination.state,
           street: destination.street
         },
-        time_windows: visit ? time_windows : nil
+        time_windows: visit ? time_windows : nil,
+        quantities: quantities
       }.compact
       end
 

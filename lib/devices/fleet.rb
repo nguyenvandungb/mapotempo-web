@@ -259,6 +259,7 @@ class Fleet < DeviceBase
         route_id: decode_route_id(mission['external_ref']),
         status: @@order_status[mission['status_type_reference']],
         color: mission['status_type_color'],
+        quantities: mission['quantities'],
         eta: mission['eta']
       }
     end.compact
