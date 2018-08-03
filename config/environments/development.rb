@@ -117,7 +117,7 @@ Rails.application.configure do
   config.devices.trimble.api_url = 'https://soap.box.trimbletl.com/fleet-service/'
   config.devices.suivi_de_flotte.api_url = 'https://webservice.suivideflotte.net/service/'
   config.devices.praxedo.api_url = 'https://ww2.praxedo.com/eTech/services/'
-  config.devices.cache_object = cache_factory('devices', 30)
+  config.devices.cache_object = cache_factory('devices', 120)
 
   config.delayed_job_use = true
 
