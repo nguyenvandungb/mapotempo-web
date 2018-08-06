@@ -150,7 +150,7 @@ class OptimizerWrapper
           resolution: {
             duration: options[:optimize_time] ? options[:optimize_time] * vehicles.size : nil,
             # iterations_without_improvment: 100,
-            initial_time_out: options[:optimize_minimal_time] * 1000,
+            initial_time_out: options[:optimize_minimal_time] ? options[:optimize_minimal_time] * vehicles.size * 1000 : nil,
             time_out_multiplier: 2
           },
           restitution: {
