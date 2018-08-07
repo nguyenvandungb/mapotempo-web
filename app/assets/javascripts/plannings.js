@@ -1118,60 +1118,38 @@ var plannings_edit = function(params) {
             $('#planning-move-stops-modal .modal-body').html(SMT['stops/move'](obj));
             $('#move-stops-toggle').toggleSelect();
             $('[type="checkbox"][data-toggle="disable-multiple-actions"]').toggleMultipleActions();
-            $('#planning-move-stops-modal input[data-change="filter"]').filterTable();
+
+            var $moveStopQuantities = $('#move-stop-quantities');
             $('#move-route-id').select2({ templateSelection: templateRoute, templateResult: templateRoute, minimumResultsForSearch: -1 });
-
+            $('#planning-move-stops-modal input[data-change="filter"]').filterTable()
+              .on('table.filtered', function() {
+                $moveStopQuantities.calculateQuantities(getAvailableStopsToMoveFrom(stops), params.quantities);
+              });
             $('#planning-move-stops-modal .move-stops-stop-id').change(function() {
-              recalculateQuantities(stops);
+              $moveStopQuantities.calculateQuantities(getAvailableStopsToMoveFrom(stops), params.quantities);
             });
-
             $('#move-route-id').change(function(obj) {
               var vehicleUsageId = obj.target.selectedOptions[0].attributes['data-vehicle-usage-id'].value;
-              fillDefaultQuantities(getDefaultQuantities(vehicleUsageId), stops);
+              $moveStopQuantities.empty().fillDefaultQuantitiesWithDuration(getVehicleQuantities(vehicleUsageId), getAvailableStopsToMoveFrom(stops), params.quantities);
             });
 
             var vehicleUsageId = $('#move-route-id').find(":selected").attr('data-vehicle-usage-id');
-            fillDefaultQuantities(getDefaultQuantities(vehicleUsageId), stops);
+            $moveStopQuantities.empty().fillDefaultQuantitiesWithDuration(getVehicleQuantities(vehicleUsageId), getAvailableStopsToMoveFrom(stops), params.quantities);
           }
         });
       });
 
-      var fillDefaultQuantities = function(totalQuantities, stops) {
-        $('#move-stop-quantities').empty();
-        if (totalQuantities) {
-          for (var index = 0; index < $("div[id^='quantity-']").length; index++) {
-            $($("div[id^='quantity-']")[index]).hide();
-          }
-          totalQuantities.forEach(function(obj) {
-            showOrCreateQuantity(obj);
-          });
+      var getAvailableStopsToMoveFrom = function(stops) {
+        var availableStopsToMove = $('#planning-move-stops-modal .move-stops-stop-id:checked:visible');
+        var selectedStops = [];
+        for (var index = 0; index < availableStopsToMove.length; index++) {
+          var element = availableStopsToMove[index];
+          selectedStops.push(stops.filter(function(stop) { return stop.stop_id === parseInt(element.value); })[0]);
         }
-        recalculateQuantities(stops);
-        $('#planning-move-stops-modal [data-toggle="tooltip"]').tooltip();
+        return selectedStops;
       };
 
-      var showOrCreateQuantity = function(obj) {
-        if ($('#quantity-' + obj.id).length == 0) {
-          var input = '<div id="quantity-' + obj.id + '">' +
-            '<span class="route-info" title="' + I18n.t('plannings.edit.route_quantity_help') + '" data-toggle="tooltip">' +
-            '<i id="move-route-icon-' + obj.id + '" class="fa ' + obj.unitIcon + ' fa-fw"></i>' +
-            '&nbsp;<span id="move-route-quantity-' + obj.id + '"></span>';
-          if (obj.capacity) {
-            input += '<span id="move-route-default-capacity-' + obj.id + '">/' + obj.capacity + '</span>';
-          } else {
-            input += '<span id="move-route-default-capacity-' + obj.id + '"></span>';
-          }
-          input += '&nbsp;<span id="move-route-capacity-label-' + obj.id + '">' + obj.label + '</span>' +
-            '</span>' +
-            '</div>';
-          $('#move-stop-quantities').append(input);
-        } else {
-          if (obj.capacity) $('#move-route-default-capacity-' + obj.id).html('/' + obj.capacity);
-          $('#quantity-' + obj.id).show();
-        }
-      };
-
-      var getDefaultQuantities = function(VehicleUsageId) {
+      var getVehicleQuantities = function(VehicleUsageId) {
         return Object.keys(vehicles_usages_map).map(function(index) {
           if (vehicles_usages_map[index].vehicle_usage_id === parseInt(VehicleUsageId)) {
             var hash = vehicles_usages_map[index].capacities.hash;
@@ -1185,65 +1163,13 @@ var plannings_edit = function(params) {
         })[0];
       };
 
-      var emptyMoveStopCalculationFields = function(changedData) {
-        $('#move-route-duration').empty();
-        changedData.quantities.forEach(function(obj) {
-          $('#move-route-quantity-' + obj.deliverable_unit_id).empty();
-        });
-      };
-
-      var recalculateQuantities = function(stops) {
-        var availableStopsToMove = $('#planning-move-stops-modal .move-stops-stop-id:checked');
-        var result = {duration: 0, quantities: []};
-        var index = 0;
-
-        if (availableStopsToMove.length === 0) {
-          var spanQuantity = $("span[id^='move-route-quantity-']");
-          for (index = 0; index < spanQuantity.length; index++) {
-            $(spanQuantity[index]).html(0);
-          }
-        } else {
-          for (index = 0; index < availableStopsToMove.length; index++) {
-            var element = availableStopsToMove[index];
-            var changedData = stops.filter(function(stop) { return stop.stop_id === parseInt(element.value); })[0];
-            emptyMoveStopCalculationFields(changedData);
-
-            changedData.quantities.forEach(function(quantity) {
-              var oldValue = result.quantities[quantity.deliverable_unit_id] ? result.quantities[quantity.deliverable_unit_id].value : 0;
-              var value = quantity.quantity_float + oldValue;
-              var details = params.quantities.filter(function(obj) { return obj.id == quantity.deliverable_unit_id; })[0];
-
-              result.quantities[quantity.deliverable_unit_id] = {
-                id: quantity.deliverable_unit_id,
-                label: details.label,
-                unitIcon: details.unit_icon,
-                value: value
-              };
-            });
-            result.duration = result.duration + changedData.take_over;
-          }
-
-          result.quantities.forEach(function(quantity) {
-            showOrCreateQuantity(quantity);
-            var capacity = parseInt($('#move-route-default-capacity-' + quantity.id).html().replace('/', ''));
-            var color = 'inherit';
-            if (quantity.value > capacity) color = 'red';
-            $('#move-route-quantity-' + quantity.id).html(quantity.value);
-            $('#move-route-quantity-' + quantity.id).css('color', color);
-            $('#move-route-icon-' + quantity.id).css('color', color);
-          });
-        }
-
-        $('#move-route-duration').html(Number(result.duration).toHHMM());
-      };
-
       $('#planning-move-stops-modal').on('hide.bs.modal', function() {
         $('#planning-move-stops-modal').attr('data-route-id', null);
       });
 
       $("#move-stops-modal").click(function() {
         var stopIds = $("#planning-move-stops-modal")
-          .find('form input[name="stop_ids"]:checked')
+          .find('form input[name="stop_ids"]:checked:visible')
           .map(function() { return $(this).val(); })
           .toArray();
         $.ajax({

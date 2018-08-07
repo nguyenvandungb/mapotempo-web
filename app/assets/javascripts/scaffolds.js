@@ -73,6 +73,7 @@ $(document).on('ready page:load', function() {
       if (match) count++;
     });
     $(selector + '_count').text(count);
+    $(selector + ' [data-change="filter"]').trigger('table.filtered');
     $('body').removeClass('ajax_waiting');
   };
 
@@ -96,6 +97,115 @@ $(document).on('ready page:load', function() {
       $(selector + ' button, ' + selector + ' select').attr('disabled', false);
     else
       $(selector + ' button, ' + selector + ' select').attr('disabled', true);
+  };
+
+
+  $.fn.fillDefaultQuantitiesWithDuration = function(vehicleQuantities, stops, controllerParamsQuantities) {
+    this.showOrCreateDuration().fillDefaultQuantities(vehicleQuantities, stops, controllerParamsQuantities);
+  };
+
+  $.fn.fillDefaultQuantities = function(vehicleQuantities, stops, controllerParamsQuantities) {
+    var $this = this;
+    if (vehicleQuantities) {
+      for (var index = 0; index < $("div[id^='quantity-']").length; index++) {
+        $($("div[id^='quantity-']")[index]).hide();
+      }
+      vehicleQuantities.forEach(function(obj) {
+        $this.showOrCreateQuantity(obj);
+      });
+    }
+    $this.calculateQuantities(stops, controllerParamsQuantities);
+    $($this.selector + ' [data-toggle="tooltip"]').tooltip();
+  };
+
+  $.fn.showOrCreateDuration = function() {
+    var $this = this;
+    if ($($this.selector + ' [class="duration"]').length == 0) {
+      var input = '<div class="duration">' +
+        '<span class="route-info" title="' + I18n.t('plannings.edit.route_visits_duration_help') + '" data-toggle="tooltip">' +
+        '<i class="fa fa-clock-o fa-fw"></i>' +
+        '<span class="duration"></span>' +
+        '</span>' +
+        '</div>';
+      $this.append(input);
+    } else {
+      $($this.selector + ' div[class="duration"]').show();
+    }
+    return $this;
+  };
+
+  /**
+   * A deliverable unit object
+   * @param {id, capacity, unitIcon, label} obj
+   */
+  $.fn.showOrCreateQuantity = function(obj) {
+    var $this = this;
+    if ($($this.selector + ' div[class="quantity-' + obj.id + '"]').length == 0) {
+      var input = '<div class="quantity-' + obj.id + '">' +
+        '<span class="route-info" title="' + I18n.t('plannings.edit.route_quantity_help') + '" data-toggle="tooltip">' +
+        '<i class="icon-' + obj.id + ' fa ' + obj.unitIcon + ' fa-fw"></i>' +
+        '&nbsp;<span class="quantity-' + obj.id + '"></span>';
+      if (obj.capacity) {
+        input += '<span class="default-capacity-' + obj.id + '">/' + obj.capacity + '</span>';
+      } else {
+        input += '<span class="default-capacity-' + obj.id + '"></span>';
+      }
+      input += '&nbsp;<span class="capacity-label-' + obj.id + '">' + obj.label + '</span>' +
+        '</span>' +
+        '</div>';
+      $this.append(input);
+    } else {
+      if (obj.capacity) $($this.selector + ' div[class="default-capacity-' + obj.id + ']').html('/' + obj.capacity);
+      $($this.selector + ' div[class="quantity-' + obj.id + ']').show();
+    }
+  };
+
+  $.fn.calculateQuantities = function(stops, controllerParamsQuantities) {
+    var $this = this;
+    var durationElement = $($this.selector + ' span[class="duration"]');
+    var index = 0;
+    var result = {duration: 0, quantities: []};
+
+    if (stops.length === 0) {
+      var spanQuantity = $($this.selector + ' span[class^="quantity-"]');
+      for (index = 0; index < spanQuantity.length; index++) {
+        $(spanQuantity[index]).html(0);
+      }
+    } else {
+      stops.forEach(function(stop) {
+        durationElement.empty();
+        stop.quantities.forEach(function(obj) {
+          $($this.selector + ' span[class="quantity-' + obj.deliverable_unit_id + '"]').empty();
+        });
+
+        stop.quantities.forEach(function(quantity) {
+          var oldValue = result.quantities[quantity.deliverable_unit_id] ? result.quantities[quantity.deliverable_unit_id].value : 0;
+          var value = quantity.quantity_float + oldValue;
+          var details = controllerParamsQuantities.filter(function(obj) { return obj.id == quantity.deliverable_unit_id; })[0];
+
+          result.quantities[quantity.deliverable_unit_id] = {
+            id: quantity.deliverable_unit_id,
+            label: details.label,
+            unitIcon: details.unit_icon,
+            value: value
+          };
+        });
+        result.duration = result.duration + stop.take_over;
+      });
+
+      result.quantities.forEach(function(quantity) {
+        $this.showOrCreateQuantity(quantity);
+        var capacity = parseInt($($this.selector + ' [class="default-capacity-' + quantity.id + '"]').html().replace('/', ''));
+        var color = 'inherit';
+        if (quantity.value > capacity) color = 'red';
+        var $element = $($this.selector + ' span[class="quantity-' + quantity.id + '"]');
+        $element.html(quantity.value.toFixed(2)).css('color', color);
+        $($this.selector + ' [class="icon-' + quantity.id + '"]').css('color', color);
+      });
+    }
+
+    durationElement.html(Number(result.duration).toHHMM());
+    return $this;
   };
 })(jQuery);
 
