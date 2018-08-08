@@ -1128,6 +1128,7 @@ var plannings_edit = function(params) {
               fillQuantities(stops, vehicleUsageId);
             });
             fillQuantities(stops);
+            $('.overflow-500').css('max-height', ($(document).height() - 350) + 'px');
           }
         });
       });
@@ -1194,15 +1195,13 @@ var plannings_edit = function(params) {
       var getVehicleCapacities = function(vehicleUsageId) {
         return Object.keys(vehicles_usages_map).map(function(index) {
           if (vehicles_usages_map[index].vehicle_usage_id === parseInt(vehicleUsageId)) {
-            var hash = vehicles_usages_map[index].capacities.hash;
-            return Object.keys(hash).map(function(id) {
+            var capacities = vehicles_usages_map[index].default_capacities;
+            return Object.keys(capacities).map(function(id) {
               var quantity = quantities.find(function(qua) { return qua.id === parseInt(id); });
-              return {id: id, capacity: hash[id], label: quantity.label, unitIcon: quantity.unit_icon};
-            });
+              if (quantity) return {id: id, capacity: capacities[id], label: quantity.label, unitIcon: quantity.unit_icon};
+            }).filter(function(element) { return element; });
           }
-        }).filter(function(element) {
-          return element !== undefined;
-        })[0];
+        }).filter(function(element) { return element; })[0];
       };
 
       $('#planning-move-stops-modal').on('hide.bs.modal', function() {

@@ -108,7 +108,7 @@ $(document).on('ready page:load', function() {
    */
   $.fn.fillQuantities = function(params) {
     var $this = this;
-    $this.css({'margin': '.1em 0', 'text-align': 'left', 'width': '100%'});
+    $this.css({'margin': '.8em 0', 'text-align': 'left', 'width': '100%'});
     if (params.withDuration) $this.showOrCreateDuration();
     if (params.vehicleCapacities) {
       for (var index = 0; index < $("div[id^='quantity-']").length; index++) {
@@ -125,7 +125,7 @@ $(document).on('ready page:load', function() {
   $.fn.showOrCreateDuration = function() {
     var $this = this;
     if ($($this.selector + ' [class="duration"]').length == 0) {
-      var input = '<div class="duration">' +
+      var input = '<div class="duration" style="display: block !important">' +
         '<span class="route-info" title="' + I18n.t('plannings.edit.route_visits_duration_help') + '" data-toggle="tooltip">' +
         '<i class="fa fa-clock-o fa-fw"></i>' +
         '<span class="duration"></span>' +
@@ -208,7 +208,7 @@ $(document).on('ready page:load', function() {
           if (quantity.value > capacity) color = 'red';
         }
         var $element = $($this.selector + ' span[class="quantity-' + quantity.id + '"]');
-        $element.html(quantity.value.toFixed(2)).css('color', color);
+        $element.html(quantity.value % 1 === 0 ? quantity.value : quantity.value.toFixed(2)).css('color', color);
         $($this.selector + ' [class^="icon-' + quantity.id + '"]').css('color', color);
       });
     }
