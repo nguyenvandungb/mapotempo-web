@@ -262,6 +262,7 @@ class DestinationsControllerTest < ActionController::TestCase
   end
 
   test 'should upload' do
+    customers(:customer_one).update(job_destination_geocoding_id: nil)
     file = ActionDispatch::Http::UploadedFile.new({
       tempfile: File.new(Rails.root.join('test/fixtures/files/import_destinations_one.csv')),
     })
@@ -311,7 +312,8 @@ class DestinationsControllerTest < ActionController::TestCase
     assert_valid response
   end
 
-  test 'should redirect after upload_csv' do
+  test 'should redirect after upload_csv without geocoding job' do
+    customers(:customer_one).update(job_destination_geocoding_id: nil)
     [
       { redirect: 'last_planning', file: 'import_custom_destinations_one.csv', column_def: { route: 'tour' } },
       { redirect: 'destinations', file: 'import_destinations_update.csv', column_def: nil },
@@ -331,6 +333,22 @@ class DestinationsControllerTest < ActionController::TestCase
       when 'plannings'
         assert_redirected_to plannings_url
       end
+    end
+  end
+
+  test 'should redirect after upload_csv with geocoding job' do
+    [
+      { redirect: 'destinations', file: 'import_custom_destinations_one.csv', column_def: { route: 'tour' } },
+      { redirect: 'destinations', file: 'import_destinations_update.csv', column_def: nil },
+      { redirect: 'destinations', file: 'import_destinations_several_plans.csv', column_def: nil }
+    ].each do |test|
+      file = ActionDispatch::Http::UploadedFile.new(
+        tempfile: File.new(Rails.root.join('test/fixtures/files/', test[:file]))
+      )
+      file.original_filename = test[:file]
+      post :upload_csv, import_csv: { replace: false, file: file, column_def: test[:column_def] ? test[:column_def] : nil }
+
+      assert_redirected_to destinations_url
     end
   end
 
