@@ -123,10 +123,10 @@ class DestinationsController < ApplicationController
     respond_to do |format|
       @import_csv = ImportCsv.new(import_csv_params.merge(importer: ImporterDestinations.new(current_user.customer), content_code: :html))
       if @import_csv.valid? && @import_csv.import
-        if @import_csv.include?(:planning_ref)
-          format.html { redirect_to plannings_url }
-        elsif @import_csv.include?(:route)
+        if @import_csv.importer.plannings.size == 1 && !current_user.customer.job_destination_geocoding
           format.html { redirect_to edit_planning_url(Planning.last) }
+        elsif @import_csv.importer.plannings.size > 1 && !current_user.customer.job_destination_geocoding
+          format.html { redirect_to plannings_url }
         else
           format.html { redirect_to action: 'index' }
         end

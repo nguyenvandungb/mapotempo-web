@@ -20,6 +20,7 @@ require 'geocoder_destinations_job'
 require 'value_to_boolean'
 
 class ImporterDestinations < ImporterBase
+  attr_accessor :plannings
 
   def initialize(customer, planning_hash = nil)
     super customer
