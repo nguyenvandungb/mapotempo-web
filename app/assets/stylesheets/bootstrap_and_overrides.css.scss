@@ -130,6 +130,26 @@ label .popover {
   font-weight: normal;
 }
 
+@media(min-width: 992px) {
+  .sidebar-pane form {
+    .col-md-2 {
+      width: 21.41%;
+      padding-left: 10px;
+    }
+
+    .col-md-10 {
+      width: 78.59%;
+      padding-right: 12px;
+      padding-left: 6px;
+    }
+
+    .col-md-offset-2 {
+      margin-left: 21.41%;
+      padding-left: 7px;
+    }
+  }
+}
+
 /** External look-like **/
 
 /* Select2 */
