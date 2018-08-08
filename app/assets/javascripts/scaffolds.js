@@ -99,22 +99,26 @@ $(document).on('ready page:load', function() {
       $(selector + ' button, ' + selector + ' select').attr('disabled', true);
   };
 
-
-  $.fn.fillDefaultQuantitiesWithDuration = function(vehicleQuantities, stops, controllerParamsQuantities) {
-    this.showOrCreateDuration().fillDefaultQuantities(vehicleQuantities, stops, controllerParamsQuantities);
-  };
-
-  $.fn.fillDefaultQuantities = function(vehicleQuantities, stops, controllerParamsQuantities) {
+  /**
+   * @param {*} vehicleCapacities
+   * @param {*} stops
+   * @param {*} controllerParamsQuantities
+   * @param {*} withCapacity
+   * @param {*} withDuration
+   */
+  $.fn.fillQuantities = function(params) {
     var $this = this;
-    if (vehicleQuantities) {
+    $this.css({'margin': '.1em 0', 'text-align': 'left', 'width': '100%'});
+    if (params.withDuration) $this.showOrCreateDuration();
+    if (params.vehicleCapacities) {
       for (var index = 0; index < $("div[id^='quantity-']").length; index++) {
         $($("div[id^='quantity-']")[index]).hide();
       }
-      vehicleQuantities.forEach(function(obj) {
-        $this.showOrCreateQuantity(obj);
+      params.vehicleCapacities.forEach(function(obj) {
+        $this.showOrCreateQuantity(obj, params.withCapacity);
       });
     }
-    $this.calculateQuantities(stops, controllerParamsQuantities);
+    $this.calculateQuantities(params.stops, params.controllerParamsQuantities);
     $($this.selector + ' [data-toggle="tooltip"]').tooltip();
   };
 
@@ -135,27 +139,29 @@ $(document).on('ready page:load', function() {
   };
 
   /**
-   * A deliverable unit object
-   * @param {id, capacity, unitIcon, label} obj
+   * @param {id, capacity, unitIcon, label} obj A deliverable unit object
+   * @param {boolean} withCapacity true/false 
    */
-  $.fn.showOrCreateQuantity = function(obj) {
+  $.fn.showOrCreateQuantity = function(obj, withCapacity) {
     var $this = this;
     if ($($this.selector + ' div[class="quantity-' + obj.id + '"]').length == 0) {
       var input = '<div class="quantity-' + obj.id + '">' +
         '<span class="route-info" title="' + I18n.t('plannings.edit.route_quantity_help') + '" data-toggle="tooltip">' +
         '<i class="icon-' + obj.id + ' fa ' + obj.unitIcon + ' fa-fw"></i>' +
         '&nbsp;<span class="quantity-' + obj.id + '"></span>';
-      if (obj.capacity) {
-        input += '<span class="default-capacity-' + obj.id + '">/' + obj.capacity + '</span>';
-      } else {
-        input += '<span class="default-capacity-' + obj.id + '"></span>';
+      if (withCapacity) {
+        if (obj.capacity) {
+          input += '<span class="default-capacity-' + obj.id + '">/' + obj.capacity + '</span>';
+        } else {
+          input += '<span class="default-capacity-' + obj.id + '"></span>';
+        }
       }
       input += '&nbsp;<span class="capacity-label-' + obj.id + '">' + obj.label + '</span>' +
         '</span>' +
         '</div>';
       $this.append(input);
     } else {
-      if (obj.capacity) $($this.selector + ' div[class="default-capacity-' + obj.id + ']').html('/' + obj.capacity);
+      if (obj.capacity && withCapacity) $($this.selector + ' div[class="default-capacity-' + obj.id + ']').html('/' + obj.capacity);
       $($this.selector + ' div[class="quantity-' + obj.id + ']').show();
     }
   };
@@ -185,8 +191,8 @@ $(document).on('ready page:load', function() {
 
           result.quantities[quantity.deliverable_unit_id] = {
             id: quantity.deliverable_unit_id,
-            label: details.label,
-            unitIcon: details.unit_icon,
+            label: details ? details.label : quantity.label,
+            unitIcon: details ? details.unit_icon : quantity.unit_icon,
             value: value
           };
         });
@@ -195,12 +201,15 @@ $(document).on('ready page:load', function() {
 
       result.quantities.forEach(function(quantity) {
         $this.showOrCreateQuantity(quantity);
-        var capacity = parseInt($($this.selector + ' [class="default-capacity-' + quantity.id + '"]').html().replace('/', ''));
         var color = 'inherit';
-        if (quantity.value > capacity) color = 'red';
+        var $defaultCapacityElement = $($this.selector + ' [class="default-capacity-' + quantity.id + '"]');
+        if ($defaultCapacityElement.length !== 0) {
+          var capacity = parseInt($defaultCapacityElement.html().replace('/', ''));
+          if (quantity.value > capacity) color = 'red';
+        }
         var $element = $($this.selector + ' span[class="quantity-' + quantity.id + '"]');
         $element.html(quantity.value.toFixed(2)).css('color', color);
-        $($this.selector + ' [class="icon-' + quantity.id + '"]').css('color', color);
+        $($this.selector + ' [class^="icon-' + quantity.id + '"]').css('color', color);
       });
     }
 

@@ -1119,25 +1119,53 @@ var plannings_edit = function(params) {
             $('#move-stops-toggle').toggleSelect();
             $('[type="checkbox"][data-toggle="disable-multiple-actions"]').toggleMultipleActions();
 
-            var $moveStopQuantities = $('#move-stop-quantities');
             $('#move-route-id').select2({ templateSelection: templateRoute, templateResult: templateRoute, minimumResultsForSearch: -1 });
             $('#planning-move-stops-modal input[data-change="filter"]').filterTable()
-              .on('table.filtered', function() {
-                $moveStopQuantities.calculateQuantities(getAvailableStopsToMoveFrom(stops), params.quantities);
-              });
-            $('#planning-move-stops-modal .move-stops-stop-id').change(function() {
-              $moveStopQuantities.calculateQuantities(getAvailableStopsToMoveFrom(stops), params.quantities);
-            });
+              .on('table.filtered', function() { calculateQuantities(stops); });
+            $('#planning-move-stops-modal .move-stops-stop-id').change(function() { calculateQuantities(stops); });
             $('#move-route-id').change(function(obj) {
               var vehicleUsageId = obj.target.selectedOptions[0].attributes['data-vehicle-usage-id'].value;
-              $moveStopQuantities.empty().fillDefaultQuantitiesWithDuration(getVehicleQuantities(vehicleUsageId), getAvailableStopsToMoveFrom(stops), params.quantities);
+              fillQuantities(stops, vehicleUsageId);
             });
-
-            var vehicleUsageId = $('#move-route-id').find(":selected").attr('data-vehicle-usage-id');
-            $moveStopQuantities.empty().fillDefaultQuantitiesWithDuration(getVehicleQuantities(vehicleUsageId), getAvailableStopsToMoveFrom(stops), params.quantities);
+            fillQuantities(stops);
           }
         });
       });
+
+      var calculateQuantities = function(stops, vehicleUsageId) {
+        vehicleUsageId = vehicleUsageId ? vehicleUsageId : $('#move-route-id').find(":selected").attr('data-vehicle-usage-id');
+        var $moveStopQuantities = $('#move-stop-quantities');
+        var $moveStopGlobalQuantities = $('#move-stop-global-quantities');
+        var vehicleQuantities = getVehicleQuantities(vehicleUsageId);
+        var stopsToMove = getAvailableStopsToMoveFrom(stops);
+        var globalStops = vehicleQuantities ? stopsToMove.concat(vehicleQuantities) : stopsToMove;
+
+        $moveStopQuantities.calculateQuantities(stopsToMove, params.quantities);
+        $moveStopGlobalQuantities.calculateQuantities(globalStops, params.quantities);
+      };
+
+      var fillQuantities = function(stops, vehicleUsageId) {
+        vehicleUsageId = vehicleUsageId ? vehicleUsageId : $('#move-route-id').find(":selected").attr('data-vehicle-usage-id');
+        var $moveStopQuantities = $('#move-stop-quantities');
+        var $moveStopGlobalQuantities = $('#move-stop-global-quantities');
+        var vehicleCapacities = getVehicleCapacities(vehicleUsageId);
+        var vehicleQuantities = getVehicleQuantities(vehicleUsageId);
+        var stopsToMove = getAvailableStopsToMoveFrom(stops);
+        var globalStops = vehicleQuantities ? stopsToMove.concat(vehicleQuantities) : stopsToMove;
+
+        $moveStopGlobalQuantities.empty().fillQuantities({
+          vehicleCapacities: vehicleCapacities,
+          stops: globalStops,
+          controllerParamsQuantities: params.quantities,
+          withCapacity: true,
+        });
+        $moveStopQuantities.empty().fillQuantities({
+          vehicleCapacities: vehicleCapacities,
+          stops: stopsToMove,
+          controllerParamsQuantities: params.quantities,
+          withDuration: true
+        });
+      };
 
       var getAvailableStopsToMoveFrom = function(stops) {
         var availableStopsToMove = $('#planning-move-stops-modal .move-stops-stop-id:checked:visible');
@@ -1149,9 +1177,23 @@ var plannings_edit = function(params) {
         return selectedStops;
       };
 
-      var getVehicleQuantities = function(VehicleUsageId) {
+      var getVehicleQuantities = function(vehicleUsageId) {
+        var quantities;
+        try {
+          Object.keys(vehicles_usages_map).forEach(function(index) {
+            if (vehicles_usages_map[index].vehicle_usage_id === parseInt(vehicleUsageId)) {
+              quantities = vehicles_usages_map[index].vehicle_quantities;
+              throw {};
+            }
+          });
+        } catch (exc) {
+          return {quantities: quantities};
+        }
+      };
+
+      var getVehicleCapacities = function(vehicleUsageId) {
         return Object.keys(vehicles_usages_map).map(function(index) {
-          if (vehicles_usages_map[index].vehicle_usage_id === parseInt(VehicleUsageId)) {
+          if (vehicles_usages_map[index].vehicle_usage_id === parseInt(vehicleUsageId)) {
             var hash = vehicles_usages_map[index].capacities.hash;
             return Object.keys(hash).map(function(id) {
               var quantity = quantities.find(function(qua) { return qua.id === parseInt(id); });
