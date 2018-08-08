@@ -29,14 +29,13 @@ $sidebar-margins: 10px;
       margin-right: $sidebar-width + $sidebar-margins; // not possible to use right because it's overloaded by pnotify
     }
   }
-  #planning-move-stops-modal { 
+  #planning-move-stops-modal {
     .modal-body {
-      text-align: center;
       .fa-spinner {
         margin: 15px;
       }
       .overflow-500 {
-        max-height: 500px;
+        max-height: calc(100% - 800px);
         overflow: auto;
       }
       .move-stops-toggle {
@@ -52,12 +51,7 @@ $sidebar-margins: 10px;
         clear: both;
       }
       .move-route-selector {
-        padding-top: 15px;
-        height: 60px;
         vertical-align: middle;
-      }
-      label {
-        margin: 15px;
       }
       div {
         display: inline-block;
