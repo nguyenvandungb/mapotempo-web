@@ -202,7 +202,7 @@ fr:
         fail: "Échec lors de l'envoi vers Mapotempo l'app mobile Mapotempo Live"
       fleet_clear:
         action: "Vider l'app mobile Mapotempo Live"
-        success: "L'app mobile Mapotempo Live a été vidé avec succès"
+        success: "L'app mobile Mapotempo Live a été vidée avec succès"
         fail: "Échec lors de la suppression dans l'app mobile Mapotempo Live"
       teksat_send:
         action: Envoyer à Teksat
