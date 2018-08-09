@@ -25,6 +25,7 @@ class Fleet < DeviceBase
 
   # TODO: use empty roles and fleet API should define default roles...
   USER_DEFAULT_ROLES = [
+    'route.updating',
     # 'mission.creating',
     'mission.updating',
     # 'mission.deleting',
