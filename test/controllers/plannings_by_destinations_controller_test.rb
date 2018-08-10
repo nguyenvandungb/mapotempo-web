@@ -3,7 +3,7 @@ require 'test_helper'
 require 'rexml/document'
 include REXML
 
-class PlanningsByDestinationControllerTest < ActionController::TestCase
+class PlanningsByDestinationsControllerTest < ActionController::TestCase
 
   setup do
     @request.env['reseller'] = resellers(:reseller_one)
@@ -35,8 +35,8 @@ class PlanningsByDestinationControllerTest < ActionController::TestCase
       assert_response :success
       assert_valid response
       assert_equal 2, assigns(:stop_visits).size
-      assert_equal 2, assigns(:routes_by_vehicles).size
-      assert_equal 3, assigns(:routes_by_vehicles).flat_map{ |_k, v| v.keys }.uniq.size
+      assert_equal 2, assigns(:routes_by_vehicles_by_planning).size
+      assert_equal 3, assigns(:routes_by_vehicles_by_planning).flat_map{ |_k, v| v.keys }.uniq.size
     ensure
       Stop.class_eval do
         def after_init

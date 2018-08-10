@@ -15,7 +15,7 @@
 # along with Mapotempo. If not, see:
 # <http://www.gnu.org/licenses/agpl.html>
 #
-class PlanningsByDestinationController < ApplicationController
+class PlanningsByDestinationsController < ApplicationController
   before_action :authenticate_user!
   load_and_authorize_resource :destination
   before_action :set, only: %i[show]
@@ -28,13 +28,10 @@ class PlanningsByDestinationController < ApplicationController
     @customer = current_user.customer
     @stop_visits = @destination.visits.map(&:stop_visits).flatten.sort_by{ |st| st.route.planning_id }
     # [planning_id => [vehicle_id => route_id]]
-    @routes_by_vehicles = {}
-    @customer.plannings.each do |planning|
-      @routes_by_vehicles[planning.id] = {}
-      planning.routes.each{ |route|
-        vehicle_id = route.vehicle_usage ? route.vehicle_usage.vehicle_id : nil
-        @routes_by_vehicles[planning.id][vehicle_id] = route.id
-      }
-    end
+    @routes_by_vehicles_by_planning = @customer.plannings.map{ |planning|
+      [planning.id, planning.routes.map{ |route|
+        [route.vehicle_usage ? route.vehicle_usage.vehicle_id : nil, route.id]
+      }.to_h]
+    }.to_h
   end
 end

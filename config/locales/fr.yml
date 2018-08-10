@@ -1015,6 +1015,7 @@
         'collapse_all_help': 'Tout compacter/développer'
     'edit':
       'title': 'Modifier client'
+      'show_plans_by_destination': 'Afficher les tournées du client'
     'import':
       'title': 'Importer des clients'
       'destinations': 'Clients'
@@ -1832,13 +1833,14 @@
       'default': 'Défaut'
     'show':
       'print': 'Imprimer'
-  'plannings_by_destination':
+  'plannings_by_destinations':
     'show':
+      'affect_destinations': 'Affecter'
       'auto_insert': 'Insertion automatique'
-      'select_vehicle': 'Affecter au véhicule'
-      'show_planning': 'Afficher le plan'
-      'show_destination': 'Affiche le client'
-      'title': 'Plans par destination'
+      'modify_planning': 'Modifier le plan'
+      'select_vehicle': 'Affecter les destinations au véhicule'
+      'title': 'Tournées du client'
+      'visit_quantities': 'Quantités de la visite'
   'routes':
     'show':
       'print': 'Imprimer'
