@@ -301,6 +301,15 @@
     }
   }
 
+  &[data-action='edit'] {
+    h1 {
+      a {
+        font-size: 13px;
+        float: right;
+      }
+    }
+  }
+
   &[data-action='import'], &[data-action='upload_csv'] {
     #columns-table {
       margin: 5px;

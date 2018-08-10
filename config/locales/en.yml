@@ -973,6 +973,7 @@ en:
         collapse_all_help: Collapse/expand all
     edit:
       title: Editing destination
+      show_plans_by_destination: Show plans by destination
     import:
       title: Import destinations
       destinations: Destinations
@@ -1712,13 +1713,14 @@ en:
       default: Default
     show:
       print: Print
-  plannings_by_destination:
+  plannings_by_destinations:
     show:
+      affect_destinations: Affect
       auto_insert: Automatic insertion
+      modify_planning: Show planning
       select_vehicle: Assign to vehicle
-      show_planning: Show planning
-      show_destination: Show destination
       title: Plannings by destination
+      visit_quantities: Visit quantities
   routes:
     show:
       print: Print
