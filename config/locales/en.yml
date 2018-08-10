@@ -995,6 +995,7 @@ en:
         help: Imports destinations from CSV file. CSV files can be exported from spreadsheet
           or other softwares.
         file_help: Import only CSV files.
+        custom_columns: 'You have defined custom columns: %{s}.'
       import_template_help: Help - Columns definition
       dialog:
         help:
