@@ -17,6 +17,9 @@
         <%= f.file_field :file, required: true do %>
           <p class="help-block">
             <%= t '.csv.file_help' %>
+            <% if @columns_default && !@columns_default.empty? %>
+              <i class="fa fa-exclamation-triangle fa-fw"></i> <%= t '.csv.custom_columns', s: @columns_default.values.join(', ') %>
+            <% end %>
             <a data-toggle="modal" data-target="#import-help-modal" data-keyboard="true" href="#help" title="<%= t('.import_template_help') %>"><i class="fa fa-info-circle fa-fw"></i> <%= t('.import_template_help') %></a>
           </p>
         <% end %>
