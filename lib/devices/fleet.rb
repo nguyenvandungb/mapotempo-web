@@ -158,7 +158,10 @@ class Fleet < DeviceBase
         create_driver(vehicle, api_key, cache_drivers)
       end
     end.compact
-    UserMailer.send_fleet_drivers(user, I18n.locale, drivers.reject{ |d| d.key?(:updated) }, current_admin).deliver_now
+
+    email_drivers = drivers.reject{ |d| d.key?(:updated) }
+    UserMailer.send_fleet_drivers(user, I18n.locale, email_drivers, current_admin).deliver_now unless email_drivers.empty?
+
     drivers
   end
 
