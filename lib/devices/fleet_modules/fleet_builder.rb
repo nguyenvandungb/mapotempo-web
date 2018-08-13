@@ -113,7 +113,7 @@ module FleetBuilder
     def build_route(route, destinations = nil)
       {
         user_id: convert_user(route.vehicle_usage.vehicle.devices[:fleet_user]),
-        name: route.ref || route.vehicle_usage.vehicle.name,
+        name: route.ref || route.vehicle_usage.vehicle.ref || route.vehicle_usage.vehicle.name,
         date: p_time(route, route.start).strftime('%FT%T.%L%:z'),
         external_ref: generate_route_id(route, p_time(route, route.start)),
         missions: destinations
