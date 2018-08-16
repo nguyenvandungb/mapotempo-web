@@ -44,7 +44,7 @@ class Fleet < DeviceBase
       device: 'fleet',
       label: 'Mapotempo Live',
       label_small: 'Mapo. Live',
-      route_operations: [:send, :clear],
+      route_operations: [:send, :fetch_routes],
       has_sync: true,
       has_create_device: true,
       has_create_user: true,
@@ -264,6 +264,37 @@ class Fleet < DeviceBase
     end.compact
   end
 
+  def fetch_routes_by_date(customer, from = ( Time.zone.now - 12.hour), to = nil)
+    url = URI.encode("#{api_url}/api/0.1/routes?from=#{from}&to=#{to}")
+
+    begin
+      response = JSON.parse rest_client_get(url, customer.devices[:fleet][:api_key], nil), symbolize_names: true
+    rescue RestClient::Unauthorized, RestClient::InternalServerError, RestClient::ResourceNotFound, RestClient::UnprocessableEntity
+      raise DeviceServiceError.new("Fleet: #{I18n.t('errors.fleet.fetch_routes')}")
+    end
+
+    response[:routes].map do |r|
+      {
+        name: r[:name],
+        fleet_user: r[:user_email],
+        external_ref: r[:external_ref],
+        route_id: decode_route_route_id(r[:external_ref]),
+        date: r[:date]
+      }
+    end
+  end
+
+  # external_refs: [{fleet_user: "user@gmail.com", external_ref: "cf_format_route"}]
+  def clear_routes_by_external_ref(customer, external_refs)
+    external_refs.each do |ref|
+      begin
+        clear_fleet_route(ref['fleet_user'], customer.devices[:fleet][:api_key], ref, true)
+      rescue RestClient::Unauthorized, RestClient::InternalServerError, RestClient::ResourceNotFound, RestClient::UnprocessableEntity => e
+        puts e.inspect
+      end
+    end
+  end
+
   def send_route(customer, route, _options = {}, delete_mission = true)
     raise DeviceServiceError.new("Fleet: #{I18n.t('errors.fleet.past_missions')}") if route.planning.date && route.planning.date < Date.today
 
@@ -420,5 +451,9 @@ class Fleet < DeviceBase
   def decode_route_id(mission_ref)
     parts = mission_ref.split('-')
     mission_ref.split('-').last if parts.length > 3
+  end
+
+  def decode_route_route_id(route_ref)
+    route_ref.split('-')[1]
   end
 end

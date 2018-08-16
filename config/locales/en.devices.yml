@@ -104,6 +104,7 @@ en:
         update_failed: Failed to update user
       get_vehicles_pos: Cannot get vehicles position
       fetch_stops: Cannot get missions list
+      fetch_routes: Cannot get routes list
       no_missions: No missions to send
       past_missions: Plan date must be later or equal than today
       set_missions: Failed to create missions
@@ -202,6 +203,12 @@ en:
         action: Clear Mapotempo Live mobile app
         success: Mapotempo Live mobile app trip has been cleared successfully
         fail: Failed to clear Mapotempo Live mobile app
+        button: Clear Selection
+        button_empty: Close
+        empty: No Routes found on Mapotempo Live
+      fleet_fetch_routes:
+        action: Clear Mapotempo Live mobile app
+        success: Mapotempo Live routes obtained
       teksat_send:
         action: Send to Teksat
         success: Sent to Teksat successfully

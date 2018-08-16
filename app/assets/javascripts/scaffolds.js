@@ -140,7 +140,7 @@ $(document).on('ready page:load', function() {
 
   /**
    * @param {id, capacity, unitIcon, label} obj A deliverable unit object
-   * @param {boolean} withCapacity true/false 
+   * @param {boolean} withCapacity true/false
    */
   $.fn.showOrCreateQuantity = function(obj, withCapacity) {
     var $this = this;
@@ -230,9 +230,16 @@ var bootstrap_dialog = function(options) {
   var default_modal = $('#default-modal').clone();
   default_modal.find('.modal-title').html(options.title);
   default_modal.find('.modal-body').html(options.message);
+
+  if (options.footer) {
+    default_modal.find('.modal-footer').html(options.footer);
+  }
+
   if (options.icon) {
-    default_modal.find('i.fa').addClass(options.icon).show();
-  };
+    default_modal.find(options.replaceOnlyModalIcon ? '.modal-icon' : 'i.fa')
+                 .addClass(options.icon).show();
+  }
+
   $("body").append(default_modal);
   return default_modal;
 };

@@ -60,15 +60,42 @@ class V01::Devices::Fleet < Grape::API
         device_clear_route
       end
 
-      desc 'Clear Planning Routes',
-        detail: 'Clear Planning Routes',
+      desc 'Clear Fleet Routes',
+        detail: 'Clear Fleet Routes',
         nickname: 'deviceFleetClearMultiple'
       params do
-        requires :planning_id, type: Integer, desc: 'Planning ID'
+        requires :external_refs, type: Array do
+          requires :fleet_user, type: String
+          requires :external_ref, type: String
+        end
       end
-      delete '/clear_multiple' do
-        device_clear_routes device_id: :fleet_user
+      post '/clear_multiple' do
+        service.clear_routes_by_external_ref(params[:external_refs])
         status 204
+      end
+
+      desc 'Get Fleet routes',
+        detail: 'Get Fleet routes',
+        nickname: 'getFleetRoutes'
+        params do
+          optional :from, type: Date
+          optional :to, type: Date
+        end
+      get '/fetch_routes' do
+        routes = service.fetch_routes_by_date(params[:from], params[:to])
+        hash = {}
+        routes.each do |route|
+          route[:date] = I18n.l(Time.parse(route[:date]), format: :long)
+          planning = Route.find_by(id: route[:route_id]).try(:planning)
+          route[:planning_name] = planning.name unless planning.nil?
+
+          if !hash[route[:fleet_user]].nil?
+            hash[route[:fleet_user]] << route
+          else
+            hash[route[:fleet_user]] = [route]
+          end
+        end
+        hash.map { |k, v| { fleet_user: k, routes: v } }
       end
 
       desc 'Sync Vehicles',

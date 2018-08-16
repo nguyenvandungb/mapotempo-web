@@ -1,0 +1,23 @@
+<div class="container-fluid" style="max-height: 500px; overflow: auto">
+  {{#vra}}
+    <h4 style="color: {{vehicle.color}}; border-bottom: 1px solid {{vehicle.color}}; font-weight: bolder"><i class="fa fa-fw fa-truck"></i> {{fleet_user}} </h4>
+
+      {{#routes}}
+        <div class="col-md-12 col-sm-12 checkbox" style="margin-bottom: 20px">
+          <label style="font-weight: bolder">
+            <input type="checkbox" class="fleet-routes-selection" value="{{external_ref}}" data-user="{{fleet_user}}">
+            <span>
+              {{#name}} Route name : {{name}} {{/name}} {{^name}} Route N°{{route_id}} {{/name}}
+            </span>
+          </label>
+          <div class="col-md-12 col-sm-12" style="color: gray"> {{date}} </div>
+          {{#planning_name}}
+            <div class="col-md-12 col-sm-12" style="color: gray"> {{planning_name}} </div>
+          {{/planning_name}}
+        </div>
+      {{/routes}}
+  {{/vra}}
+  {{^vra}}
+    <h2 style="text-align: center"> {{empty}} </h2>
+  {{/vra}}
+</div>

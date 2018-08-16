@@ -105,7 +105,12 @@ class V01::Devices::FleetTest < ActiveSupport::TestCase
     set_route
     with_stubs [:route_actions_url] do
       planning = plannings(:planning_one)
-      delete api('devices/fleet/clear_multiple', { customer_id: @customer.id, planning_id: planning.id })
+      route = routes(:route_one_one)
+      service = FleetService.new(customer: @customer).service
+      ref = service.send(:generate_route_id, route, service.p_time(route, route.start))
+
+      post api('devices/fleet/clear_multiple', { customer_id: @customer.id}), external_refs: [{fleet_user: 'fake_user@example.com', external_ref: ref}]
+
       assert_equal 204, last_response.status, last_response.body
       routes = planning.routes.select(&:vehicle_usage_id)
       routes.each(&:reload)
