@@ -59,10 +59,5 @@ class ApplicationControllerTest < ActionController::TestCase
         get :index, format: :json
         assert_response :internal_server_error
       end
-
-      ApplicationController.stub_any_instance(:api_key?, lambda { |*a| raise StandardError }) do
-        get :index, format: :json
-        assert_response :internal_server_error
-      end
   end
 end
