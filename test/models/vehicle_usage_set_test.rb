@@ -126,4 +126,20 @@ class VehicleUsageSetTest < ActiveSupport::TestCase
     assert_not vehicle_usage_set.valid?
     assert_equal [:work_time], vehicle_usage_set.errors.keys
   end
+
+  test 'rest stop should not be after rest start' do
+    vehicle_usage_set = vehicle_usage_sets(:vehicle_usage_set_one)
+
+    assert_raises ActiveRecord::RecordInvalid do
+      vehicle_usage_set.update! rest_stop: '09:00', rest_start: '10:00'
+    end
+  end
+
+  test 'close should not be after open' do
+    vehicle_usage_set = vehicle_usage_sets(:vehicle_usage_set_one)
+
+    assert_raises ActiveRecord::RecordInvalid do
+      vehicle_usage_set.update! close: '09:00', open: '10:00'
+    end
+  end
 end

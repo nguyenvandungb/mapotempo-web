@@ -793,4 +793,238 @@ class PlanningsControllerTest < ActionController::TestCase
       end
     end
   end
+
+  test 'should not switch on unprocessable entity' do
+    @planning.routes.each(&:compute!) # To get correct colors for linestrings
+
+    begin
+      $origin_route_id = @planning.routes[1].id
+      $destination_route_id = @planning.routes[2].id
+      Stop.class_eval do
+        after_initialize :after_init
+        def after_init
+          raise if self.route_id != $origin_route_id && self.route_id != $destination_route_id
+        end
+      end
+
+      Planning.stub_any_instance(:switch, lambda { |*a| raise ActiveRecord::RecordInvalid.new(self) }) do
+        patch :switch, planning_id: @planning, format: :json, route_id: routes(:route_one_one).id, vehicle_usage_id: vehicle_usages(:vehicle_usage_one_three).id
+        assert_response :unprocessable_entity
+      end
+
+      Planning.stub_any_instance(:switch, lambda { |*a| nil }) do
+        patch :switch, planning_id: @planning, format: :json, route_id: routes(:route_one_one).id, vehicle_usage_id: vehicle_usages(:vehicle_usage_one_three).id
+        assert_response :unprocessable_entity
+      end
+
+    ensure
+      Stop.class_eval do
+        def after_init
+        end
+      end
+    end
+  end
+
+  test 'should not automatic insert on unprocessable entity' do
+    Planning.stub_any_instance(:automatic_insert, lambda { |*a| raise ActiveRecord::RecordNotFound.new(self) }) do
+      patch :automatic_insert, id: @planning.id, format: :json, stop_ids: [stops(:stop_unaffected).id]
+      assert_response :unprocessable_entity
+    end
+
+    Planning.stub_any_instance(:automatic_insert, lambda { |*a| nil }) do
+      patch :automatic_insert, id: @planning.id, format: :json, stop_ids: [stops(:stop_unaffected).id]
+      assert_response :unprocessable_entity
+    end
+
+    Planning.stub_any_instance(:save!, lambda { |*a| raise ActiveRecord::RecordInvalid.new(self) }) do
+      patch :automatic_insert, id: @planning.id, format: :json, stop_ids: [stops(:stop_unaffected).id]
+      assert_response :unprocessable_entity
+    end
+
+    Planning.stub_any_instance(:save!, lambda { |*a| nil }) do
+      patch :automatic_insert, id: @planning.id, format: :json, stop_ids: [stops(:stop_unaffected).id]
+      assert_response :unprocessable_entity
+    end
+  end
+
+  test 'should not optimize one route on unprocessable entity' do
+    begin
+      $route_id = routes(:route_one_one).id
+      Stop.class_eval do
+        after_initialize :after_init
+        def after_init
+          raise if self.route_id != $route_id
+        end
+      end
+
+      Customer.stub_any_instance(:save!, lambda { |*a| false } ) do
+        get :optimize_route, planning_id: @planning, format: :json, route_id: routes(:route_one_one).id
+        assert_valid response
+        assert_response :unprocessable_entity
+      end
+
+      Planning.stub_any_instance(:optimize, lambda { |*a| raise NoSolutionFoundError } ) do
+        get :optimize_route, planning_id: @planning, format: :json, route_id: routes(:route_one_one).id
+        assert_valid response
+        assert_response :unprocessable_entity
+      end
+
+      Planning.stub_any_instance(:optimize, lambda { |*a| raise ActiveRecord::RecordInvalid.new(self) } ) do
+        get :optimize_route, planning_id: @planning, format: :json, route_id: routes(:route_one_one).id
+        assert_valid response
+        assert_response :unprocessable_entity
+      end
+
+    ensure
+      Stop.class_eval do
+        def after_init
+        end
+      end
+    end
+  end
+
+  test 'should not optimize on unprocessable entity' do
+    Planning.stub_any_instance(:save!, lambda { |*a| false } ) do
+      get :optimize, planning_id: @planning, format: :json, global: true
+      assert_valid response
+      assert_response :unprocessable_entity
+    end
+
+    Planning.stub_any_instance(:optimize, lambda { |*a| raise NoSolutionFoundError } ) do
+      get :optimize, planning_id: @planning, format: :json, global: true
+      assert_valid response
+      assert_response :unprocessable_entity
+    end
+
+    Planning.stub_any_instance(:optimize, lambda { |*a| raise ActiveRecord::RecordInvalid.new(self) } ) do
+      get :optimize, planning_id: @planning, format: :json, global: true
+      assert_valid response
+      assert_response :unprocessable_entity
+    end
+  end
+
+  test 'should not move on unprocessable entity' do
+    begin
+      $origin_route_id = @planning.routes[0].id
+      $destination_route_id = @planning.routes[1].id
+      Stop.class_eval do
+        after_initialize :after_init
+        def after_init
+          raise if self.route_id != $origin_route_id && self.route_id != $destination_route_id
+        end
+      end
+
+
+      Planning.stub_any_instance(:compute, lambda { |*a| raise ActiveRecord::RecordInvalid.new(self) }) do
+        patch :move, planning_id: @planning, route_id: @planning.routes[1], stop_id: @planning.routes[0].stops[0], index: 1, format: :json
+        assert_response :unprocessable_entity
+      end
+
+      Planning.stub_any_instance(:save!, lambda { |*a| false }) do
+        patch :move, planning_id: @planning, route_id: @planning.routes[1], stop_id: @planning.routes[0].stops[0], index: 1, format: :json
+        assert_response :unprocessable_entity
+      end
+
+    ensure
+      Stop.class_eval do
+        def after_init
+        end
+      end
+    end
+  end
+
+  test 'should not refresh on unprocessable entity' do
+    Planning.stub_any_instance(:save, lambda { false } ) do
+      get :refresh, planning_id: @planning, format: :json
+      assert_response :unprocessable_entity
+    end
+  end
+
+  test 'should not update stop on unprocessable entity' do
+    begin
+      $route_id = routes(:route_one_one).id
+      Stop.class_eval do
+        after_initialize :after_init
+        def after_init
+          raise if self.route_id != $route_id
+        end
+      end
+
+      Route.stub_any_instance(:compute!, lambda { |*a| raise ActiveRecord::RecordInvalid.new(self) }) do
+        patch :update_stop, planning_id: @planning, format: :json, route_id: routes(:route_one_one).id, stop_id: stops(:stop_one_one).id, stop: { active: false }
+        assert_response :unprocessable_entity
+      end
+
+      Route.stub_any_instance(:compute!, lambda { |*a| nil }) do
+        patch :update_stop, planning_id: @planning, format: :json, route_id: routes(:route_one_one).id, stop_id: stops(:stop_one_one).id, stop: { active: false }
+        assert_response :unprocessable_entity
+      end
+
+    ensure
+      Stop.class_eval do
+        def after_init
+        end
+      end
+    end
+  end
+
+  test 'should not update active on unprocessable entity' do
+    begin
+      $route_id = routes(:route_one_one).id
+      Stop.class_eval do
+        after_initialize :after_init
+        def after_init
+          raise if self.route_id != $route_id
+        end
+      end
+
+      Planning.stub_any_instance(:save, lambda { |*a| false }) do
+        patch :active, planning_id: @planning, format: :json, route_id: routes(:route_one_one).id, active: :none
+        assert_response :unprocessable_entity
+      end
+
+    ensure
+      Stop.class_eval do
+        def after_init
+        end
+      end
+    end
+  end
+
+  test 'should not reverse order on unprocessable entity' do
+    begin
+      $route_id = routes(:route_one_one).id
+      Stop.class_eval do
+        after_initialize :after_init
+
+        def after_init
+          raise if self.route_id != $route_id
+        end
+      end
+
+      Planning.stub_any_instance(:save, lambda { |*a| false } ) do
+        patch :reverse_order, planning_id: @planning, format: :json, route_id: routes(:route_one_one).id
+        assert_response :unprocessable_entity
+      end
+
+    ensure
+      Stop.class_eval do
+        def after_init
+        end
+      end
+    end
+  end
+
+  test 'should not apply zonings on unprocessable entity' do
+    Planning.stub_any_instance(:save!, lambda { |*a| raise ActiveRecord::RecordInvalid.new(self) } ) do
+      patch :apply_zonings, id: @planning, format: :json, planning: { zoning_ids: [zonings(:zoning_one).id] }
+      assert_response :unprocessable_entity
+    end
+
+    Planning.stub_any_instance(:save!, lambda { |*a| false } ) do
+      patch :apply_zonings, id: @planning, format: :json, planning: { zoning_ids: [zonings(:zoning_one).id] }
+      assert_response :unprocessable_entity
+    end
+  end
+
 end

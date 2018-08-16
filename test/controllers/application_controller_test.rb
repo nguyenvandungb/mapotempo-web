@@ -11,7 +11,7 @@ class ApplicationControllerTest < ActionController::TestCase
   Rails.application.routes.disable_clear_and_finalize = true
 
   Rails.application.routes.draw do
-   get 'index' => 'application#index'
+    get 'index' => 'application#index'
   end
 
   test 'should set user from api key without updating sign in at' do
@@ -26,5 +26,43 @@ class ApplicationControllerTest < ActionController::TestCase
     sign_in users(:user_one)
     get :index
     assert_not_nil flash.now[:error]
+  end
+
+  test 'should rescue database error' do
+    ApplicationController.stub_any_instance(:api_key?, lambda { |*a| raise ActiveRecord::StaleObjectError.new(self, nil) }) do
+      get :index, format: :json
+      assert_equal I18n.t('errors.database.default'), JSON.parse(response.body)['error']
+      assert_response :unprocessable_entity
+    end
+
+    ApplicationController.stub_any_instance(:api_key?, lambda { |*a| raise PG::TRDeadlockDetected.new }) do
+      get :index, format: :json, only_path: true
+      assert_equal I18n.t('errors.database.deadlock'), JSON.parse(response.body)['error']
+      assert_response :unprocessable_entity
+    end
+
+    ApplicationController.stub_any_instance(:api_key?, lambda { |*a| raise ActiveRecord::StatementInvalid.new(self) }) do
+      get :index, format: :json
+      assert_equal I18n.t('errors.database.invalid_statement'), JSON.parse(response.body)['error']
+      assert_response :unprocessable_entity
+    end
+
+    ApplicationController.stub_any_instance(:api_key?, lambda { |*a| raise PG::TRSerializationFailure.new }) do
+      get :index, format: :json
+      assert_equal I18n.t('errors.database.default'), JSON.parse(response.body)['error']
+      assert_response :unprocessable_entity
+    end
+  end
+
+  test 'should rescue server error' do
+      ApplicationController.stub_any_instance(:api_key?, lambda { |*a| raise ActionController::InvalidAuthenticityToken.new }) do
+        get :index, format: :json
+        assert_response :internal_server_error
+      end
+
+      ApplicationController.stub_any_instance(:api_key?, lambda { |*a| raise StandardError }) do
+        get :index, format: :json
+        assert_response :internal_server_error
+      end
   end
 end

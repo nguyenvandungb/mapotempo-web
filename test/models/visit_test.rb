@@ -251,4 +251,12 @@ class VisitTest < ActiveSupport::TestCase
     visits(:visit_unaffected_one).update tags: [tags(:tag_one), tags(:tag_two)]
     assert route.reload.outdated
   end
+
+  test 'close2 should not be after open2' do
+    visit = visits(:visit_one)
+
+    assert_raises ActiveRecord::RecordInvalid do
+      visit.update! close2: '09:00', open2: '10:00'
+    end
+  end
 end
