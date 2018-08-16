@@ -240,13 +240,11 @@ class PlanningsController < ApplicationController
             end
           end
 
-          format.json do
-            if @planning.compute && @planning.save! && @planning.reload
-              @routes = @planning.routes.select{ |r| route_ids.include? r.id }
-              render action: :show
-            else
-              render json: @planning.errors, status: :unprocessable_entity
-            end
+          if @planning.compute && @planning.save! && @planning.reload
+            @routes = @planning.routes.select{ |r| route_ids.include? r.id }
+            format.json { render action: :show }
+          else
+            format.json { render json: @planning.errors, status: :unprocessable_entity }
           end
         end
       rescue ActiveRecord::RecordNotFound => e
