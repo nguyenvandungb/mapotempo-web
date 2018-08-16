@@ -618,6 +618,11 @@ en:
         optimization_time:
           must_be_greater_than_minimal_time: must be greater than minimal time
   errors:
+    database:
+      default: Impossible to execute this operation.
+      invalid_statement: Database error. Impossible to execute this operation
+      deadlock: 'Warning: Failed to update data. Another update was realized simultaneously,
+        you may performed several operations too fast or multiple times.'
     management:
       title: An error occurred
       description: The page you want to access raised an error
@@ -645,8 +650,6 @@ en:
     planning:
       import_too_many_routes: Tried to import more routes than available vehicles
       already_optimizing: A plan optimization is already in progress
-      deadlock: 'Warning: Failed to update data. Another update was realized simultaneously,
-        you may performed several operations too fast or multiple times.'
       automatic_insert_no_result: No route to set stop
       job_in_progress: Impossible to execute this operation for the moment, a background task
         (optimization) is currently running

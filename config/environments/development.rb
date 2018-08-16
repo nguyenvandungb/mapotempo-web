@@ -39,6 +39,8 @@ Rails.application.configure do
   # Raises error for missing translations
   config.action_view.raise_on_missing_translations = true
 
+  config.raise_on_standard_error = false
+
   # Application config
   # Display sent email at http://localhost:3000/letter_opener
   # Use :letter_opener to automatically open email in browser
@@ -63,8 +65,9 @@ Rails.application.configure do
   config.optimize = OptimizerWrapper.new(
     cache_factory('optimizer_wrapper', 60*60*24*10),
     ENV['OPTIMIZER_HOST'] || 'http://localhost:1791/0.1',
-    ENV['OPTIMIZER_API_KEY']
+    ENV['OPTIMIZER_API_KEY'] || 'demo'
   )
+
   config.optimize_time = 60
   config.optimize_time_force = nil
   config.optimize_minimal_time = 15
@@ -82,7 +85,7 @@ Rails.application.configure do
   config.geocode_complete = false # Build time setting
 
   require 'geocode_addok_wrapper'
-  config.geocode_geocoder = GeocodeAddokWrapper.new(ENV['GEOCODER_HOST'] || 'https://geocode.mapotempo.com/0.1', ENV['GEOCODER_API_KEY'])
+  config.geocode_geocoder = GeocodeAddokWrapper.new(ENV['GEOCODER_HOST'] || 'https://geocode.mapotempo.com/0.1', ENV['GEOCODER_API_KEY'] || 'demo')
 
   config.router_osrm = Routers::Osrm.new(
     cache_factory('osrm_request', 60*60*24*1),
@@ -104,11 +107,11 @@ Rails.application.configure do
   config.router_wrapper = Routers::RouterWrapper.new(
     cache_factory('router_wrapper_request', 60*60*24*1),
     cache_factory('router_wrapper_result', 60*60*24*1),
-    ENV['ROUTER_API_KEY']
+    ENV['ROUTER_API_KEY'] || 'demo'
   )
 
   config.devices.fleet.api_url = 'http://0.0.0.0:8084'
-  config.devices.fleet.admin_api_key = ENV['DEVICE_FLEET_ADMIN_API_KEY']
+  config.devices.fleet.admin_api_key = ENV['DEVICE_FLEET_ADMIN_API_KEY'] || 'demo'
   config.devices.alyacom.api_url = 'http://partners.alyacom.fr/ws'
   config.devices.masternaut.api_url = 'http://ws.webservices.masternaut.fr/MasterWS/services'
   config.devices.orange.api_url = 'https://m2m-services.ft-dm.com'
