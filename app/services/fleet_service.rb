@@ -44,6 +44,18 @@ class FleetService < DeviceService
     end
   end
 
+  def fetch_stops_status(planning)
+    # Key for cache is composed of :updated_at routes because planning will do operations by itself that can invalidate the data for 120 seconds
+    key = [:fetch_stops, service_name, planning.customer.id, planning.id, planning.customer.devices[:fleet][:user], planning.routes.select(&:vehicle_usage?).map(&:updated_at)]
+    with_cache(key) do
+      planning.fetch_stops_status
+    end
+  end
+
+  def fetch_routes_by_date(from, to)
+    service.fetch_routes_by_date(customer, from, to)
+  end
+
   def create_company
     if customer.devices[service_name]
       service.create_company(customer)
@@ -57,5 +69,9 @@ class FleetService < DeviceService
   def clear_route(route)
     super(route)
     route.clear_eta_data
+  end
+
+  def clear_routes_by_external_ref(refs)
+    service.clear_routes_by_external_ref(customer, refs.each(&:symbolize_keys))
   end
 end
