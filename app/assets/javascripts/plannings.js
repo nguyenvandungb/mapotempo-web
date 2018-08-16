@@ -1995,21 +1995,78 @@ var devicesObservePlanning = (function() {
     });
   };
 
+  var _fetchFleetRoutes = function(vehicle_routes_array) {
+    var refs = {},
+        btnName = (vehicle_routes_array.length <= 0) ? I18n.t('plannings.edit.fleet_clear.button_empty') : I18n.t('plannings.edit.fleet_clear.button');
+
+    var modal = bootstrap_dialog({
+      title: I18n.t('plannings.edit.fleet_fetch_routes.action'),
+      icon: 'fa fa-mobile fa-rotate-90 fa-fw',
+      replaceOnlyModalIcon: true,
+      message: SMT['modals/fleet_fetch_routes']({
+        vra: vehicle_routes_array,
+        empty: I18n.t('plannings.edit.fleet_clear.empty')
+      }),
+      footer: '<button id="clear_multiple" class="btn btn-primary"> ' + btnName + ' </button>'
+    }).modal('show');
+
+    // Out Callback Previously settled
+    modal.off('click', '#clear_multiple').off('change', '.fleet-routes-selected');
+
+    // Control Route Selection (Add&Remove ext_ref)
+    modal.find('.fleet-routes-selection').change(function(e) {
+      if ($(this).is(':checked')) {
+        refs[$(this).val()] = { fleet_user: $(this).data('user'), external_ref: $(this).val() };
+      } else if (refs[$(this).val()]) {
+        delete refs[$(this).val()];
+      }
+    });
+
+    // Send Request with ext_ref selected
+    modal.find('#clear_multiple').click(function(e) {
+      if (Object.keys(refs).length <= 0) { modal.modal('hide'); return; }
+      $(this).off('click'); // Don't let user call multiple times
+
+      $.ajax({
+        url: '/api/0.1/devices/fleet/clear_multiple',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({ external_refs: $.map(refs, function(obj) { return obj; }) }),
+        success: function(data) {
+          if (data && data.error) { stickyError(data.error); return; }
+          notice(I18n.t('plannings.edit.fleet_clear.success'));
+        },
+        complete: function() {
+          modal.modal('hide');
+        },
+        error: function() {
+          stickyError(I18n.t('plannings.edit.fleet_clear.fail'));
+        }
+      });
+
+    });
+  }
+
   var _devicesInitVehicle = function(callback) {
 
     $.each($('.last-sent-at', _context), function(i, element) {
       if ($(element).find('span').html() === '') $(element).hide();
     });
 
-    // Still needed, maybe ask to FLO why ?!
     $(_context).off('click', '.device-operation').on('click', '.device-operation', function(e) {
-      if (!confirm(I18n.t('all.verb.confirm'))) return;
-
       var from = $(e.target),
         service = from.data('service'),
         operation = from.data('operation'),
         url = '/api/0.1/devices/' + service + '/' + operation,
         data = {};
+
+      if (from.data('planning-id')) data.planning_id = from.data('planning-id');
+      if (from.data('route-id')) data.route_id = from.data('route-id');
+      if (from.data('type')) data.type = from.data('type');
+
+      if (operation != 'fetch_routes' && !confirm(I18n.t('all.verb.confirm'))) {
+        return;
+      }
 
       var service_translation = 'plannings.edit.dialog.' + service + '.in_progress';
       var dialog = bootstrap_dialog({
@@ -2020,13 +2077,24 @@ var devicesObservePlanning = (function() {
         })
       });
 
-      if (from.data('planning-id')) data.planning_id = from.data('planning-id');
-      if (from.data('route-id')) data.route_id = from.data('route-id');
-      if (from.data('type')) data.type = from.data('type');
+      url += ((data.planning_id && operation !== 'fetch_routes') ? '_multiple' : '');
+      var schema;
+
+      switch(operation) {
+        case 'clear':
+          schema = 'DELETE'
+          break;
+        case 'fetch_routes':
+          schema = 'GET'
+          break;
+        default:
+          schema = 'POST'
+          break;
+      }
 
       $.ajax({
-        url: url + (data.planning_id ? '_multiple' : ''),
-        type: (operation === 'clear') ? 'DELETE' : 'POST',
+        url: url,
+        type: schema,
         dataType: 'json',
         data: data,
         beforeSend: function() {
@@ -2047,6 +2115,8 @@ var devicesObservePlanning = (function() {
               _setLastSentAt(data);
             else if (from.data('route-id') && operation === 'clear')
               _clearLastSentAt(data, _context);
+            else if (operation === 'fetch_routes')
+              _fetchFleetRoutes(data);
 
             callback && callback(from); // for backgroundTask
           }

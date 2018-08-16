@@ -104,6 +104,7 @@ fr:
         update_failed: Échec lors de la mise à jour de l'utilisateur
       get_vehicles_pos: Impossible de lister la position des véhicules
       fetch_stops: Impossible de récupérer la liste des missions
+      fetch_routes: Impossible de récupérer la liste des routes
       no_missions: Aucune mission à envoyer
       past_missions: La date du plan doit être postérieure ou égale à aujourd'hui
       set_missions: Échec lors de la création de la mission
@@ -204,6 +205,12 @@ fr:
         action: "Vider l'app mobile Mapotempo Live"
         success: "L'app mobile Mapotempo Live a été vidée avec succès"
         fail: "Échec lors de la suppression dans l'app mobile Mapotempo Live"
+        button: "Vider la sélection"
+        button_empty: "Fermer"
+        empty: "Aucune routes trouvées sur Mapotempo Live"
+      fleet_fetch_routes:
+        action: "Vider l'app mobile Mapotempo Live"
+        success: "Routes Mapotempo Live obtenues"
       teksat_send:
         action: Envoyer à Teksat
         success: Envoi vers Teksat terminé avec succès
