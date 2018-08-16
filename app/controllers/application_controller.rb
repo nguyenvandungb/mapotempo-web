@@ -21,15 +21,15 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
 
   # Handle exceptions
-  rescue_from StandardError, with: :server_error if ENV['RAILS_ENV'] == 'production'
+  rescue_from StandardError, with: :server_error if Mapotempo::Application.config.raise_on_standard_error
   rescue_from ActionController::InvalidAuthenticityToken, with: :server_error
   rescue_from ActiveRecord::RecordNotFound, with: :not_found_error
   rescue_from AbstractController::ActionNotFound, with: :not_found_error
   rescue_from ActionController::UnknownController, with: :not_found_error
-  rescue_from ActiveRecord::StaleObjectError, with: :deadlock
-  rescue_from PG::TRDeadlockDetected, with: :deadlock
-  rescue_from ActiveRecord::StatementInvalid, with: :deadlock
-  rescue_from PG::TRSerializationFailure, with: :deadlock
+  rescue_from ActiveRecord::StaleObjectError, with: :database_error
+  rescue_from PG::TRDeadlockDetected, with: :database_error
+  rescue_from ActiveRecord::StatementInvalid, with: :database_error
+  rescue_from PG::TRSerializationFailure, with: :database_error
   rescue_from Exceptions::JobInProgressError, with: :job_in_progress
 
   layout :layout_by_resource
@@ -184,14 +184,23 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def deadlock(exception)
+  def database_error(exception)
     # Display in logger
     Rails.logger.warn(exception.class.to_s + ' : ' + exception.to_s)
     Rails.logger.warn(exception.backtrace.join("\n"))
 
+    error = case exception
+    when ActiveRecord::StatementInvalid
+      I18n.t('errors.database.invalid_statement')
+    when PG::TRDeadlockDetected
+      I18n.t('errors.database.deadlock')
+    else
+      I18n.t('errors.database.default')
+    end
+
     respond_to do |format|
       format.html { render 'errors/show', layout: 'full_page', locals: { status: 422 }, status: 422 }
-      format.json { render json: { error: I18n.t('errors.planning.deadlock') }, status: :unprocessable_entity }
+      format.json { render json: { error: error }, status: :unprocessable_entity }
     end
   end
 

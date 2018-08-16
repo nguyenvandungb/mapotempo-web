@@ -624,6 +624,12 @@
         'optimization_time':
           'must_be_greater_than_minimal_time': 'doit être supérieur à la durée minimale'
   'errors':
+    'database':
+      'default': 'L''action que vous avez tenté de réaliser est impossible.'
+      'invalid_statement': 'Erreur avec la base de données, l''action que vous avez tenté de réaliser est impossible.'
+      'deadlock': 'Attention : Échec de mise à jour. Une autre mise à jour a été effectuée
+        en simultané, vous avez peut-être réalisé plusieurs opérations trop rapidement
+        ou plusieurs fois.'
     'management':
       'title': 'Impossible d''accèder à la page'
       'description': 'La page que vous essayez d''atteindre a provoqué une erreur'
@@ -654,9 +660,6 @@
       'import_too_many_routes': 'Tentative d''importer plus de tournées que de véhicules
         disponibles'
       'already_optimizing': 'Une optimisation de plan est déjà en cours'
-      'deadlock': 'Attention : Échec de mise à jour. Une autre mise à jour a été effectuée
-        en simultané, vous avez peut-être réalisé plusieurs opérations trop rapidement
-        ou plusieurs fois.'
       'automatic_insert_no_result': 'Affectation des arrêts impossible'
       'job_in_progress': 'Opération impossible pour le moment, une tâche de fond (optimisation)
         est en cours d''execution'
