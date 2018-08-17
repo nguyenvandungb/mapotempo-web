@@ -41,7 +41,7 @@ class Optimizer
         planning.errors.add(:base, I18n.t('errors.planning.already_optimizing'))
         false
       else
-        planning.customer.job_optimizer = Delayed::Job.enqueue(OptimizerJob.new(planning.id, route && route.id, options[:global], options[:active_only]))
+        planning.customer.job_optimizer = Delayed::Job.enqueue(OptimizerJob.new(planning.id, route && route.id, options[:global], options[:active_only], options[:ignore_overload_multipliers]))
         planning.customer.job_optimizer.save!
       end
     else

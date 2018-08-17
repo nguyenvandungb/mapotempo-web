@@ -392,7 +392,7 @@ class PlanningsController < ApplicationController
       params[:ignore_overload_multipliers].values.map{ |obj|
         {
           unit_id: obj['unit_id'].to_i,
-          ignore: ValueToBoolean::value_to_boolean(obj['ignore'])
+          ignore: ValueToBoolean.value_to_boolean(obj['ignore'])
         }
       }
     else
