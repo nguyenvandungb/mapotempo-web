@@ -17,7 +17,7 @@
 #
 require 'optim/ort'
 
-class OptimizerJob < Job.new(:planning_id, :route_id, :global, :active_only)
+class OptimizerJob < Job.new(:planning_id, :route_id, :global, :active_only, :ignore_overload_multipliers)
   @@optimize_time = Mapotempo::Application.config.optimize_time
   @@optimize_time_force = Mapotempo::Application.config.optimize_time_force
   @@max_split_size = Mapotempo::Application.config.optimize_max_split_size
@@ -42,7 +42,7 @@ class OptimizerJob < Job.new(:planning_id, :route_id, :global, :active_only)
     bars = Array.new(2, 0)
     optimum = unless routes.select(&:vehicle_usage_id).empty?
       begin
-        planning.optimize(routes, global: global, active_only: active_only) do |positions, services, vehicles|
+        planning.optimize(routes, global: global, active_only: active_only, ignore_overload_multipliers: ignore_overload_multipliers) do |positions, services, vehicles|
           optimum = Mapotempo::Application.config.optimize.optimize(
             positions, services, vehicles,
             name: "c#{planning.customer_id} " + planning.name,
