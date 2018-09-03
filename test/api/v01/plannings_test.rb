@@ -503,6 +503,18 @@ class V01::PlanningsTest < V01::PlanningsBaseTest
       assert_equal '4', last_response.body
     end
   end
+
+  test 'should get planning quantities' do
+    get api("#{@planning.id}/quantities")
+    assert last_response.ok?
+    assert_equal 0, JSON.parse(last_response.body).count
+  end
+
+  test 'should get vehicule_usages of a whole planning' do
+    get api("#{@planning.id}/vehicle_usages")
+    assert last_response.ok?
+    assert_equal 2, JSON.parse(last_response.body).count
+  end
 end
 
 class V01::PlanningsErrorTest < V01::PlanningsBaseTest

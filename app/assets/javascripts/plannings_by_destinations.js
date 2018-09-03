@@ -1,6 +1,8 @@
 /* global bootstrap_dialog modal_options */
 var planningsShow = function(params) {
   'use strict';
+  var planningQuantities = [];
+  var vehiclesUsagesByPlanning = [];
 
   var templateVehicle = function(vehicle) {
     if (vehicle.id)
@@ -24,6 +26,7 @@ var planningsShow = function(params) {
   var movedDestinations;
   var countMovedDestinations = function(max) {
     movedDestinations++;
+    $('.progress-bar').css('width', (movedDestinations * 100 / max) + '%');
     if (movedDestinations == max) location.href = '';
   };
 
@@ -78,59 +81,141 @@ var planningsShow = function(params) {
 
   var getVehicleCapacities = function(vehicleId, planningId) {
     if (!vehicleId) return [];
-    var capacities = params.vehiclesUsagesByPlanning[planningId][vehicleId];
+    var capacities = vehiclesUsagesByPlanning[planningId][vehicleId];
     return Object.keys(capacities.default_capacities).map(function(id) {
-      var quantity = params.quantitiesByPlanning[planningId].find(function(qua) { return qua.id === parseInt(id); });
+      var quantity = planningQuantities[planningId].find(function(qua) { return qua.id === parseInt(id); });
       if (quantity) return {id: id, capacity: capacities.default_capacities[id], label: quantity.label, unitIcon: quantity.unit_icon};
     }).filter(function(element) { return element; });
   };
 
   var getVehicleQuantities = function(vehicleId, planningId) {
     if (!vehicleId) return [];
-    return [{ quantities: params.vehiclesUsagesByPlanning[planningId][vehicleId].vehicle_quantities }];
+    return [{ quantities: vehiclesUsagesByPlanning[planningId][vehicleId].vehicle_quantities }];
   };
 
-  var modifyVehicle = function($vehicleElement, planningId, visitId) {
-    $('.vehicle-color[data-planning-id="' + planningId + '"][data-visit-id="' + visitId + '"]')
-      .css('background', $vehicleElement.data('color'));
-    $('.vehicle-name[data-planning-id="' + planningId + '"][data-visit-id="' + visitId + '"]')
-      .html($vehicleElement.html());
+  var modifyVehicle = function(vehicleElement, planningId) {
+    $('#planning-list .vehicle-color[data-planning-id="' + planningId + '"]')
+      .css('background', vehicleElement.color);
+    $('#planning-list .vehicle-name[data-planning-id="' + planningId + '"]')
+      .html(vehicleElement.value);
+    $('#planning-list-' + planningId).show();
   };
 
   var cleanUncheckedQuantities = function() {
     var uncheckedVisits = $('#visits .stop-id:visible:not(:checked)');
     for (var index = 0; index < uncheckedVisits.length; index++) {
       var $element = $(uncheckedVisits[index]);
-      $('.vehicle-projected-quantities[data-planning-id="' + $element.data('planning') + '"][data-visit-id="' + $element.data('visit') + '"]').empty();
+      $('.vehicle-projected-quantities[data-planning-id="' + $element.data('planning') + '"]').empty();
+      modifyVehicle({color: '', value: ''}, $element.data('planning'));
+      $('#planning-list-' + $element.data('planning')).hide();
     }
+  };
+
+  var getVehiclesUsagesByPlanning = function(planningId, fnct) {
+    $.ajax({
+      type: 'GET',
+      dataType: 'json',
+      url: '/api/0.1/plannings/' + planningId + '/vehicle_usages?api_key=' + params.user_api_key,
+      beforeSend: beforeSendWaiting,
+      error: function(request, status, error) {
+        ajaxError(request, status, error);
+        completeWaiting();
+      },
+      success: function(data) {
+        vehiclesUsagesByPlanning[planningId] = data;
+        completeWaiting();
+        fnct();
+      }
+    });
+  };
+
+  var getPlanningQuantities = function(planningId, fnct) {
+    $.ajax({
+      type: 'GET',
+      dataType: 'json',
+      url: '/api/0.1/plannings/' + planningId + '/quantities?api_key=' + params.user_api_key,
+      beforeSend: beforeSendWaiting,
+      error: function(request, status, error) {
+        ajaxError(request, status, error);
+        completeWaiting();
+      },
+      success: function(data) { 
+        planningQuantities[planningId] = data;
+        completeWaiting();
+        fnct();
+      }
+    });
+  };
+
+  var renderData = function(steped, objct) {
+    if (steped !== 2) return;
+    objct.stopsToMoveByPlanning[objct.planningId].forEach(function() {
+      modifyVehicle({color: objct.$vehicleElement.data('color'), value: objct.$vehicleElement.html()}, objct.planningId);
+      var quantitiesToCalculate = $('.vehicle-projected-quantities[data-planning-id="' + objct.planningId + '"]');
+      for (var qtIndex = 0; qtIndex < quantitiesToCalculate.length; qtIndex++) {
+        var $element = $(quantitiesToCalculate[qtIndex]);
+        var vehicleId = objct.$vehicleElement.val();
+        var vehicleCapacities = getVehicleCapacities(vehicleId, objct.planningId);
+        var globalVisits = getVehicleQuantities(vehicleId, objct.planningId);
+        globalVisits.push(objct.visitToMove);
+        $element.empty();
+        $element.fillQuantities({
+          vehicleCapacities: vehicleCapacities,
+          stops: globalVisits,
+          controllerParamsQuantities: planningQuantities[objct.planningId],
+          withCapacity: true,
+        });
+      }
+    });
   };
 
   var calculateCapacities = function() {
     cleanUncheckedQuantities();
     var quantitiesByPlanning = getQuantitiesByPlanning();
     var $vehicleElement = $('#vehicle-id').find(":selected");
-    if (!$vehicleElement.attr('data-id')) return;
+    if (!$vehicleElement.data('id')) return;
     Object.keys(quantitiesByPlanning).forEach(function(planningId) {
       var visitToMove = quantitiesByPlanning[planningId];
       var stopsToMoveByPlanning = getStopsToMoveByPlanning();
-      stopsToMoveByPlanning[planningId].forEach(function(visitId) {
-        modifyVehicle($vehicleElement, planningId, visitId);
-        var quantitiesToCalculate = $('.vehicle-projected-quantities[data-planning-id="' + planningId + '"][data-visit-id="' + visitId + '"]');
-        for (var qtIndex = 0; qtIndex < quantitiesToCalculate.length; qtIndex++) {
-          var $element = $(quantitiesToCalculate[qtIndex]);
-          var vehicleId = $vehicleElement.val();
-          var vehicleCapacities = getVehicleCapacities(vehicleId, planningId);
-          var globalVisits = getVehicleQuantities(vehicleId, planningId);
-          globalVisits.push(visitToMove);
-          $element.empty();
-          $element.fillQuantities({
-            vehicleCapacities: vehicleCapacities,
-            stops: globalVisits,
-            controllerParamsQuantities: params.quantitiesByPlanning[planningId],
-            withCapacity: true,
+      var ready = 0;
+      if (vehiclesUsagesByPlanning[planningId]) {
+        ready++;
+        renderData(ready, {
+          stopsToMoveByPlanning: stopsToMoveByPlanning,
+          planningId: planningId,
+          $vehicleElement: $vehicleElement,
+          visitToMove: visitToMove
+        });
+      } else {
+        getVehiclesUsagesByPlanning(planningId, function() {
+          ready++;
+          renderData(ready, {
+            stopsToMoveByPlanning: stopsToMoveByPlanning,
+            planningId: planningId,
+            $vehicleElement: $vehicleElement,
+            visitToMove: visitToMove
           });
-        }
-      });
+        });
+      }
+      if (planningQuantities[planningId]) {
+        ready++;
+        renderData(ready, {
+          stopsToMoveByPlanning: stopsToMoveByPlanning,
+          planningId: planningId,
+          $vehicleElement: $vehicleElement,
+          visitToMove: visitToMove
+        });
+      } else {
+        getPlanningQuantities(planningId, function() {
+          ready++;
+          renderData(ready, {
+            stopsToMoveByPlanning: stopsToMoveByPlanning,
+            planningId: planningId,
+            $vehicleElement: $vehicleElement,
+            visitToMove: visitToMove
+          });
+        });
+      }
     });
   };
 
@@ -142,6 +227,7 @@ var planningsShow = function(params) {
         msg: I18n.t('plannings.edit.dialog.move_destinations.in_progress')
       })
     }));
+    $('.progress-bar').css('width', 0);
     dialog.modal({ keyboard: false, show: true });
 
     movedDestinations = 0;
@@ -171,6 +257,7 @@ var planningsShow = function(params) {
         msg: I18n.t('plannings.edit.dialog.automatic_insert.in_progress')
       })
     }));
+    $('.progress-bar').css('width', 0);
     dialog.modal({ keyboard: false, show: true });
 
     movedDestinations = 0;
@@ -203,7 +290,7 @@ var planningsShow = function(params) {
 };
 
 $(document).ready(function() {
-  $('.overflow').css('max-height', ($(document).height() - 390) + 'px');
+  $('.overflow').css('max-height', ($(window).height() - 250) + 'px');
 });
 
 Paloma.controller('PlanningsByDestinations', {

@@ -1840,7 +1840,7 @@
       'modify_planning': 'Modifier le plan'
       'select_vehicle': 'Affecter les destinations au véhicule'
       'title': 'Tournées du client'
-      'visit_quantities': 'Quantités de la visite'
+      'visit_quantities': 'Quantités'
   'routes':
     'show':
       'print': 'Imprimer'

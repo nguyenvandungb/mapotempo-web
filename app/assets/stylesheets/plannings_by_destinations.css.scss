@@ -21,9 +21,6 @@
 
 [data-controller='plannings_by_destinations'][data-action='show'] {
   #visits {
-    .overflow {
-      overflow: auto;
-    }
     table {
       th:first-child {
         width: 20px;
@@ -36,7 +33,14 @@
       }
     }
   }
+  #planning-list {
+    margin-top: 3em;
+  }
   #multiple_plannings_actions {
-    margin: 5px 0;
+    clear: both;
+    padding: 5px 0;
+  }
+  .overflow {
+    overflow: auto;
   }
 }

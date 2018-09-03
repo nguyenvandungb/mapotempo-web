@@ -19,6 +19,7 @@ require 'coerce'
 require 'exceptions'
 
 include PlanningsHelperApi
+include PlanningConcern
 
 class V01::Plannings < Grape::API
   helpers SharedParams
@@ -354,6 +355,30 @@ class V01::Plannings < Grape::API
         end
       else
         status 403
+      end
+    end
+
+    params do
+      requires :id, type: Integer, desc: 'The planning id'
+    end
+    get ':id/vehicle_usages' do
+      planning = current_customer.plannings.find(params[:id])
+      if planning
+        present PlanningConcern.vehicles_usages_map(planning)
+      else
+        error! 'Vehicle_usages of planning not found', 404
+      end
+    end
+
+    params do
+      requires :id, type: Integer, desc: 'The planning id'
+    end
+    get ':id/quantities' do
+      planning = current_customer.plannings.find(params[:id])
+      if planning
+        present planning.quantities
+      else
+        error! 'Quantities of planning not found', 404
       end
     end
   end
