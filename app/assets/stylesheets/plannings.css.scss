@@ -601,3 +601,22 @@ $sidebar-margins: 10px;
     }
   }
 }
+
+.temperature-info {
+  h6 {
+    text-align: center;
+    margin-top: 5px;
+    margin-bottom: 0px;
+    font-weight: bold;
+    font-size: 13px;
+  }
+
+  div {
+    margin: 0px 2px;
+  }
+
+  margin: 10px 5px;
+  margin-bottom: 0px;
+  border: 2pt solid #dddddd;
+  border-radius: 3px;
+}
