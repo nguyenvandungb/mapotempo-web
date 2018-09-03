@@ -28,58 +28,11 @@ module PlanningsHelper
   end
 
   def planning_vehicles_usages_map(planning)
-    planning.vehicle_usage_set.vehicle_usages.active.each_with_object({}) do |vehicle_usage, hash|
-      hash[vehicle_usage.vehicle_id] = vehicle_usage.vehicle.slice(:name, :color, :capacities, :default_capacities).merge(vehicle_usage_id: vehicle_usage.id, vehicle_id: vehicle_usage.vehicle_id, router_dimension: vehicle_usage.vehicle.default_router_dimension, work_or_window_time: vehicle_usage.work_or_window_time, vehicle_quantities: vehicle_quantities(planning, vehicle_usage))
-    end
-  end
-
-  def vehicle_quantities(planning, vehicle_usage)
-    hash = []
-    planning.routes.find{ |route|
-      route.vehicle_usage == vehicle_usage
-    }.quantities.select{ |_k, value| value > 0 }.each do |id, value|
-      unit = planning.customer.deliverable_units.find{ |du| du.id == id }
-      next unless unit
-      hash << {
-        deliverable_unit_id: unit.id,
-        label: unit.label,
-        unit_icon: unit.default_icon,
-        quantity_float: value
-      }
-    end
-    hash
+    PlanningConcern.vehicles_usages_map(planning)
   end
 
   def planning_quantities(planning)
-    hashy_map = {}
-    planning.routes.each do |route|
-      vehicle = route.vehicle_usage.try(:vehicle)
-
-      route.quantities.select{ |_k, v | v > 0 }.each do |id, v|
-        unit = route.planning.customer.deliverable_units.find{ |du| du.id == id }
-        next unless unit
-
-        if hashy_map.has_key?(unit.id)
-          hashy_map[unit.id][:quantity] += v
-          hashy_map[unit.id][:capacity] += vehicle ? vehicle.default_capacities[id] || 0 : 0
-        else
-          hashy_map[unit.id] = {
-            id: unit.id,
-            label: unit.label,
-            unit_icon: unit.default_icon,
-            quantity: v,
-            capacity: vehicle ? vehicle.default_capacities[id] || 0 : 0
-          }
-        end
-      end
-    end
-
-    hashy_map.to_a.map { |unit|
-      unit[1][:quantity] = LocalizedValues.localize_numeric_value(unit[1][:quantity].round(2))
-      # Nil if no capacity
-      unit[1][:capacity] = unit[1][:capacity] > 0 ? LocalizedValues.localize_numeric_value(unit[1][:capacity].round(2)) : nil
-      unit[1]
-    }
+    planning.quantities
   end
 
   # It collect the enabled devices, instantiate the service then list them

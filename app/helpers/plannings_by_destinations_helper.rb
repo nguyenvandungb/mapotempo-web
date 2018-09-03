@@ -20,15 +20,7 @@ module PlanningsByDestinationsHelper
     @customer.plannings.map{ |planning| planning_vehicles_array(planning) }
   end
 
-  def vehicles_usages_by_planning
-    @customer.plannings.map{ |planning| [planning.id, planning_vehicles_usages_map(planning)] }.to_h
-  end
-
-  def quantities_by_planning
-    @customer.plannings.map{ |planning| [planning.id, planning_quantities(planning)] }.to_h
-  end
-
   def active_vehicles
-    @customer.vehicles.reject{ |vehicle| vehicle.vehicle_usages.map(&:active).uniq == [false] }
+    @customer.vehicles.includes(:vehicle_usages).reject{ |vehicle| vehicle.vehicle_usages.map(&:active).uniq == [false] }
   end
 end

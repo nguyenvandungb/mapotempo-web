@@ -635,6 +635,40 @@ class Planning < ApplicationRecord
     all_skills.any?
   end
 
+  def quantities
+    Route.includes_deliverable_units.scoping do
+      hashy_map = {}
+      self.routes.each do |route|
+        vehicle = route.vehicle_usage.try(:vehicle)
+
+        route.quantities.select{ |_k, v | v > 0 }.each do |id, v|
+          unit = route.planning.customer.deliverable_units.find{ |du| du.id == id }
+          next unless unit
+
+          if hashy_map.has_key?(unit.id)
+            hashy_map[unit.id][:quantity] += v
+            hashy_map[unit.id][:capacity] += vehicle ? vehicle.default_capacities[id] || 0 : 0
+          else
+            hashy_map[unit.id] = {
+              id: unit.id,
+              label: unit.label,
+              unit_icon: unit.default_icon,
+              quantity: v,
+              capacity: vehicle ? vehicle.default_capacities[id] || 0 : 0
+            }
+          end
+        end
+      end
+
+      hashy_map.to_a.map { |unit|
+        unit[1][:quantity] = LocalizedValues.localize_numeric_value(unit[1][:quantity].round(2))
+        # Nil if no capacity
+        unit[1][:capacity] = unit[1][:capacity] > 0 ? LocalizedValues.localize_numeric_value(unit[1][:capacity].round(2)) : nil
+        unit[1]
+      }
+    end
+  end
+
   private
 
   # To reduce matrix computation with only one route... remove code?

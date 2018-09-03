@@ -25,13 +25,22 @@ class PlanningsByDestinationsController < ApplicationController
   private
 
   def set
-    @customer = current_user.customer
-    @stop_visits = @destination.visits.map(&:stop_visits).flatten.sort_by{ |st| st.route.planning_id }
-    # [planning_id => [vehicle_id => route_id]]
-    @routes_by_vehicles_by_planning = @customer.plannings.map{ |planning|
-      [planning.id, planning.routes.map{ |route|
-        [route.vehicle_usage ? route.vehicle_usage.vehicle_id : nil, route.id]
-      }.to_h]
-    }.to_h
+    Route.includes_vehicle_usages.scoping do
+      @customer = current_user.customer
+      @stop_visits = @destination.visits.includes(stop_visits: [:route]).map(&:stop_visits).flatten.sort_by{ |st|
+        st.route.planning_id
+      }
+      # [planning_id => [vehicle_id => route_id]]
+      @routes_by_vehicles_by_planning = @customer.plannings.includes(:routes).map{ |planning|
+        [planning.id, planning.routes.includes(:vehicle_usage).map{ |route|
+          [route.vehicle_usage ? route.vehicle_usage.vehicle_id : nil, route.id]
+        }.to_h]
+      }.to_h
+      @plannings = @destination.visits.includes(:stop_visits).flat_map{ |visit|
+        visit.stop_visits.map{ |stop|
+          stop.route.planning
+        }
+      }.uniq
+    end
   end
 end

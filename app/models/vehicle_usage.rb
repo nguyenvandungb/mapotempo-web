@@ -233,6 +233,23 @@ class VehicleUsage < ApplicationRecord
     tag_ids_changed? || super
   end
 
+  def quantities(planning)
+    hash = []
+    planning.routes.find{ |route|
+      route.vehicle_usage == self
+    }.quantities.select{ |_k, value| value > 0 }.each do |id, value|
+      unit = planning.customer.deliverable_units.find{ |du| du.id == id }
+      next unless unit
+      hash << {
+        deliverable_unit_id: unit.id,
+        label: unit.label,
+        unit_icon: unit.default_icon,
+        quantity_float: value
+      }
+    end
+    hash
+  end
+
   private
 
   def update_routes

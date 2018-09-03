@@ -42,6 +42,7 @@ class Route < ApplicationRecord
   scope :includes_stops, -> { includes(:stops) }
   # The second visit is for counting the visit index from all the visits of the destination
   scope :includes_destinations, -> { includes(stops: {visit: [:tags, destination: [:tags, :customer]]}) }
+  scope :includes_deliverable_units, -> { includes(vehicle_usage: [:vehicle_usage_set, vehicle: [customer: :deliverable_units]]) }
 
   include RefSanitizer
 
