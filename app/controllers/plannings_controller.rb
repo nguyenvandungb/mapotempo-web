@@ -24,7 +24,7 @@ class PlanningsController < ApplicationController
   UPDATE_ACTIONS = [:update, :move, :refresh, :switch, :automatic_insert, :update_stop, :active, :reverse_order, :apply_zonings, :optimize, :optimize_route]
   before_action :set_planning, only: [:show, :edit, :duplicate, :destroy] + UPDATE_ACTIONS
   before_action :check_no_existing_job, only: UPDATE_ACTIONS
-  around_action :includes_destinations, except: [:index, :new, :create]
+  around_action :includes_sub_models, except: [:index, :new, :create]
   around_action :over_max_limit, only: [:create, :duplicate]
 
   load_and_authorize_resource
@@ -406,17 +406,27 @@ class PlanningsController < ApplicationController
     @planning = current_user.customer.plannings.find(params[:id] || params[:planning_id])
   end
 
-  def includes_destinations
-    if @with_stops && (params[:route_id] || params[:route_ids] || [:automatic_insert, :optimize].include?(action_name.to_sym))
-      Stop.includes_destinations.scoping do
+  def includes_sub_models
+    VehicleUsage.with_stores.scoping do
+      if @with_stops
+        if (params[:route_id] || params[:route_ids]) && %i[move switch].exclude?(action_name.to_sym)
+          Route.where(id: [params[:route_id]] + (params[:route_ids] ? params[:route_ids].split(',') : [])).includes_destinations.scoping do
+            yield
+          end
+        elsif %i[automatic_insert move optimize switch].include?(action_name.to_sym)
+          Stop.includes_destinations.scoping do
+            yield
+          end
+        elsif %i[show edit].exclude?(action_name.to_sym) || !request.format.html?
+          Route.includes_destinations.scoping do
+            yield
+          end
+        else
+          yield
+        end
+      else
         yield
       end
-    elsif @with_stops && ([:show, :edit].exclude?(action_name.to_sym) || !request.format.html?)
-      Route.includes_destinations.scoping do
-        yield
-      end
-    else
-      yield
     end
   end
 
