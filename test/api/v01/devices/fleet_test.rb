@@ -118,6 +118,29 @@ class V01::Devices::FleetTest < ActiveSupport::TestCase
     end
   end
 
+  test 'should fetch routes' do
+    Time.use_zone(users(:user_one).time_zone) do
+      less12_hours = (Time.zone.now - 12.hour).to_date.to_s
+      vehicle_1_name = vehicles(:vehicle_one).name
+      stub_request(:get, %r{.*/api/0.1/routes\?from=#{less12_hours}%20\d{2}:\d{2}:\d{2}%20-\d{4}$})
+        .to_return(status: 200, body: "{
+          \"routes\": [
+            {
+              \"id\": \"route-kzLpSZb5wY\",
+              \"external_ref\": \"route-146067-2018_09_06\",
+              \"name\": \"#{vehicle_1_name}\",
+              \"user_id\": \"user-fIxc7jcZYs\",
+              \"sync_user\": \"5ffbb992f9c44a4e7a50897f785c5f63d38e587130f7cf86a07359d609dc50dd\",
+              \"date\": \"#{less12_hours}T08:00:00.000+02:00\"
+            }
+          ]
+        }")
+
+      get api('devices/fleet/fetch_routes', planning_id: plannings(:planning_one).id)
+      assert_equal vehicle_1_name, JSON.parse(last_response.body).first['routes'].first['name']
+    end
+  end
+
   test 'fetch stops and update quantities' do
     set_route
     customers(:customer_one).update(job_optimizer_id: nil)

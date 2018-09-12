@@ -264,8 +264,9 @@ class Fleet < DeviceBase
     end.compact
   end
 
-  def fetch_routes_by_date(customer, from = ( Time.zone.now - 12.hour), to = nil)
-    url = URI.encode("#{api_url}/api/0.1/routes?from=#{from}&to=#{to}")
+  def fetch_routes_by_date(customer, from, to)
+    from ||= (Time.zone.now - 12.hour)
+    url = URI.encode("#{api_url}/api/0.1/routes?from=#{from}#{to}")
 
     begin
       response = JSON.parse rest_client_get(url, customer.devices[:fleet][:api_key], nil), symbolize_names: true
