@@ -18,6 +18,8 @@
 require 'addressable'
 require_relative './fleet_modules/fleet_builder.rb'
 
+#RestClient.log = $stdout
+
 class Fleet < DeviceBase
   include FleetBuilder
 
@@ -235,7 +237,7 @@ class Fleet < DeviceBase
     error = nil
 
     planning.routes.select(&:vehicle_usage?).each do |route|
-      next if route.vehicle_usage.vehicle.devices[:fleet_user].blank?
+      next if route.vehicle_usage.vehicle.devices[:fleet_user].blank? || !route.start
 
       begin
         response = rest_client_get(
