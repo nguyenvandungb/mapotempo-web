@@ -625,7 +625,7 @@
           'must_be_greater_than_minimal_time': 'doit être supérieur à la durée minimale'
   'errors':
     'database':
-      'default': 'L''action que vous avez tenté de réaliser est impossible.'
+      'default': 'L''action que vous avez réalisée est impossible.'
       'invalid_statement': 'Erreur avec la base de données, l''action que vous avez tenté de réaliser est impossible.'
       'deadlock': 'Attention : Échec de mise à jour. Une autre mise à jour a été effectuée
         en simultané, vous avez peut-être réalisé plusieurs opérations trop rapidement
@@ -2484,7 +2484,7 @@
           'none_destinations': 'Aucune destination n''a été chargée'
       'routes':
         'index':
-          'none_routes': 'Aucune route n''a été chargée'
+          'none_routes': 'Aucune tournée n''a été chargée'
           'departure': 'Départ :'
           'arrival': 'Arrivée :'
         'print':

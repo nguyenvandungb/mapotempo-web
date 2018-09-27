@@ -34,14 +34,14 @@ class V01::Devices::Fleet < Grape::API
       end
 
       desc 'List Devices',
-        detail: 'List Devices',
+        detail: 'List Mapotempo Live Devices',
         nickname: 'deviceFleetList'
       get '/devices' do
         present service.list_devices, with: V01::Entities::DeviceItem
       end
 
       desc 'Send Planning Routes',
-        detail: 'Send Planning Routes',
+        detail: 'Send Planning Routes in Mapotempo Live',
         nickname: 'deviceFleetSendMultiple'
       params do
         requires :planning_id, type: Integer, desc: 'Planning ID'
@@ -51,7 +51,7 @@ class V01::Devices::Fleet < Grape::API
       end
 
       desc 'Clear Route',
-        detail: 'Clear Route',
+        detail: 'Clear Route in Mapotempo Live',
         nickname: 'deviceFleetClear'
       params do
         requires :route_id, type: Integer, desc: 'Route ID'
@@ -60,8 +60,8 @@ class V01::Devices::Fleet < Grape::API
         device_clear_route
       end
 
-      desc 'Clear Fleet Routes',
-        detail: 'Clear Fleet Routes',
+      desc 'Clear Routes',
+        detail: 'Clear Routes in Mapotempo Live',
         nickname: 'deviceFleetClearMultiple'
       params do
         requires :external_refs, type: Array do
