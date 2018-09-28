@@ -69,25 +69,37 @@ en:
             code_route: "Code for the route"
       vehicle:
         devices:
+          fleet_demo:
+            title: Fleet (Demo)
           fleet:
+            title: Mapotempo Live
             fleet_user: "Mapotempo Live user name"
           locster:
+            title: Locster
             locster_ref: "Locster vehicle Ref."
           masternaut:
+            title: Masternaut
             masternaut_ref: "Masternaut vehicle Ref."
           orange:
+            title: Orange Fleet Performance
             orange_id: "Orange vehicle ID"
           suivi_de_flotte:
+            title: Suivi de flotte
             suivi_de_flotte_id: "Suivi de flotte vehicle ID"
           teksat:
+            title: Teksat
             teksat_id: "Teksat vehicle ID"
           tomtom:
+            title: TomTom Webfleet
             tomtom_id: "TomTom vehicle ID"
           trimble:
+            title: Trimble
             trimble_ref: "Trimble vehicle Ref."
           notico:
+            title: Notico
             agent_id: "Notico Deliv delivery man ID"
           praxedo:
+            title: Praxedo
             praxedo_agent_id: "Praxedo Agent ID"
   errors:
     fleet:

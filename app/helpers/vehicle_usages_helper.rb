@@ -90,10 +90,11 @@ module VehicleUsagesHelper
     end
   end
 
-  def vehicle_external_services(vehicle)
-    vehicle.devices.select{ |key, value| !value.nil? }.collect{ |key, value|
+  def vehicle_devices(vehicle)
+    vehicle.devices.select{ |_key, value| value }.map{ |key, _value|
+      # TODO: build name correctly, for Notico for instance
       s = key.to_s
-      s[0, s.rindex('_')].tr('_', ' ').capitalize
+      I18n.t('activerecord.attributes.vehicle.devices.' + s[0, s.rindex('_')] + '.title', default: s[0, s.rindex('_')])
     }.join(', ')
   end
 

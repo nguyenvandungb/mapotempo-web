@@ -69,25 +69,37 @@ fr:
             code_route: "Code de la tournée"
       vehicle:
         devices:
+          fleet_demo:
+            title: Fleet (Demo)
           fleet:
+            title: Mapotempo Live
             fleet_user: "Nom de l'utilisateur Mapotempo Live"
           locster:
+            title: Locster
             locster_ref: "Ref. véhicule Locster"
           masternaut:
+            title: Masternaut
             masternaut_ref: "Ref. véhicule Masternaut"
           orange:
+            title: Orange Fleet Performance
             orange_id: "ID véhicule orange"
           suivi_de_flotte:
+            title: Suivi de flotte
             suivi_de_flotte_id: "ID véhicule suivi de flotte"
           teksat:
+            title: Teksat
             teksat_id: "ID véhicule Teksat"
           tomtom:
+            title: TomTom Webfleet
             tomtom_id: "ID véhicule TomTom"
           trimble:
+            title: Trimble
             trimble_ref: "Ref. véhicule Trimble"
           notico:
+            title: Notico
             agent_id: "ID Livreur Notico Deliv"
           praxedo:
+            title: Praxedo
             praxedo_agent_id: "Code Technicien Praxedo"
   errors:
     fleet:
@@ -176,7 +188,7 @@ fr:
         alyacom:
           help: "Permet d'envoyer les tournées vers l'application AlyaCom."
         tomtom:
-          help: "Permet d'envoyer les tournées vers les GPS TomTom Pro avec WEBFLEET."
+          help: "Permet d'envoyer les tournées vers les GPS TomTom Pro avec WebFLEET."
         teksat:
           help: "Permet d'envoyer les tournées vers les GPS Teksat."
         orange:
@@ -294,7 +306,7 @@ fr:
           title: Teksat
           in_progress: Veuillez patienter
         tomtom:
-          title: TomTom
+          title: TomTom Webfleet
           in_progress: Veuillez patienter
         masternaut:
           title: Masternaut
