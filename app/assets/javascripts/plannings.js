@@ -1956,15 +1956,6 @@ var plannings_index = function(params) {
   }).change(function() {
     window.location = '/routes_by_vehicles/' + $(this).val() + '?planning_ids=' + $('[name^=planning]:checked').map(function(elt) { return $(this).val() } ).toArray().join(',');
   });
-
-  var onPlanningSelected = function() {
-    if ($('[name^=planning]:checked').length)
-      $('#multiple_plannings_actions button, #multiple_plannings_actions select').attr('disabled', false);
-    else
-      $('#multiple_plannings_actions button, #multiple_plannings_actions select').attr('disabled', true);
-  };
-  $('[name^=planning]').change(onPlanningSelected);
-  onPlanningSelected();
 };
 
 var devicesObservePlanning = (function() {

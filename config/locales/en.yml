@@ -2365,6 +2365,8 @@ en:
       cancel: Cancel
       filter: Filter
       apply: Appliquer
+    multiple-actions:
+      none_selected_element: None selected element
     unit:
       m: m
       kms: km

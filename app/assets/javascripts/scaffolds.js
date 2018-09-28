@@ -87,16 +87,21 @@ $(document).on('ready page:load', function() {
       }).toArray().filter(function(elt, i, self) {
         return self.indexOf(elt) === i;
       }).forEach(function(id) {
+        $(id).tooltip({placement: 'left', title: I18n.t('all.multiple-actions.none_selected_element')});
         onObjectSelected(id);
       });
     }
   };
 
   var onObjectSelected = function(selector) {
-    if ($('[type="checkbox"][data-toggle="disable-multiple-actions"][data-target="' + selector + '"]:checked').length)
-      $(selector + ' button, ' + selector + ' select').attr('disabled', false);
-    else
+    if ($('[type="checkbox"][data-toggle="disable-multiple-actions"][data-target="' + selector + '"]:checked').length) {
+      $(selector + ' button, ' + selector + ' select').attr('disabled', false).attr('title', '');
+      $(selector).tooltip('disable');
+    }
+    else {
       $(selector + ' button, ' + selector + ' select').attr('disabled', true);
+      $(selector).tooltip('enable');
+    }
   };
 
   /**

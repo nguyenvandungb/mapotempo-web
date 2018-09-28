@@ -34,7 +34,7 @@
   <tbody>
     <% @zonings.each do |zoning| %>
       <tr>
-        <td><%= check_box_tag("zonings[#{zoning.id}]", '1', false, 'data-toggle' => 'disable-multiple-actions', 'data-target' => '#multiple-actions') %></td>
+        <td><%= check_box_tag("zonings[#{zoning.id}]", zoning.id, false, 'data-toggle' => 'disable-multiple-actions', 'data-target' => '#multiple-actions') %></td>
         <td><%= zoning.name %></td>
         <td class="text-right">
           <%= link_to zoning_duplicate_path(zoning), disabled: current_user.customer.too_many_zonings?, :class => "btn btn-default btn-sm", method: :patch do %><i class="fa fa-copy fa-fw"></i> <%= t 'all.verb.duplicate' %><% end %>

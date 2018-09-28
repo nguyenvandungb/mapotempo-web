@@ -2528,6 +2528,8 @@
       'cancel': 'Annuler'
       'filter': 'Filtrer'
       'apply': 'Appliquer'
+    'multiple-actions':
+      'none_selected_element': 'Aucun élément sélectionné'
     'unit':
       'm': 'm'
       'kms': 'km'

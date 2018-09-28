@@ -42,7 +42,7 @@
   <tbody>
     <% @plannings.each do |planning| %>
       <tr>
-        <td><%= check_box_tag("plannings[#{planning.id}]", planning.id) %></td>
+        <td><%= check_box_tag("plannings[#{planning.id}]", planning.id, false, 'data-toggle' => 'disable-multiple-actions', 'data-target' => '#multiple_plannings_actions') %></td>
         <td><%= planning.name %></td>
         <% if @customer.enable_references %>
         <td><%= planning.ref %></td>
