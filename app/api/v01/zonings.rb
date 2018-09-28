@@ -122,7 +122,7 @@ class V01::Zonings < Grape::API
       Zoning.transaction do
         zoning = current_customer.zonings.find(params[:id])
         planning = current_customer.plannings.find(params[:planning_id])
-        if zoning && planning
+        if planning
           zoning.from_planning(planning)
           zoning.save!
           present zoning, with: V01::Entities::Zoning
@@ -144,7 +144,7 @@ class V01::Zonings < Grape::API
         zoning = current_customer.zonings.find(params[:id])
         planning = current_customer.plannings.find(params[:planning_id])
         n = params.key?(:n) ? Integer(params[:n]) : nil
-        if zoning && planning
+        if planning
           zoning.automatic_clustering(planning, n)
           zoning.save!
           present zoning, with: V01::Entities::Zoning
@@ -164,7 +164,7 @@ class V01::Zonings < Grape::API
     end
     patch ':id/isochrone' do
       Zoning.transaction do
-        zoning = current_customer.zonings.where(id: params[:id]).first
+        zoning = current_customer.zonings.where(id: params[:id]).first!
         vehicle_usage_set = if params.key?(:vehicle_usage_set_id)
           vehicle_usage_set_id = Integer(params[:vehicle_usage_set_id])
           current_customer.vehicle_usage_sets.to_a.find{ |vehicle_usage_set| vehicle_usage_set.id == vehicle_usage_set_id }
@@ -172,12 +172,12 @@ class V01::Zonings < Grape::API
           current_customer.vehicle_usage_sets[0]
         end
         size = Integer(params[:size])
-        if zoning && vehicle_usage_set
+        if vehicle_usage_set
           zoning.isochrones(size, vehicle_usage_set, params[:departure_date])
           zoning.save!
           present zoning, with: V01::Entities::Zoning
         else
-          error! 'Zoning or VehicleUsageSet not found', 404
+          error! 'VehicleUsageSet not found', 404
         end
       end
     end
@@ -194,7 +194,7 @@ class V01::Zonings < Grape::API
     end
     patch ':id/vehicle_usage/:vehicle_usage_id/isochrone' do
       Zoning.transaction do
-        zoning = current_customer.zonings.where(id: params[:id]).first
+        zoning = current_customer.zonings.where(id: params[:id]).first!
         vehicle_usage_id = Integer(params[:vehicle_usage_id])
         vehicle_usage = current_customer.vehicle_usage_sets.collect{ |vehicle_usage_set|
           vehicle_usage_set.vehicle_usages.find{ |vehicle_usage|
@@ -202,13 +202,13 @@ class V01::Zonings < Grape::API
           }
         }.compact.first
         size = Integer(params[:size])
-        if zoning && vehicle_usage
+        if vehicle_usage
           # Use Time.zone.parse to preserve time zone from user (instead of to_time)
           zoning.isochrone(size, vehicle_usage, nil, !params[:departure_date].blank? && Time.zone.parse(params[:departure_date].to_s) + vehicle_usage.default_open)
           zoning.save!
           present zoning.zones.find{ |z| z.vehicle == vehicle_usage.vehicle }, with: V01::Entities::Zone
         else
-          error! 'Zoning or VehicleUsage not found', 404
+          error! 'VehicleUsage not found', 404
         end
       end
     end
@@ -225,7 +225,7 @@ class V01::Zonings < Grape::API
     end
     patch ':id/isodistance' do
       Zoning.transaction do
-        zoning = current_customer.zonings.where(id: params[:id]).first
+        zoning = current_customer.zonings.where(id: params[:id]).first!
         vehicle_usage_set = if params.key?(:vehicle_usage_set_id)
           vehicle_usage_set_id = Integer(params[:vehicle_usage_set_id])
           current_customer.vehicle_usage_sets.to_a.find{ |vehicle_usage_set| vehicle_usage_set.id == vehicle_usage_set_id }
@@ -233,13 +233,13 @@ class V01::Zonings < Grape::API
           current_customer.vehicle_usage_sets[0]
         end
         size = Integer(params[:size])
-        if zoning && vehicle_usage_set
+        if vehicle_usage_set
           zoning.prefered_unit = @current_user.prefered_unit
           zoning.isodistances(size, vehicle_usage_set, params[:departure_date])
           zoning.save!
           present zoning, with: V01::Entities::Zoning
         else
-          error! 'Zoning or VehicleUsageSet not found', 404
+          error! 'VehicleUsageSet not found', 404
         end
       end
     end
@@ -256,7 +256,7 @@ class V01::Zonings < Grape::API
     end
     patch ':id/vehicle_usage/:vehicle_usage_id/isodistance' do
       Zoning.transaction do
-        zoning = current_customer.zonings.where(id: params[:id]).first
+        zoning = current_customer.zonings.where(id: params[:id]).first!
         vehicle_usage_id = Integer(params[:vehicle_usage_id])
         vehicle_usage = current_customer.vehicle_usage_sets.collect{ |vehicle_usage_set|
           vehicle_usage_set.vehicle_usages.find{ |vehicle_usage|
@@ -264,14 +264,14 @@ class V01::Zonings < Grape::API
           }
         }.compact.first
         size = Integer(params[:size])
-        if zoning && vehicle_usage
+        if vehicle_usage
           zoning.prefered_unit = @current_user.prefered_unit
           # Use Time.zone.parse to preserve time zone from user (instead of to_time)
           zoning.isodistance(size, vehicle_usage, nil, !params[:departure_date].blank? && Time.zone.parse(params[:departure_date].to_s) + vehicle_usage.default_open)
           zoning.save!
           present zoning.zones.find{ |z| z.vehicle == vehicle_usage.vehicle }, with: V01::Entities::Zone
         else
-          error! 'Zoning or VehicleUsage not found', 404
+          error! 'VehicleUsage not found', 404
         end
       end
     end
@@ -332,7 +332,7 @@ class V01::Zonings < Grape::API
       requires :lng, type: Float, desc: 'Longitude.'
     end
     get ':id/polygon_by_point' do
-      zoning = current_customer.zonings.where(id: params[:id]).first
+      zoning = current_customer.zonings.where(id: params[:id]).first!
 
       zone, pip_distance = zoning.zones.map{ |zone|
         [zone, zone.inside_distance(params[:lat], params[:lng]) || 0]
@@ -342,6 +342,8 @@ class V01::Zonings < Grape::API
 
       if zone && pip_distance > 0
         present zone, with: V01::Entities::Zone
+      else
+        error! 'No zone found', 404
       end
     end
 
