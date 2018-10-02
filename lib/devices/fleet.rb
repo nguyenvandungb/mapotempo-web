@@ -266,9 +266,9 @@ class Fleet < DeviceBase
     end.compact
   end
 
-  def fetch_routes_by_date(customer, from, to)
-    from ||= (Time.zone.now - 12.hour)
-    url = URI.encode("#{api_url}/api/0.1/routes?from=#{from}#{to}")
+  def fetch_routes_by_date(customer, from, to, sync_user)
+    params = {from: from ? from : (Time.zone.now - 12.hour), to: to, user_id: sync_user}
+    url = URI.encode("#{api_url}/api/0.1/routes?" + params.compact.map{ |k, v| "#{k}=#{v}" }.join('&'))
 
     begin
       response = JSON.parse rest_client_get(url, customer.devices[:fleet][:api_key], nil), symbolize_names: true
@@ -279,7 +279,7 @@ class Fleet < DeviceBase
     response[:routes].map do |r|
       {
         name: r[:name],
-        fleet_user: r[:user_email],
+        fleet_user: r[:email],
         external_ref: r[:external_ref],
         route_id: decode_route_route_id(r[:external_ref]),
         date: r[:date]

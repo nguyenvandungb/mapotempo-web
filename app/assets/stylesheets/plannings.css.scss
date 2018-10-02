@@ -29,11 +29,17 @@ $sidebar-margins: 10px;
       margin-right: $sidebar-width + $sidebar-margins; // not possible to use right because it's overloaded by pnotify
     }
   }
-  #planning-move-stops-modal {
-    .modal-body {
+  .modal-body {
+    .spinner{
+      text-align: center;
+      width: 100%;
       .fa-spinner {
         margin: 15px;
       }
+    }
+  }
+  #planning-move-stops-modal {
+    .modal-body {
       .overflow-500 {
         max-height: calc(100% - 800px);
         overflow: auto;

@@ -245,6 +245,10 @@ var bootstrap_dialog = function(options) {
                  .addClass(options.icon).show();
   }
 
+  if (options.dataDismiss === true) {
+    default_modal.find('[data-dismiss]').show();
+  }
+
   $("body").append(default_modal);
   return default_modal;
 };

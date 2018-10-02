@@ -29,6 +29,7 @@ class V01::Devices::FleetTest < ActiveSupport::TestCase
   setup do
     @customer = customers(:customer_one)
     @customer.update(devices: { fleet: { enable: true, user: 'driver1', api_key: '123456' } }, enable_vehicle_position: true, enable_stop_status: true)
+    set_route
   end
 
   def planning_api(part = nil, param = {})
@@ -44,7 +45,6 @@ class V01::Devices::FleetTest < ActiveSupport::TestCase
   end
 
   test 'should send route' do
-    set_route
     with_stubs [:route_actions_url] do
       route = routes(:route_one_one)
       post api('devices/fleet/send', { customer_id: @customer.id, route_id: route.id })
@@ -56,7 +56,6 @@ class V01::Devices::FleetTest < ActiveSupport::TestCase
   end
 
   test 'list devices' do
-    set_route
     with_stubs [:get_users_url] do
       get api('devices/fleet/devices', { customer_id: @customer.id })
       assert_equal 200, last_response.status
@@ -65,7 +64,6 @@ class V01::Devices::FleetTest < ActiveSupport::TestCase
   end
 
   test 'should return vehicle positions' do
-    set_route
     with_stubs [:get_vehicles_pos_url] do
       get api('vehicles/current_position'), { ids: @customer.vehicle_ids }
       assert_equal 200, last_response.status, last_response.body
@@ -76,7 +74,6 @@ class V01::Devices::FleetTest < ActiveSupport::TestCase
   end
 
   test 'should send multiple routes' do
-    set_route
     with_stubs [:route_actions_url] do
       planning = plannings(:planning_one)
       post api('devices/fleet/send_multiple', { customer_id: @customer.id, planning_id: planning.id })
@@ -90,7 +87,6 @@ class V01::Devices::FleetTest < ActiveSupport::TestCase
   end
 
   test 'should clear' do
-    set_route
     with_stubs [:route_actions_url] do
       route = routes(:route_one_one)
       delete api('devices/fleet/clear', { customer_id: @customer.id, route_id: route.id })
@@ -102,7 +98,6 @@ class V01::Devices::FleetTest < ActiveSupport::TestCase
   end
 
   test 'should clear multiple' do
-    set_route
     with_stubs [:route_actions_url] do
       planning = plannings(:planning_one)
       route = routes(:route_one_one)
@@ -137,12 +132,11 @@ class V01::Devices::FleetTest < ActiveSupport::TestCase
         }")
 
       get api('devices/fleet/fetch_routes', planning_id: plannings(:planning_one).id)
-      assert_equal vehicle_1_name, JSON.parse(last_response.body).first['routes'].first['name']
+      assert_equal vehicle_1_name, JSON.parse(last_response.body).first['routes_by_vehicle'][0]['vehicle_name']
     end
   end
 
   test 'fetch stops and update quantities' do
-    set_route
     customers(:customer_one).update(job_optimizer_id: nil)
 
     with_stubs [:fetch_stops] do

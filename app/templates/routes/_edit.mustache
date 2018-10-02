@@ -61,7 +61,7 @@
                   <i class="fa fa-mobile fa-rotate-90 fa-fw"></i>
                   {{#i18n}}plannings.edit.fleet_demo_send.action{{/i18n}}
               </li>
-              <li class="link device-operation" data-service="fleet_demo" data-operation="clear" data-route-id="{{route_id}}">
+              <li class="link device-operation" data-service="fleet_demo" data-operation="fetch_routes" data-route-id="{{route_id}}">
                   <i class="fa fa-mobile fa-rotate-90 fa-fw"></i>
                   {{#i18n}}plannings.edit.fleet_demo_clear.action{{/i18n}}
               </li>
@@ -76,7 +76,7 @@
                 <i class="fa fa-mobile fa-rotate-90 fa-fw"></i>
                 {{#i18n}}plannings.edit.fleet_send.action{{/i18n}}
               </li>
-              <li class="link device-operation" data-service="fleet" data-operation="clear" data-route-id="{{route_id}}">
+              <li class="link device-operation" data-service="fleet" data-operation="fetch_routes" data-sync-user="{{devices.fleet_user.id}}" >
                 <i class="fa fa-mobile fa-rotate-90 fa-fw"></i>
                 {{#i18n}}plannings.edit.fleet_clear.action{{/i18n}}
               </li>

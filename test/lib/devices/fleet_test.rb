@@ -130,4 +130,14 @@ class FleetTest < ActionController::TestCase
     parts = @service.send(:decode_mission_id, ext_ref)
     assert_equal 'v1757563', parts[0]
   end
+
+  test 'should contains only departure and arrival when stops time are nil' do
+    set_route
+    fleet = Fleet.new
+    route = routes(:route_one_one)
+    route.stops.each{ |stop| stop.update(time: nil) }
+    result = fleet.build_route_with_missions(route, @customer)
+
+    assert_equal 2, result[:missions].count
+  end
 end

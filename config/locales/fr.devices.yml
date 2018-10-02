@@ -220,6 +220,9 @@ fr:
         button: "Vider la sélection"
         button_empty: "Fermer"
         empty: "Aucune tournée trouvée sur Mapotempo Live"
+        route:
+          name: Nom de route
+          number: Numéro de route
       fleet_fetch_routes:
         action: "Vider l'app mobile Mapotempo Live"
         success: "Tournées Mapotempo Live obtenues"

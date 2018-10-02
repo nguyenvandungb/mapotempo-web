@@ -218,6 +218,9 @@ en:
         button: Clear Selection
         button_empty: Close
         empty: No Routes found on Mapotempo Live
+        route:
+          name: Route name
+          number: Route number
       fleet_fetch_routes:
         action: Clear Mapotempo Live mobile app
         success: Mapotempo Live routes obtained

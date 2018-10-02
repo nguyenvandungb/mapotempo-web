@@ -77,12 +77,12 @@ class V01::Devices::Fleet < Grape::API
       desc 'Get Fleet routes',
         detail: 'Get Fleet routes',
         nickname: 'getFleetRoutes'
-        params do
-          optional :from, type: Date
-          optional :to, type: Date
-        end
+      params do
+        optional :from, type: Date
+        optional :to, type: Date
+      end
       get '/fetch_routes' do
-        routes = service.fetch_routes_by_date(params[:from], params[:to])
+        routes = service.fetch_routes_by_date(params[:from], params[:to], params[:sync_user])
         hash = {}
         routes.each do |route|
           route[:date] = I18n.l(Time.parse(route[:date]), format: :long)
@@ -95,7 +95,15 @@ class V01::Devices::Fleet < Grape::API
             hash[route[:fleet_user]] = [route]
           end
         end
-        hash.map { |k, v| { fleet_user: k, routes: v } }
+        hash.map { |k, v|
+          { fleet_user: k,
+            routes_by_vehicle: v.group_by{ |route|
+              route[:name]
+            }.map{ |key, val|
+              { vehicle_name: key, routes: val }
+            }
+          }
+        }
       end
 
       desc 'Sync Vehicles',

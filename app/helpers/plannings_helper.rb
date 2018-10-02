@@ -36,7 +36,7 @@ module PlanningsHelper
   end
 
   # It collect the enabled devices, instantiate the service then list them
-  def devices(customer)
+  def planning_devices(customer)
     devices = {}
     device_confs = customer.device.configured_definitions || []
 

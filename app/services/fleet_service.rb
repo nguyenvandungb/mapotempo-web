@@ -52,8 +52,8 @@ class FleetService < DeviceService
     end
   end
 
-  def fetch_routes_by_date(from, to)
-    service.fetch_routes_by_date(customer, from, to)
+  def fetch_routes_by_date(from, to, sync_user)
+    service.fetch_routes_by_date(customer, from, to, sync_user)
   end
 
   def create_company
