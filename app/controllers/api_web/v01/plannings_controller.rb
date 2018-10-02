@@ -31,6 +31,7 @@ class ApiWeb::V01::PlanningsController < ApiWeb::V01::ApiWebController
 
   def edit
     @spreadsheet_columns = []
+    @with_devices = true
     capabilities
   end
 

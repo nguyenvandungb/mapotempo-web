@@ -51,6 +51,7 @@ module PlanningsHelper
         devices[device.service_name_id] = list unless list.empty?
       rescue Exception => e
         Rails.logger.info(e)
+        raise e if  ENV['RAILS_ENV'] == 'test'
       end
     }
     devices
