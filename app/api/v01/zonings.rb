@@ -343,7 +343,7 @@ class V01::Zonings < Grape::API
       if zone && pip_distance > 0
         present zone, with: V01::Entities::Zone
       else
-        error! 'No zone found', 404
+        status 204
       end
     end
 

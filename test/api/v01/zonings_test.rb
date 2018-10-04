@@ -140,8 +140,7 @@ class V01::ZoningsTest < ActiveSupport::TestCase
 
     # Check for coordinates outside all zones
     get api("#{@zoning.id}/polygon_by_point", 'lat' => 42.23123, 'lng' => -3.335083)
-    assert last_response.ok?, last_response.body
-    assert_equal last_response.body, 'null'
+    assert_equal 204, last_response.status
   end
 
   test 'should use limitation' do
