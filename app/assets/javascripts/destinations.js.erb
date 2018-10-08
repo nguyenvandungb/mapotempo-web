@@ -463,12 +463,14 @@ var destinations_form = function(params, api) {
   $('[name="visits-attributes-change-bulk-apply"]').click(function() {
     var fromTags = $('#from_visit_tags').val(),
       toTags = $('#to_visit_tags').val(),
-      $visitTags = $('#visits [name$="[tag_ids][]"]');
+      $visitTags = $('#visits select[name$="[tag_ids][]"]');
     for (var i in fromTags) {
       $visitTags.each(function(j, elt) {
-        $('option[value=' + fromTags[i] + ']', $(elt).parent()).removeAttr('selected');
-        $('option[value=' + toTags[i] + ']', $(elt).parent()).attr('selected', 'selected');
-        $(elt).change();
+        if ($('option[value=' + fromTags[i] + ']', elt).attr('selected')) {
+          $('option[value=' + fromTags[i] + ']', elt).removeAttr('selected');
+          $('option[value=' + toTags[i] + ']', elt).attr('selected', 'selected');
+          $(elt).change();
+        }
       });
     }
   });
