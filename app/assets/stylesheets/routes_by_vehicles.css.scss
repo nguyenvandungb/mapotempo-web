@@ -193,4 +193,48 @@ $sidebar-margins: 10px;
       }
     }
   }
+
+  .sidebar.extended {
+    width: 100% !important;
+    right: 0px;
+    bottom: 0px;
+    padding: 0px;
+
+    .sidebar-content {
+      white-space: nowrap;
+      overflow: auto;
+
+      h1,
+      form,
+      .btn {
+        display: none;
+      }
+
+      .btn.extend, .btn.sidebar-close {
+        display: inline-block;
+      }
+
+      .fa-arrows-h {
+        display: inline-block;
+        cursor: move;
+      }
+
+      .routes {
+        top: 40px;
+        overflow: scroll;
+
+        .route {
+          display: inline-block;
+          vertical-align: top;
+          margin: 2px;
+          max-width: 350px;
+
+          .stops {
+            display: block !important;
+          }
+        }
+      }
+    }
+
+  }
 }

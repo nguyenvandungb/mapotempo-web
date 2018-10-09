@@ -176,6 +176,10 @@ var routesByVehicleShow = function(params) {
       });
   };
 
+  $('.btn.extend').click(function() {
+    $('.sidebar').toggleClass('extended');
+  });
+
   $.ajax({
     url: '/routes_by_vehicles/' + params.vehicle_id + '.json',
     data: {planning_ids: params.routes_array.map(function(route) {
