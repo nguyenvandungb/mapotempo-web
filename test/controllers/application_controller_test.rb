@@ -29,27 +29,28 @@ class ApplicationControllerTest < ActionController::TestCase
   end
 
   test 'should rescue database error' do
+    message = "#{I18n.t('errors.database.default')} #{I18n.t('errors.database.deadlock')}"
     ApplicationController.stub_any_instance(:api_key?, lambda { |*a| raise ActiveRecord::StaleObjectError.new(self, nil) }) do
       get :index, format: :json
-      assert_equal I18n.t('errors.database.default'), JSON.parse(response.body)['error']
+      assert_equal message, JSON.parse(response.body)['error']
       assert_response :unprocessable_entity
     end
 
     ApplicationController.stub_any_instance(:api_key?, lambda { |*a| raise PG::TRDeadlockDetected.new }) do
       get :index, format: :json, only_path: true
-      assert_equal I18n.t('errors.database.deadlock'), JSON.parse(response.body)['error']
+      assert_equal message, JSON.parse(response.body)['error']
       assert_response :unprocessable_entity
     end
 
     ApplicationController.stub_any_instance(:api_key?, lambda { |*a| raise ActiveRecord::StatementInvalid.new(self) }) do
       get :index, format: :json
-      assert_equal I18n.t('errors.database.invalid_statement'), JSON.parse(response.body)['error']
+      assert_equal "#{I18n.t('errors.database.default')} #{I18n.t('errors.database.invalid_statement')}", JSON.parse(response.body)['error']
       assert_response :unprocessable_entity
     end
 
     ApplicationController.stub_any_instance(:api_key?, lambda { |*a| raise PG::TRSerializationFailure.new }) do
       get :index, format: :json
-      assert_equal I18n.t('errors.database.default'), JSON.parse(response.body)['error']
+      assert_equal message, JSON.parse(response.body)['error']
       assert_response :unprocessable_entity
     end
   end

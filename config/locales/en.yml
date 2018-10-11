@@ -619,10 +619,10 @@ en:
           must_be_greater_than_minimal_time: must be greater than minimal time
   errors:
     database:
-      default: Impossible to execute this operation.
-      invalid_statement: Database error. Impossible to execute this operation
-      deadlock: 'Warning: Failed to update data. Another update was realized simultaneously,
-        you may performed several operations too fast or multiple times.'
+      default: Database error.
+      invalid_statement: Impossible to execute this operation
+      deadlock: 'Failed to update data. Another update was realized simultaneously,
+        you may have performed several operations too fast or multiple times.'
     management:
       title: An error occurred
       description: The page you want to access raised an error

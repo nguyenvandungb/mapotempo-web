@@ -625,9 +625,9 @@
           'must_be_greater_than_minimal_time': 'doit être supérieur à la durée minimale'
   'errors':
     'database':
-      'default': 'L''action que vous avez réalisée est impossible.'
-      'invalid_statement': 'Erreur avec la base de données, l''action que vous avez tenté de réaliser est impossible.'
-      'deadlock': 'Attention : Échec de mise à jour. Une autre mise à jour a été effectuée
+      'default': 'Erreur avec la base de données.'
+      'invalid_statement': 'L''action que vous avez tenté de réaliser est impossible.'
+      'deadlock': 'Une autre mise à jour a été effectuée
         en simultané, vous avez peut-être réalisé plusieurs opérations trop rapidement
         ou plusieurs fois.'
     'management':

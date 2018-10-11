@@ -189,18 +189,17 @@ class ApplicationController < ActionController::Base
     Rails.logger.warn(exception.class.to_s + ' : ' + exception.to_s)
     Rails.logger.warn(exception.backtrace.join("\n"))
 
-    error = case exception
+    errors = [I18n.t('errors.database.default')]
+    case exception
     when ActiveRecord::StatementInvalid
-      I18n.t('errors.database.invalid_statement')
-    when PG::TRDeadlockDetected
-      I18n.t('errors.database.deadlock')
-    else
-      I18n.t('errors.database.default')
+      errors << I18n.t('errors.database.invalid_statement')
+    when PG::TRDeadlockDetected, ActiveRecord::StaleObjectError, PG::TRSerializationFailure
+      errors << I18n.t('errors.database.deadlock')
     end
 
     respond_to do |format|
       format.html { render 'errors/show', layout: 'full_page', locals: { status: 422 }, status: 422 }
-      format.json { render json: { error: error }, status: :unprocessable_entity }
+      format.json { render json: { error: errors.join(' ') }, status: :unprocessable_entity }
     end
   end
 
