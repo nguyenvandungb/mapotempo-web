@@ -1983,8 +1983,10 @@ var plannings_edit = function(params) {
               if ($.isArray(route.devices.fleet_user)) {
                 route.devices = getDevicesFromFleetUsers(route.devices.fleet_user, fleetUserId);
                 route.devices.color = route.color;
-              } else {
+              } else if (route.devices.fleet_user){
                 route.devices.fleet_user.color = route.color;
+              } else {
+                route.devices.color = route.color;
               }
             } else {
               if (params.devices.fleet_user) {
@@ -2113,7 +2115,7 @@ var plannings_edit = function(params) {
               stickyError(data.error);
             } else {
               var serviceTranslation = 'plannings.edit.' + service + '_' + operation + (from.data('type') ? '_' + from.data('type') : '') + '.success';
-              notice(I18n.t(serviceTranslation));
+              if (operation !== 'fetch_routes') notice(I18n.t(serviceTranslation));
 
               if (from.data('planning-id') && operation === 'send')
                 _setPlanningRoutesLastSentAt(data);
