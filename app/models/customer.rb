@@ -486,28 +486,28 @@ class Customer < ApplicationRecord
 
   def validate_plannings_length
     if self.default_max_plannings && self.default_max_plannings < self.plannings.length
-      errors.add(:plannings, I18n.t('activerecord.errors.models.customer.attributes.plannings.over_max_limit'))
+      errors.add(:max_plannings, I18n.t('activerecord.errors.models.customer.attributes.plannings.over_max_limit'))
       false
     end
   end
 
   def validate_zonings_length
     if self.default_max_zonings && self.default_max_zonings < self.zonings.length
-      errors.add(:zonings, I18n.t('activerecord.errors.models.customer.attributes.zonings.over_max_limit'))
+      errors.add(:max_zonings, I18n.t('activerecord.errors.models.customer.attributes.zonings.over_max_limit'))
       false
     end
   end
 
   def validate_destinations_length
     if self.default_max_destinations && self.default_max_destinations < self.destinations.length
-      errors.add(:destinations, I18n.t('activerecord.errors.models.customer.attributes.destinations.over_max_limit'))
+      errors.add(:max_destinations, I18n.t('activerecord.errors.models.customer.attributes.destinations.over_max_limit'))
       false
     end
   end
 
   def validate_vehicle_usage_sets_length
     if self.default_max_vehicle_usage_sets && self.default_max_vehicle_usage_sets < self.vehicle_usage_sets.length
-      errors.add(:vehicle_usage_sets, I18n.t('activerecord.errors.models.customer.attributes.vehicle_usage_sets.over_max_limit'))
+      errors.add(:max_vehicle_usage_sets, I18n.t('activerecord.errors.models.customer.attributes.vehicle_usage_sets.over_max_limit'))
       false
     end
   end
