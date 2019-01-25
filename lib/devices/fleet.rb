@@ -336,6 +336,21 @@ class Fleet < DeviceBase
     external_ref.split('-')[1]
   end
 
+  def reporting(api_key, locale, params)
+    url = URI.encode("#{api_url}/api/0.1/reportings?#{URI.encode_www_form(params.compact)}")
+    begin
+      response = RestClient.get(
+        url,
+        { content_type: :json, charset: 'utf-8', Authorization: 'Token token=' + api_key, 'Accept-Language': locale }
+      )
+      response.to_s
+    rescue RestClient::Unauthorized, RestClient::InternalServerError, RestClient::ResourceNotFound, RestClient::UnprocessableEntity => e
+      raise DeviceServiceError, "Mapo. Live: #{e.message}"
+    rescue RestClient::RequestTimeout, Errno::ECONNREFUSED, SocketError
+      raise DeviceServiceError.new("Mapo. Live: #{I18n.t('errors.fleet.timeout')}")
+    end
+  end
+
   private
 
   def get_route(api_key, fleet_user, external_ref)

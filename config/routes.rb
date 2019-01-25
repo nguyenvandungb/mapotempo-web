@@ -182,6 +182,7 @@ Rails.application.routes.draw do
   get '/images/point_large' => 'images#point_large'
   get '/images/point_large-:color' => 'images#point_large'
 
+  resources :reporting
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

@@ -46,7 +46,7 @@ profile_osm = Profile.create!(name: "1. OSM", layers: [mapnik_fr, mapnik, mapbox
 profile_all = Profile.create!(name: "2. All", layers: [mapnik_fr, mapnik, mapbox, stamen_bw, here_layer], routers: [car, car_urban, bicycle, pedestrian, here_car, here_truck, public_transport])
 profile_other = Profile.create!(name: "3. Other", layers: [mapnik_fr, mapnik, mapbox, stamen_bw], routers: [car_urban])
 
-reseller = Reseller.create!(host: "localhost:3000", name: "Mapotempo")
+reseller = Reseller.create!(host: "localhost:3000", name: "Mapotempo", authorized_fleet_administration: true)
 customer = Customer.create!(reseller: reseller, name: "Toto", default_country: "France", router: car, profile: profile_all, test: true, max_vehicles: 2, devices: {'fleet_demo' => {'enable' => '1'}})
 admin = User.create!(email: "admin@example.com", password: "123456789", reseller: reseller, layer: mapnik)
 test = User.create!(email: "test@example.com", password: "123456789", layer: mapnik, customer: customer)

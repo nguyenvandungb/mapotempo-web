@@ -1,0 +1,32 @@
+<% content_for :title, t('.title') %>
+<h1><%= t '.title' %></h1>
+
+<div class="row row-top">
+  <%= twitter_bootstrap_form_for :_, url: {action: 'index'}, layout: :horizontal, html: { class: 'form-horizontal reporting-form', autocomplete: "off"} do |f| %>
+
+    <%= f.hidden_field :customer_id, value: current_user.customer.id %>
+
+    <%= f.text_field :begin_date, t('.begin_date'), { placeholder: t('.default_begin_date'), value: l((Date.today - 8.days).to_time, format: :datepicker), input_group: content_tag('i', '', {class: 'fa fa-calendar fa-fw'})} %>
+
+    <%= f.text_field :end_date, t('.end_date'), { placeholder: t('.default_end_date'), value: l(Date.yesterday.to_time, format: :datepicker), input_group: content_tag('i', '', {class: 'fa fa-calendar fa-fw'})} %>
+
+    <%= f.toggles t '.with_actions' do %>
+      <%= f.check_box :with_actions %>
+    <% end %>
+
+    <div class="col-md-offset-2 col-md-6">
+      <%= f.submit t('.submit'), id: 'download-reporting', data: { disable_with: t('.downloading') } %>
+    </div>
+  <% end %>
+</div>
+
+<script>
+$('#_begin_date, #_end_date').datepicker({
+  language: I18n.currentLocale(),
+  autoclose: true,
+  calendarWeeks: true,
+  todayHighlight: true,
+  format: I18n.t("all.datepicker"),
+  zIndexOffset: 1000
+});
+</script>

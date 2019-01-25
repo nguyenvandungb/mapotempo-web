@@ -79,4 +79,20 @@ class FleetService < DeviceService
       service.decode_route_id_from_route_ref(ref)
     })
   end
+
+  def reporting(params)
+    raise DeviceServiceError, "Mapo. Live: account not configured" unless customer.devices[:fleet][:api_key]
+
+    key = [:reporting, service_name, customer.id, Digest::MD5.hexdigest(Marshal.dump(params))]
+    with_cache(key) do
+      service.reporting customer.devices[:fleet][:api_key],
+      params[:locale],
+       {
+        format: params[:format],
+        from: params[:begin_date].to_s,
+        to: (params[:end_date] + 1.day).to_s,
+        with_actions: params[:with_actions]
+      }
+    end
+  end
 end

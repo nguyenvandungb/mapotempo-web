@@ -1193,6 +1193,23 @@ en:
       check_custom_columns: Check your columns definition.
     reverse_geocoding:
       apply: Apply new address
+  reporting:
+    download:
+      max_interval_reached: Range between begin date and end date must be inferior to 31 days
+      end_date_inferior: End date must be superior to begin date
+      fail: An error has occured, try again
+      success: The reporting is currently downloading
+      retry: Retry download
+      no_content: The request body is empty
+    index:
+      title: Reporting
+      submit: Download
+      downloading: Downloading...
+      default_begin_date: D-8 by default
+      default_end_date: D-1 by default
+      begin_date: Begin date
+      end_date: End date
+      with_actions: history of actions
   index:
     unsupported_browser:
       unsupported_browser: Unsupported Browser

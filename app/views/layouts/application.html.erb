@@ -111,7 +111,9 @@
                     <% end %>
                   <% end %>
                 </ul>
-              </li>
+              <% if current_user.customer.device.configured? :fleet %>
+              <li><%= link_to reporting_index_path do %><i class="fa fa-line-chart fa-fw"></i> <span class="menu_label"><%= t('reporting.index.title') %></span><% end %></li>
+              <% end %>
             <% end %>
           </ul>
 
