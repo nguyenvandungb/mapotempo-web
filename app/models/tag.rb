@@ -41,6 +41,8 @@ class Tag < ApplicationRecord
   include RefSanitizer
 
   before_update :update_outdated
+  before_destroy :set_routes
+  after_destroy :reset_routes_geojson_point
 
   amoeba do
     exclude_association :visits
@@ -81,5 +83,17 @@ class Tag < ApplicationRecord
     if color_changed? || icon_changed? || icon_size_changed?
       outdated
     end
+  end
+
+  def set_routes
+    @routes = Route.where(id: visits.flat_map{ |v| v.stop_visits.map(&:route_id) }.uniq)
+  end
+
+  def reset_routes_geojson_point
+    # Update tag reference in geojson points
+    @routes.each { |r|
+      r.geojson_points = r.stops_to_geojson_points
+      r.save!
+    }
   end
 end
