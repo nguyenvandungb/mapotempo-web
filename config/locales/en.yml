@@ -1741,7 +1741,7 @@ en:
       tags: tags
       phone_number: phone
       ref_visit: reference visit
-      duration: duration
+      duration: visit duration
       quantity: quantity
       quantity_operation: operation
       orders: orders
