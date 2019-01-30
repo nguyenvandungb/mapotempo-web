@@ -172,6 +172,7 @@ class ImporterDestinations < ImporterBase
   end
 
   def uniq_ref(row)
+    row[:stop_type] = row[:stop_type].present? ? valid_stop_type(row[:stop_type]) : I18n.t('destinations.import_file.stop_type_visit')
     return if row.key?(:stop_type) && row[:stop_type] != I18n.t('destinations.import_file.stop_type_visit')
     row[:ref] || row[:ref_visit] ? [row[:ref], row[:ref_visit]] : nil
   end
@@ -249,17 +250,12 @@ class ImporterDestinations < ImporterBase
     end
   end
 
-  def is_visit(type)
+  def is_visit?(type)
     type == I18n.t('destinations.import_file.stop_type_visit')
   end
 
   def import_row(_name, row, _options)
-    row[:stop_type] = if row[:stop_type].present?
-      valid_stop_type(row[:stop_type])
-    else
-      I18n.t('destinations.import_file.stop_type_visit')
-    end
-    return unless is_visit(row[:stop_type])
+    return unless is_visit?(row[:stop_type])
 
     # Deals with deprecated open and close
     row[:open1] = row.delete(:open) if !row.key?(:open1) && row.key?(:open)
