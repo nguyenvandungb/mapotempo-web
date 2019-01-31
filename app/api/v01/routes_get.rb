@@ -20,7 +20,7 @@ include PlanningIcalendar
 include IcalendarUrlHelper
 
 class V01::RoutesGet < Grape::API
-  content_type :json, 'application/javascript'
+  content_type :json, 'application/json'
   content_type :geojson, 'application/vnd.geo+json'
   content_type :xml, 'application/xml'
   content_type :ics, 'text/calendar'

@@ -19,8 +19,8 @@ require 'coerce'
 
 # Specific file to get plannings because it needs to return specific content types (js, xml and geojson)
 class V01::VisitsGet < Grape::API
-  content_type :json, 'application/javascript'
-  content_type :geojson, 'application/vnd.geo+json'
+  content_type :json, 'application/json; charset=UTF-8'
+  content_type :geojson, 'application/vnd.geo+json; charset=UTF-8'
   content_type :xml, 'application/xml'
   default_format :json
 

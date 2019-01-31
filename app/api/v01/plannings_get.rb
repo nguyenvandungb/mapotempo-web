@@ -21,7 +21,7 @@ include IcalendarUrlHelper
 
 # Specific file to get plannings because it needs to return specific content types (js, xml and ics)
 class V01::PlanningsGet < Grape::API
-  content_type :json, 'application/javascript'
+  content_type :json, 'application/json'
   content_type :geojson, 'application/vnd.geo+json'
   content_type :xml, 'application/xml'
   content_type :ics, 'text/calendar'
