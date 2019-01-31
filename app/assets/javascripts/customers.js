@@ -210,7 +210,7 @@ var customers_edit = function(params) {
   routersAllowedForProfile(params);
   $('#customer_profile_id').on('click', function() {
     routersAllowedForProfile(params);
-    layersAllowedForProfile(params);
+    if (params['validate_layer'] === true) layersAllowedForProfile(params);
   });
   $('#customer_router').on('click', function() {
     removeRouterWarning();
