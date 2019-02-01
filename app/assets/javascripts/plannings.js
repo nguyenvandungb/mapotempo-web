@@ -2397,8 +2397,8 @@ var plannings_index = function(params) {
 
   iCalendarExport();
   spreadsheetModalExport(params.spreadsheet_columns);
-  var vehicle_id = $('#vehicle_id').val();
-  var planning_ids = $('[name^=planning]:checked').map(function() { return $(this).val(); }).toArray().join(',');
+  var vehicle_id = $('#vehicle_id').val(),
+    planning_ids;
 
   var templateVehicle = function(vehicle) {
     if (vehicle.id)
@@ -2411,7 +2411,6 @@ var plannings_index = function(params) {
     templateResult: templateVehicle
   }).change(function() {
     vehicle_id = $(this).val();
-    planning_ids = $('[name^=planning]:checked').map(function() { return $(this).val(); }).toArray().join(',');
   });
 
   $('#routes-by-vehicle').on('click', function(e) {
@@ -2419,6 +2418,7 @@ var plannings_index = function(params) {
     if (!vehicle_id) {
       return warning(I18n.t('plannings.index.vehicle_select_error'));
     }
+    planning_ids = $('[name^=planning]:checked').map(function() { return $(this).val(); }).toArray().join(',');
     location.assign('/routes_by_vehicles/' + vehicle_id + '?planning_ids=' + planning_ids);
   });
 
@@ -2427,6 +2427,7 @@ var plannings_index = function(params) {
     if (!vehicle_id) {
       return warning(I18n.t('plannings.index.vehicle_select_error'));
     }
+    planning_ids = $('[name^=planning]:checked').map(function() { return $(this).val(); }).toArray().join(',');
     location.assign('/deliverables_by_vehicles/' + vehicle_id + '?planning_ids=' + planning_ids);
   });
 
