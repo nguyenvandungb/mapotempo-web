@@ -121,7 +121,8 @@ class DestinationsController < ApplicationController
 
   def upload_csv
     respond_to do |format|
-      @import_csv = ImportCsv.new(import_csv_params.merge(importer: ImporterDestinations.new(current_user.customer), content_code: :html))
+      @importer = ImporterDestinations.new(current_user.customer)
+      @import_csv = ImportCsv.new(import_csv_params.merge(importer: @importer, content_code: :html))
       if @import_csv.valid? && @import_csv.import
         if @import_csv.importer.plannings.size == 1 && !current_user.customer.job_destination_geocoding
           format.html { redirect_to edit_planning_url(@import_csv.importer.plannings.last) }
@@ -248,7 +249,7 @@ class DestinationsController < ApplicationController
       :replace,
       :file,
       :delete_plannings,
-      column_def: ImporterDestinations.new(current_user.customer).columns.keys
+      column_def: @importer.columns.keys
     )
   end
 
