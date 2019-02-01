@@ -1047,7 +1047,7 @@ var plannings_edit = function(params) {
         }
       });
 
-      function setTooltipColor(vehicleUsageId, color) {
+      var setTooltipColor = function setTooltipColor(vehicleUsageId, color) {
         var tooltip;
         if (vehicleMarkers.length
           && vehicleMarkers[vehicleUsageId]
@@ -1059,7 +1059,7 @@ var plannings_edit = function(params) {
           content.find('#vehicle-name').css('background-color', color)
           vehicleMarkers[vehicleUsageId].setTooltipContent('<div>' + content.html() + '</div>');
         }
-      }
+      };
 
       $.ajax({
         type: 'PUT',
@@ -1244,20 +1244,20 @@ var plannings_edit = function(params) {
           });
         });
 
-        function setTooltipRef(vehicleUsageId, ref) {
-          var tooltip;
-          if (vehicleMarkers.length
-            && vehicleMarkers[vehicleUsageId]
-            && (tooltip = vehicleMarkers[vehicleUsageId].getTooltip())) {
-            var content = $(tooltip._content);
-            var name = vehicles_usages_map[vehicleUsageId].name;
-            content.find('#vehicle-name').html(ref + ' ' + name);
-            vehicleMarkers[vehicleUsageId].setTooltipContent('<div>' + content.html() + '</div>');
-          }
+      var setTooltipRef = function setTooltipRef(vehicleUsageId, ref) {
+        var tooltip;
+        if (vehicleMarkers.length
+          && vehicleMarkers[vehicleUsageId]
+          && (tooltip = vehicleMarkers[vehicleUsageId].getTooltip())) {
+          var content = $(tooltip._content);
+          var name = vehicles_usages_map[vehicleUsageId].name;
+          content.find('#vehicle-name').html(ref + ' ' + name);
+          vehicleMarkers[vehicleUsageId].setTooltipContent('<div>' + content.html() + '</div>');
         }
+      };
 
       /** move_stops */
-      $('#planning-move-stops-modal').on('show.bs.modal', function(ev) {
+      $('#planning-move-stops-modal').off().on('show.bs.modal', function(ev) {
         $('#planning-move-stops-modal .modal-body').html(
           '<div class="spinner"><i class="fa fa-spin fa-2x fa-spinner"></i></div>'
         ).unbind();
@@ -1392,7 +1392,7 @@ var plannings_edit = function(params) {
         $('#planning-move-stops-modal').attr('data-route-id', null);
       });
 
-      $("#move-stops-modal").click(function() {
+      $("#move-stops-modal").off().on('click', function() {
         var stopIds = $("#planning-move-stops-modal")
           .find('form input[name="stop_ids"]:checked:visible')
           .map(function() { return $(this).val(); })
