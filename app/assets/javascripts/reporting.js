@@ -24,17 +24,21 @@ var reporting_index = function() {
       headers: {
         contentType: 'application/csv; charset=utf-8'
       },
-      success: function(data, textStatus, xhr) {
-        var a = document.createElement('a');
-        var url = window.URL.createObjectURL(data);
-        document.body.appendChild(a);
-        a.href = url;
-        a.download = 'reporting.csv';
-        a.click();
-        window.URL.revokeObjectURL(url);
+      success: function(data, _textStatus, xhr) {
+        if (xhr.status === 204) {
+          notice(I18n.t('reporting.download.no_content'));
+        } else {
+          var a = document.createElement('a');
+          var url = window.URL.createObjectURL(data);
+          document.body.appendChild(a);
+          a.href = url;
+          a.download = 'reporting.csv';
+          a.click();
+          window.URL.revokeObjectURL(url);
+          notice(I18n.t('reporting.download.success'));
+        }
         $('#download-reporting').prop('disabled', false);
         $('#download-reporting').text(I18n.t('reporting.download.retry'));
-        notice(I18n.t('reporting.download.success'));
       },
       error: function() {
         if (end_date - begin_date > 31) {
