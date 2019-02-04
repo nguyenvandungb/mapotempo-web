@@ -112,9 +112,9 @@ var deliverable_by_vehicle_show = function(params) {
       data.routes_quantities = setupQuantitiesDisplay(data);
       data.routes_total_infos = setupRoutesInfosDisplay(data);
       data.have_deliverables = data.routes_quantities.length > 0;
-
       $('.table-container').html(SMT['deliverables_by_vehicles/show'](data));
-
+      // + 2 to completely fill table
+      setupCellFiller(data.plannings.length + 2);
     }).fail(function() {
       stickyError(I18n.t('deliverables_by_vehicles.show.fail'));
     });
@@ -127,6 +127,15 @@ var deliverable_by_vehicle_show = function(params) {
         });
         return e;
       });
+    };
+
+    var setupCellFiller = function(nbPlannings) {
+      for (var i = 0; i < nbPlannings; ++i) {
+        var td = $(document.createElement('td'));
+        td.attr('scope', 'col');
+        td.attr('class', 'cell-filler');
+        $('#cell-filler-container').append(td);
+      }
     };
 
     var setupRoutesInfosDisplay = function setupRoutesInfosDisplay(data) {
