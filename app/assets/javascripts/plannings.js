@@ -818,22 +818,36 @@ var plannings_edit = function(params) {
   })();
 
   var optimizationTimer = (function() {
-    var _routesLength;
+    var _routesLength,
+      minTxt,
+      maxTxt;
 
-    var displayOptimDuration = function displayOptimDuration() {
+    var displayOptimDuration = function displayOptimDuration(error) {
       var _getOptimDuration = function _getOptimDuration() {
         return {
           min: _routesLength ? optimisationDuration.min * _routesLength : optimisationDuration.min,
           max: _routesLength ? optimisationDuration.max * _routesLength : optimisationDuration.max
         };
       };
+
+      if (error) {
+        return $(".optim-duration").hide();
+      }
       var duration = _getOptimDuration();
 
-      var minTxt = (duration.min < 60 ? I18n.t('plannings.edit.dialog.optimization.optimize_less') + ' 1' : Math.floor(duration.min / 60)) + ' minutes';
-      var maxTxt = (duration.max < 60 ? I18n.t('plannings.edit.dialog.optimization.optimize_less') + ' 1': Math.floor(duration.max / 60)) + ' minutes';
+      minTxt = _setText(duration.min, I18n.t('plannings.edit.dialog.optimization.optimize_min'));
+      maxTxt = _setText(duration.max, I18n.t('plannings.edit.dialog.optimization.optimize_max'));
 
-      $('.optim-duration #min-optim-duration').text(I18n.t('plannings.edit.dialog.optimization.optimize_min') + ' ' + minTxt);
-      $('.optim-duration #max-optim-duration').text(I18n.t('plannings.edit.dialog.optimization.optimize_max') + ' ' + maxTxt);
+      $('.optim-duration #min-optim-duration').text(minTxt);
+      $('.optim-duration #max-optim-duration').text(maxTxt);
+    };
+
+    var _setText = function setText(duration, text) {
+      if (duration < 60) {
+        return text + ' ' + I18n.t('plannings.edit.dialog.optimization.optimize_less') + ' 1 min.';
+      }
+      var seconds = Math.floor(duration % 60);
+      return text + ' ' + Math.floor(duration / 60) + 'min. ' +  (seconds != 0 ? seconds + ' sec.' : '');
     };
 
     var setOptimDuration = function setOptimDuration(routesLength) {
@@ -1492,6 +1506,14 @@ var plannings_edit = function(params) {
 
   // Depending 'options.partial' this function is called for initialization or for pieces of planning
   var displayPlanning = function(data, options) {
+
+    // Display optimization duration in modal on page reload
+    if (data.optimizer) {
+      var len = data.optimizer.dispatch_params_delayed_job.routes ?
+        data.optimizer.dispatch_params_delayed_job.routes.length : data.optimizer.dispatch_params_delayed_job.nb_route;
+      optimizationTimer.setOptimDuration(len).displayOptimDuration(data.optimizer.error);
+    }
+
     if (!progressDialog(data.optimizer, dialog_optimizer, '/plannings/' + planning_id + '.json' + (options.firstTime ? '?with_stops=' + withStopsInSidePanel : ''), displayPlanning, options)) {
       return;
     }
@@ -1903,13 +1925,6 @@ var plannings_edit = function(params) {
 
   var displayPlanningFirstTime = function(data) {
 
-    // Display optimization duration in modal on page reload
-    if (data.optimizer) {
-      var len = data.optimizer.dispatch_params_delayed_job.routes ?
-        data.optimizer.dispatch_params_delayed_job.routes.length : data.optimizer.dispatch_params_delayed_job.nb_route;
-      optimizationTimer.setOptimDuration(len).displayOptimDuration();
-    }
-
     // WARNING: data can be without routes here in case of optimization with delayed job
     displayPlanning(data, {
       firstTime: true
@@ -2009,7 +2024,8 @@ var plannings_edit = function(params) {
           + '<h5>' + I18n.t('plannings.edit.dialog.optimization.optimization_time') + '</h5>'
           + '<div id="min-optim-duration"></div>'
           + '<div id="max-optim-duration"></div>'
-        + '</div>'
+          + '</div>'
+          + '<button type="button" class="btn btn-primary" data-dismiss="modal">' + I18n.t('web.dialog.close') + '</button>'
     });
 
     $(".optim-duration h5").prop('title', I18n.t('plannings.edit.dialog.optimization.optimize-title'));
