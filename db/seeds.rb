@@ -3,8 +3,7 @@ I18n.locale = :fr
 mapnik_fr = Layer.create!(source: "osm", name: "Mapnik-fr", url: "http://tile-{s}.openstreetmap.fr/osmfr/{z}/{x}/{y}.png", urlssl: "https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png", attribution: "Tiles by OpenStreetMap-France")
 mapnik = Layer.create!(source: "osm", name: "Mapnik", url: "http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", urlssl: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", attribution: "Tiles by OpenStreetMap")
 stamen_bw = Layer.create!(source: "osm", name: "Stamen B&W", name_locale: {fr: "Stamen N&B"}, url: "http://{s}.tile.stamen.com/toner-lite/{z}/{x}/{y}.png", urlssl: "https://stamen-tiles-{s}.a.ssl.fastly.net/toner-lite/{z}/{x}/{y}.png", attribution: "Tiles by Stamen Design")
-
-here_layer = Layer.create!(source: "here", name: "Here", url: "http://4.base.maps.cit.api.here.com/maptile/2.1/maptile/newest/normal.day/{z}/{x}/{y}/256/png8?app_id=" + ENV['HERE_APP_ID'] + "&app_code=YOUR_APP_CODE" + ENV['HERE_APP_CODE'], urlssl: "https://4.base.maps.cit.api.here.com/maptile/2.1/maptile/newest/normal.day/{z}/{x}/{y}/256/png8?app_id=" + ENV['HERE_APP_ID'] + "&app_code=" + ENV['HERE_APP_CODE'], attribution: "Here")
+here_layer = Layer.create!(source: "here", name: "Here", url: "http://4.base.maps.cit.api.here.com/maptile/2.1/maptile/newest/normal.day/{z}/{x}/{y}/256/png8?app_id=#{ENV['HERE_APP_ID']}&app_code=YOUR_APP_CODE#{ENV['HERE_APP_CODE']}", urlssl: "https://4.base.maps.cit.api.here.com/maptile/2.1/maptile/newest/normal.day/{z}/{x}/{y}/256/png8?app_id=#{ENV['HERE_APP_ID']}&app_code=#{ENV['HERE_APP_CODE']}", attribution: "Here")
 
 car = RouterWrapper.create!(
     mode: 'car',
@@ -42,9 +41,9 @@ public_transport = RouterWrapper.create!(
     name_locale: {fr: 'Calculateur pour transport en commun', en: 'Public Transport router'},
     options: {time: true, distance: false, avoid_zones: false, isochrone: true, isodistance: true, max_walk_distance: true})
 
-profile_osm = Profile.create!(name: "1. OSM", layers: [mapnik_fr, mapnik, mapbox, stamen_bw], routers: [car, bicycle, pedestrian, public_transport])
-profile_all = Profile.create!(name: "2. All", layers: [mapnik_fr, mapnik, mapbox, stamen_bw, here_layer], routers: [car, car_urban, bicycle, pedestrian, here_car, here_truck, public_transport])
-profile_other = Profile.create!(name: "3. Other", layers: [mapnik_fr, mapnik, mapbox, stamen_bw], routers: [car_urban])
+profile_osm = Profile.create!(name: "1. OSM", layers: [mapnik_fr, mapnik, stamen_bw], routers: [car, bicycle, pedestrian, public_transport])
+profile_all = Profile.create!(name: "2. All", layers: [mapnik_fr, mapnik, stamen_bw, here_layer], routers: [car, car_urban, bicycle, pedestrian, here_car, here_truck, public_transport])
+profile_other = Profile.create!(name: "3. Other", layers: [mapnik_fr, mapnik, stamen_bw], routers: [car_urban])
 
 reseller = Reseller.create!(host: "localhost:3000", name: "Mapotempo", authorized_fleet_administration: true)
 customer = Customer.create!(reseller: reseller, name: "Toto", default_country: "France", router: car, profile: profile_all, test: true, max_vehicles: 2, devices: {'fleet_demo' => {'enable' => '1'}})
