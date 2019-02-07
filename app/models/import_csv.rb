@@ -60,11 +60,12 @@ class ImportCsv
 
               # Switch from locale or custom to internal column name
               r, row = row, {}
-              @importer.columns.each{ |k, v|
+              @importer.columns.each{ |key, v|
                 next unless v[:title]
+
                 if r.is_a?(Array)
                   # Import without column name or by merging columns
-                  values = ((column_def[k] && !column_def[k].empty?) ? column_def[k] : (without_header? ? '' : v[:title])).split(',').map{ |c|
+                  values = (column_def[key] && !column_def[key].empty? ? column_def[key] : (without_header? ? '' : v[:title])).split(',').map{ |c|
                     c.strip!
                     if c.to_i != 0
                       r[c.to_i - 1].is_a?(Array) ? r[c.to_i - 1][1] : r[c.to_i - 1]
@@ -72,10 +73,10 @@ class ImportCsv
                       r.find{ |rr| rr[0] == c }.try{ |rr| rr[1] }
                     end
                   }.compact
-                  row[k] = values.join(' ') unless values.empty?
+                  row[key] = values.join(' ') if !values.empty? || key == :lat || key == :lng # lat or lng must be set even if empty
                 elsif r.key?(v[:title])
                   # Import with column name
-                  row[k] = r[v[:title]]
+                  row[key] = r[v[:title]]
                 end
               }
             end
@@ -89,7 +90,8 @@ class ImportCsv
         end
       rescue StandardError => e
         raise e if Rails.env.test? && !e.is_a?(ImportBaseError) && !e.is_a?(Exceptions::OverMaxLimitError)
-        message = e.is_a?(ImportInvalidRow) ? I18n.t('import.data_erroneous.csv', s: last_line) + ', ' : (last_line && !e.is_a?(ImportBaseError)) ? I18n.t('import.csv.line', s: last_line) + ', ' : ''
+
+        message = e.is_a?(ImportInvalidRow) ? I18n.t('import.data_erroneous.csv', s: last_line) + ', ' : last_line && !e.is_a?(ImportBaseError) ? I18n.t('import.csv.line', s: last_line) + ', ' : ''
         message += e.message
         message[0] = message[0].capitalize
         message += (message.end_with?('.') ? ' ' : '. ') + I18n.t('destinations.import_file.check_custom_columns') if column_def && !column_def.values.compact.empty?

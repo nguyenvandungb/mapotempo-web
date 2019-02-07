@@ -27,6 +27,7 @@ $(document).on('ready page:load', function() {
   $('.modal').on('shown.bs.modal', function() {
     // Focus first primary button
     $('.btn-primary', this).first().focus();
+    $('.modal-body .overflow-500', this).height(($(window).height()/3)*2);
   });
 });
 

@@ -253,6 +253,11 @@ span.color[data-color=''][data-selected]:after {
   }
 }
 
+.overflow-500 {
+  overflow: auto;
+  height: 500px;
+}
+
 #map {
   @media print {
     .leaflet-control-zoom {
