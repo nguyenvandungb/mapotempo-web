@@ -31,6 +31,10 @@ class V01::Devices::FleetReporting < Grape::API
           end
 
           MAX_DAYS = 31
+          DATE_DESC = "Local format depends of the locale sent in http header. Default local send is english (:en)\n
+    ex:\n
+    en: mm-dd-yyyy\n
+    fr: dd-mm-yyyy"
         end
 
         before do
@@ -45,8 +49,8 @@ class V01::Devices::FleetReporting < Grape::API
           detail: "Get reporting from Mapotempo Live missions. Range between begin_date and end_date must be inferior to #{MAX_DAYS} days",
           nickname: 'reporting'
         params do
-          requires :begin_date, type: Date, coerce_with: ->(d) { Date.strptime(d.to_s, I18n.t('time.formats.datepicker')).strftime(ACTIVE_RECORD_DATE_MASK).to_date }, desc: 'Select only plannings after this date.'
-          requires :end_date, type: Date, coerce_with: ->(d) { Date.strptime(d.to_s, I18n.t('time.formats.datepicker')).strftime(ACTIVE_RECORD_DATE_MASK).to_date }, desc: 'Select only plannings before this date.'
+          requires :begin_date, type: Date, coerce_with: ->(d) { Date.strptime(d.to_s, I18n.t('time.formats.datepicker')).strftime(ACTIVE_RECORD_DATE_MASK).to_date }, desc: 'Select only plannings after this date.' + DATE_DESC
+          requires :end_date, type: Date, coerce_with: ->(d) { Date.strptime(d.to_s, I18n.t('time.formats.datepicker')).strftime(ACTIVE_RECORD_DATE_MASK).to_date }, desc: 'Select only plannings before this date.' + DATE_DESC
           requires :with_actions, type: Boolean, desc: 'Get history of actions', default: false
         end
         get do
@@ -55,7 +59,7 @@ class V01::Devices::FleetReporting < Grape::API
           elsif (params[:end_date] - params[:begin_date]).to_i > MAX_DAYS
             raise DeviceServiceError.new('Maximum days for reporting reached: ' + MAX_DAYS.to_s, 400)
           else
-            service.reporting params
+            service.reporting(params) || status(204)
           end
         end
       end

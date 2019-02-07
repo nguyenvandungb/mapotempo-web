@@ -343,6 +343,8 @@ class Fleet < DeviceBase
         url,
         { content_type: :json, charset: 'utf-8', Authorization: 'Token token=' + api_key, 'Accept-Language': locale }
       )
+      return nil if response.code == 204
+
       response.to_s
     rescue RestClient::Unauthorized, RestClient::InternalServerError, RestClient::ResourceNotFound, RestClient::UnprocessableEntity => e
       raise DeviceServiceError, "Mapo. Live: #{e.message}"

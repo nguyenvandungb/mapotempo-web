@@ -33,18 +33,31 @@ class V01::Devices::FleetReportingTest < ActiveSupport::TestCase
   end
 
   test 'should get reporting' do
-    stub_request(:get, "http://localhost:8084/api/0.1/reportings?format=json&from=2019-01-01&to=2019-02-01&with_actions=true")
-    .with(
-      headers: {
-      'Authorization'=>'Token token=123456',
-      'Charset'=>'utf-8',
-      'Content-Type'=>'application/json'
-      })
-    .to_return(status: 200, body: "", headers: {})
+    stub_request(:get, 'http://localhost:8084/api/0.1/reportings?format=json&from=2019-01-01&to=2019-02-01&with_actions=true')
+      .with(
+        headers: { 'Authorization' => 'Token token=123456', 'Charset' => 'utf-8', 'Content-Type' => 'application/json' })
+      .to_return(status: 200, body: '', headers: {})
 
 
     get api('devices/fleet/reporting', { customer_id: @customer.id, begin_date: '01-01-2019', end_date: '31-01-2019', with_actions: true })
     assert_equal 200, last_response.status
+  end
+
+  test 'should parse dates' do
+    stub_request(:get, 'http://localhost:8084/api/0.1/reportings?format=json&from=2019-01-01&to=2019-01-31&with_actions=true').
+      with(
+        headers: { 'Authorization' => 'Token token=123456', 'Charset' => 'utf-8', 'Content-Type' => 'application/json' }).
+      to_return(status: 204, body: '', headers: {})
+
+
+    orig_locale = I18n.locale
+    begin
+      I18n.locale = :en
+      get api('devices/fleet/reporting', { customer_id: @customer.id, begin_date: '01-01-2019', end_date: '01-30-2019', with_actions: true })
+      assert_equal 204, last_response.status
+    ensure
+      I18n.locale = orig_locale
+    end
   end
 
 end

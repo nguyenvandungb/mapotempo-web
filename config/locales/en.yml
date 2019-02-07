@@ -1209,7 +1209,7 @@ en:
       default_end_date: D-1 by default
       begin_date: Begin date
       end_date: End date
-      with_actions: history of actions
+      with_actions: history of status
   index:
     unsupported_browser:
       unsupported_browser: Unsupported Browser

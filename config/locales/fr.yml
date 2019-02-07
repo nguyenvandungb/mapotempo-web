@@ -1317,7 +1317,7 @@
       'default_end_date': 'J-1 par défaut'
       'begin_date': 'Date de début'
       'end_date': 'Date de fin'
-      'with_actions': 'Historique des actions'
+      'with_actions': 'Historique des statuts'
   'route_mailer':
     'send_kmz_route':
       'title': 'Export Plan KMZ'
