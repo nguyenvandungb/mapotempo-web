@@ -801,7 +801,7 @@
     'index':
       'title': 'Liste comptes client'
       'new': 'Nouveau compte client'
-      'import': 'Importer un compte client'
+      'import': 'Importer'
       'map': 'Carte'
       'no_test': 'hors test'
       'status': 'Statut'

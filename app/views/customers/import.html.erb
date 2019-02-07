@@ -17,8 +17,7 @@
     </div>
 
     <%= render partial: 'profile_router_inputs', locals: { f: f } %>
-
-    <%= f.collection_select :layer_id, t('activerecord.models.layer'), Layer.all.sort_by(&:id).select{ |l| !l[:overlay] }, :id, :translated_name, {}, {required: true} %>
+    <%= f.collection_select :layer_id, t('activerecord.models.layer'), Layer.all.sort_by(&:id).select{ |l| !l[:overlay] }, :id, :translated_name, {}, {} %>
     <div class="col-md-2"></div>
     <p class="help-block layer-unauthorized hidden warning has-warning" style="display:block!important;"><%= t('activerecord.attributes.customer.layer_warning') %></p>
 
