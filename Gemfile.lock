@@ -723,7 +723,7 @@ DEPENDENCIES
   font-awesome-rails
   grape (< 1)
   grape-entity
-  grape-swagger (< 0.30)
+  grape-swagger (< 0.26)
   grape-swagger-entity (< 0.3)
   guard
   guard-delayed
