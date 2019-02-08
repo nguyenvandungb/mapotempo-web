@@ -31,33 +31,25 @@ class V01::Devices::FleetReporting < Grape::API
           end
 
           MAX_DAYS = 31
-          DATE_DESC = "Local format depends of the locale sent in http header. Default local send is english (:en)\n
-    ex:\n
-    en: mm-dd-yyyy\n
-    fr: dd-mm-yyyy"
         end
 
         before do
           @customer = current_customer(params[:customer_id])
         end
 
-        rescue_from DeviceServiceError do |e, c|
-          error! e.message, c
-        end
-
         desc 'Get reporting',
           detail: "Get reporting from Mapotempo Live missions. Range between begin_date and end_date must be inferior to #{MAX_DAYS} days",
           nickname: 'reporting'
         params do
-          requires :begin_date, type: Date, coerce_with: ->(d) { Date.strptime(d.to_s, I18n.t('time.formats.datepicker')).strftime(ACTIVE_RECORD_DATE_MASK).to_date }, desc: 'Select only plannings after this date.' + DATE_DESC
-          requires :end_date, type: Date, coerce_with: ->(d) { Date.strptime(d.to_s, I18n.t('time.formats.datepicker')).strftime(ACTIVE_RECORD_DATE_MASK).to_date }, desc: 'Select only plannings before this date.' + DATE_DESC
-          requires :with_actions, type: Boolean, desc: 'Get history of actions', default: false
+          requires :begin_date, type: Date, coerce_with: ->(d) { Date.strptime(d.to_s, I18n.t('time.formats.datepicker')).strftime(ACTIVE_RECORD_DATE_MASK).to_date }, desc: 'Select only plannings after this date.' + SharedParams::DATE_DESC
+          requires :end_date, type: Date, coerce_with: ->(d) { Date.strptime(d.to_s, I18n.t('time.formats.datepicker')).strftime(ACTIVE_RECORD_DATE_MASK).to_date }, desc: 'Select only plannings before this date.' + SharedParams::DATE_DESC
+          optional :with_actions, type: Boolean, desc: 'Get history of actions'
         end
         get do
           if params[:end_date] < params[:begin_date]
-            raise DeviceServiceError.new('End date should be after begin date', 400)
+              error!(I18n.t('reporting.download.end_date_inferior'), 400)
           elsif (params[:end_date] - params[:begin_date]).to_i > MAX_DAYS
-            raise DeviceServiceError.new('Maximum days for reporting reached: ' + MAX_DAYS.to_s, 400)
+              error!(I18n.t('reporting.download.max_interval_reached'), 400)
           else
             service.reporting(params) || status(204)
           end

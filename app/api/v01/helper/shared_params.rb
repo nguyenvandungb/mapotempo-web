@@ -37,6 +37,8 @@ module SharedParams
   end
 
   ID_DESC = 'Id or the ref field value, then use "ref:[value]".'.freeze
-
+  DATE_DESC = "Local format depends of the locale sent in http header. Default local send is english (:en)\n
+  ex:\n
+  en: mm-dd-yyyy\n
+  fr: dd-mm-yyyy"
 end
-
