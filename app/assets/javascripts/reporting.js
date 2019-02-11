@@ -22,17 +22,22 @@ var reporting_index = function() {
         contentType: 'application/csv; charset=utf-8'
       },
       success: function(data, _textStatus, xhr) {
+        var blob = new Blob([data], {type: 'text/csv'});
+        var filename = 'reporting.csv';
         if (xhr.status === 204) {
           notice(I18n.t('reporting.download.no_content'));
         } else {
-          var blob = new Blob([data], {type: 'text/csv'});
-          var a = document.createElement('a');
-          var url = window.URL.createObjectURL(blob);
-          document.body.appendChild(a);
-          a.href = url;
-          a.download = 'reporting.csv';
-          a.click();
-          window.URL.revokeObjectURL(url);
+          if (navigator.msSaveBlob) {
+            navigator.msSaveBlob(blob, filename);
+          } else {
+            var a = document.createElement('a');
+            var url = window.URL.createObjectURL(blob);
+            document.body.appendChild(a);
+            a.href = url;
+            a.download = filename;
+            a.click();
+            window.URL.revokeObjectURL(url);
+          }
           notice(I18n.t('reporting.download.success'));
         }
         $('#download-reporting').prop('disabled', false);
