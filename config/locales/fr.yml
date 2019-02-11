@@ -1310,7 +1310,8 @@
       'retry': 'Re-télécharger'
       'no_content': 'Le corps de la réponse est vide'
     'index':
-      'title': 'Rapport'
+      'title': 'Rapports'
+      'head': 'Téléchargement du rapport des tournées réalisées avec l’application mobile Mapotempo Live'
       'submit': 'Télécharger'
       'downloading': 'Téléchargement en cours...'
       'default_begin_date': 'J-8 par défaut'

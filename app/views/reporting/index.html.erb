@@ -2,6 +2,10 @@
 <h1><%= t '.title' %></h1>
 
 <div class="row row-top">
+  <p><%= t '.head' %></p>
+</div>
+
+<div class="row">
   <%= twitter_bootstrap_form_for :_, url: {action: 'index'}, layout: :horizontal, html: { class: 'form-horizontal reporting-form', autocomplete: "off"} do |f| %>
 
     <%= f.hidden_field :customer_id, value: current_user.customer.id %>

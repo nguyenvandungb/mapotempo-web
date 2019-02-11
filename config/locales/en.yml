@@ -1203,6 +1203,7 @@ en:
       no_content: The request body is empty
     index:
       title: Reporting
+      head: Download report of routes executed with Mapotempo Live mobile application
       submit: Download
       downloading: Downloading...
       default_begin_date: D-8 by default
