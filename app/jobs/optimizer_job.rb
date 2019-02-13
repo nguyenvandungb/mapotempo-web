@@ -73,7 +73,7 @@ class OptimizerJob < Job.new(:planning_id, :route_id, :global, :active_only, :ig
           Delayed::Worker.logger.info "OptimizerJob planning_id=#{planning_id} #{@job.progress}"
           optimum
         end
-      rescue NoSolutionFoundError => e
+      rescue VRPNoSolutionError, VRPUnprocessableError => e
         job_progress_save 'no_solution'
         Delayed::Worker.logger.info "OptimizerJob planning_id=#{planning_id} #{@job.progress}"
         raise e

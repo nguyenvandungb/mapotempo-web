@@ -131,7 +131,7 @@ class V01::Routes < Grape::API
                 end
               end
             end
-          rescue NoSolutionFoundError => e
+          rescue VRPNoSolutionError => e
             status 304
           end
         end

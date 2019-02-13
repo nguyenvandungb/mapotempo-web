@@ -528,7 +528,7 @@ class V01::PlanningsErrorTest < V01::PlanningsBaseTest
 
   test 'should perform a global optimization and return no solution found' do
     customers(:customer_one).update(job_optimizer_id: nil)
-    OptimizerWrapper.stub_any_instance(:optimize, lambda{ |*_a| raise NoSolutionFoundError.new }) do
+    OptimizerWrapper.stub_any_instance(:optimize, lambda{ |*_a| raise VRPNoSolutionError.new }) do
       get api("/#{@planning.id}/optimize", { global: true, details: true, synchronous: true })
       assert_equal 304, last_response.status, last_response.body
     end

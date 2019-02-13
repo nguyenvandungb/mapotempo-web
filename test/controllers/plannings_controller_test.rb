@@ -759,7 +759,7 @@ class PlanningsControllerTest < ActionController::TestCase
         assert_response :unprocessable_entity
       end
 
-      Planning.stub_any_instance(:optimize, lambda { |*a| raise NoSolutionFoundError } ) do
+      Planning.stub_any_instance(:optimize, lambda { |*a| raise VRPNoSolutionError } ) do
         get :optimize_route, planning_id: @planning, format: :json, route_id: routes(:route_one_one).id
         assert_valid response
         assert_response :unprocessable_entity
@@ -780,7 +780,7 @@ class PlanningsControllerTest < ActionController::TestCase
       assert_response :unprocessable_entity
     end
 
-    Planning.stub_any_instance(:optimize, lambda { |*a| raise NoSolutionFoundError } ) do
+    Planning.stub_any_instance(:optimize, lambda { |*a| raise VRPNoSolutionError } ) do
       get :optimize, planning_id: @planning, format: :json, global: true
       assert_valid response
       assert_response :unprocessable_entity

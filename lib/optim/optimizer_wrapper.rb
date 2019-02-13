@@ -17,7 +17,8 @@
 #
 require 'rest_client'
 
-class NoSolutionFoundError < StandardError; end
+class VRPNoSolutionError < StandardError; end
+class VRPUnprocessableError < StandardError; end
 
 class OptimizerWrapper
 
@@ -75,7 +76,7 @@ class OptimizerWrapper
         vehicles: vehicles.collect{ |vehicle|
           v = {
             id: "v#{vehicle[:id]}",
-            router_mode: vehicle[:router].mode,
+            router_mode: vehicle[:router].try(&:mode),
             router_dimension: vehicle[:router_dimension],
             # router_options are flattened and merged below
             speed_multiplier: vehicle[:speed_multiplier],
@@ -170,7 +171,13 @@ class OptimizerWrapper
       json = resource_vrp.post({api_key: @api_key, vrp: vrp}.to_json, content_type: :json, accept: :json) { |response, request, result, &block|
         if response.code != 200 && response.code != 201
           json = (response && /json/.match(response.headers[:content_type]) && response.size > 1) ? JSON.parse(response) : nil
-          Delayed::Worker.logger.info "VRP submit #{response.code} " + (json && json['message'] ? json['message'] : '') + ' ' + request.to_json
+          msg = if json && json['message']
+                  json['message']
+                elsif json && json['error']
+                  json['error']
+                end
+          Delayed::Worker.logger.info "VRP submit #{response.code} " + (msg || '') + ' ' + request.to_json
+          raise VRPUnprocessableError, msg || 'Unexpected error'
         end
         response
       }
@@ -190,7 +197,7 @@ class OptimizerWrapper
           json = RestClient.get(@url + "/vrp/jobs/#{job_id}.json", params: {api_key: @api_key})
         else
           if /No solution provided/.match result['job']['avancement']
-            raise NoSolutionFoundError.new
+            raise VRPNoSolutionError.new
           else
             raise RuntimeError.new(result['job']['avancement'] || 'Optimizer return unknown error')
           end

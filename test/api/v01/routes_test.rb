@@ -298,7 +298,7 @@ class V01::RoutesErrorTest < V01::RoutesBaseTest
 
   test 'should optimize route and return no solution found' do
     customers(:customer_one).update(job_optimizer_id: nil)
-    OptimizerWrapper.stub_any_instance(:optimize, lambda{ |*_a| raise NoSolutionFoundError.new }) do
+    OptimizerWrapper.stub_any_instance(:optimize, lambda{ |*_a| raise VRPNoSolutionError.new }) do
       patch api(@route.planning.id, "#{@route.id}/optimize", details: true)
       assert_equal 304, last_response.status, last_response.body
     end

@@ -293,7 +293,7 @@ class PlanningsController < ApplicationController
           errors = @planning.errors.full_messages.size.zero? ? @planning.customer.errors.full_messages : @planning.errors.full_messages
           format.json { render json: @planning.errors, status: :unprocessable_entity }
         end
-      rescue NoSolutionFoundError
+      rescue VRPNoSolutionError
         @planning.errors[:base] = I18n.t('plannings.edit.dialog.optimizer.no_solution')
         format.json { render json: @planning.errors, status: :unprocessable_entity }
       rescue ActiveRecord::RecordInvalid
@@ -316,7 +316,7 @@ class PlanningsController < ApplicationController
           errors = @planning.errors.full_messages.size.zero? ? @planning.customer.errors.full_messages : @planning.errors.full_messages
           format.json { render json: errors, status: :unprocessable_entity }
         end
-      rescue NoSolutionFoundError
+      rescue VRPNoSolutionError
         @planning.errors[:base] = I18n.t('plannings.edit.dialog.optimizer.no_solution')
         format.json { render json: @planning.errors, status: :unprocessable_entity }
       rescue ActiveRecord::RecordInvalid

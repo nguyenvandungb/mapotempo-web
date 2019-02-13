@@ -229,7 +229,7 @@ class V01::Plannings < Grape::API
 
         begin
           Optimizer.optimize(planning, nil, { global: params[:global], synchronous: params[:synchronous], active_only: params[:all_stops].nil? ? params[:active_only] : !params[:all_stops], ignore_overload_multipliers: params[:ignore_overload_multipliers] })
-        rescue NoSolutionFoundError
+        rescue VRPNoSolutionError
           status 304
         end
         if params[:details]
