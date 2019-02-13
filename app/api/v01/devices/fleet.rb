@@ -126,16 +126,24 @@ class V01::Devices::Fleet < Grape::API
            detail: 'Create company with a driver by vehicle',
            nickname: 'deviceFleetCreateCompanyAndDrivers'
       get '/create_company' do
-        data = service.create_company['admin_user'].slice('email', 'api_key')
-        data['drivers'] = service.create_or_update_drivers(@current_user)
-        data
+        if @customer.reseller.authorized_fleet_administration?
+          data = service.create_company['admin_user'].slice('email', 'api_key')
+          data['drivers'] = service.create_or_update_drivers(@current_user)
+          data
+        else
+          error! 'Forbidden', 403
+        end
       end
 
       desc 'Create drivers',
            detail: 'Create driver by vehicle',
            nickname: 'deviceFleetCreateDrivers'
       get '/create_or_update_drivers' do
-        service.create_or_update_drivers(@current_user) if @current_customer.reseller.authorized_fleet_administration?
+        if @customer.reseller.authorized_fleet_administration?
+          service.create_or_update_drivers(@current_user) if @current_customer.reseller.authorized_fleet_administration?
+        else
+          error! 'Forbidden', 403
+        end
       end
     end
   end
