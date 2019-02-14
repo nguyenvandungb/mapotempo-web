@@ -250,11 +250,10 @@ function markerClusterIcon(childCount, defaultColor, borderColors) {
 }
 
 var removeInactiveStops = function(data) {
-  Object.entries(data['features']).forEach(function(entry) {
-    var key = entry[0];
-    var value = entry[1];
-    if (value['properties']['active'] === false) {
-      data['features'].splice(key, 1);
+  $.each(data['features'], function(index, element) {
+    if (index === data['features'].length) return false;
+    if (element['properties']['active'] === false) {
+      data['features'].splice(index, 1);
     }
   });
 };
