@@ -1040,6 +1040,20 @@ var plannings_edit = function(params) {
 
     var $routes = context.hasClass('route') ? context : $(".route", context);
 
+    var setTooltipColor = function setTooltipColor(vehicleUsageId, color) {
+      var tooltip;
+      if (vehicleMarkers.length
+        && vehicleMarkers[vehicleUsageId]
+        && (tooltip = vehicleMarkers[vehicleUsageId].getTooltip())) {
+        var content = $(tooltip._content);
+        content.children(":first").css({
+          'border': '0.3em solid ' + color,
+        });
+        content.find('#vehicle-name').css('background-color', color)
+        vehicleMarkers[vehicleUsageId].setTooltipContent('<div>' + content.html() + '</div>');
+      }
+    };
+
     // Following callbacks need to be set as many as route has changed
     $routes.off('change').on('change', "[name=route\\\[color\\\]]", function() {
       var id = $(this).closest('[data-route_id]').attr('data-route_id');
@@ -1060,20 +1074,6 @@ var plannings_edit = function(params) {
           setTooltipColor(route.vehicle_usage_id, color);
         }
       });
-
-      var setTooltipColor = function setTooltipColor(vehicleUsageId, color) {
-        var tooltip;
-        if (vehicleMarkers.length
-          && vehicleMarkers[vehicleUsageId]
-          && (tooltip = vehicleMarkers[vehicleUsageId].getTooltip())) {
-          var content = $(tooltip._content);
-          content.children(":first").css({
-            'border': '0.3em solid ' + color,
-          });
-          content.find('#vehicle-name').css('background-color', color)
-          vehicleMarkers[vehicleUsageId].setTooltipContent('<div>' + content.html() + '</div>');
-        }
-      };
 
       $.ajax({
         type: 'PUT',
