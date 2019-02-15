@@ -1078,7 +1078,7 @@ var plannings_edit = function(params) {
       $.ajax({
         type: 'PUT',
         data: JSON.stringify({
-          color: color
+          color: this.value
         }),
         contentType: 'application/json',
         url: '/api/0.1/plannings/' + planning_id + '/routes/' + id + '.json',
