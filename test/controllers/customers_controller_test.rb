@@ -120,4 +120,12 @@ class CustomersControllerTest < ActionController::TestCase
 
     assert_response :success
   end
+
+  test 'should render import action if no file is uploaded on import' do
+    sign_in users(:user_admin)
+
+    post :upload_dump, customer: { profile_id: profiles(:profile_one).id, router_id: routers(:router_one).id, layer_id: layers(:layer_one).id }
+
+    assert_template :import
+  end
 end

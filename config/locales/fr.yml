@@ -817,6 +817,7 @@
       'submit': 'Importer le compte client'
     'upload_dump':
       'success': 'Client importé avec succès'
+      'file_empty': 'Un fichier .dump doit être renseigné'
     'new':
       'title': 'Nouveau compte client'
     'destroy':

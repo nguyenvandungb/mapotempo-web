@@ -793,6 +793,7 @@ en:
       submit: Import customer
     upload_dump:
       success: Customer successfully imported
+      file_empty: .dump file must be filled
     new:
       title: New Account
     destroy:

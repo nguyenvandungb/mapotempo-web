@@ -96,17 +96,23 @@ class CustomersController < ApplicationController
 
   def upload_dump
     uploaded_io = customer_params[:uploaded_file]
-    file_path = Rails.root.join('public', 'uploads', uploaded_io.original_filename)
-    File.open(file_path, 'wb'){ |file| file.write(uploaded_io.read)}
+    if uploaded_io.nil?
+      @customer = current_user.reseller.customers.build
+      flash.now[:alert] = I18n.t('customers.upload_dump.file_empty')
+      render action: :import
+    else
+      file_path = Rails.root.join('public', 'uploads', uploaded_io.original_filename)
+      File.open(file_path, 'wb'){ |file| file.write(uploaded_io.read)}
 
-    string_customer = File.open(file_path, 'rb')
-    options = {profile_id: customer_params[:profile_id], router_id: customer_params[:router_id], layer_id: customer_params[:layer_id]}
+      string_customer = File.open(file_path, 'rb')
+      options = {profile_id: customer_params[:profile_id], router_id: customer_params[:router_id], layer_id: customer_params[:layer_id]}
 
-    File.delete(file_path)
+      File.delete(file_path)
 
-    customer = ImportExportCustomer.import(string_customer, options)
+      customer = ImportExportCustomer.import(string_customer, options)
 
-    redirect_to [:customers], notice: t('.success', customer_name: customer.name)
+      redirect_to [:customers], notice: t('.success', customer_name: customer.name)
+    end
   end
 
   private
