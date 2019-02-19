@@ -73,7 +73,8 @@ class ImportCsv
                       r.find{ |rr| rr[0] == c }.try{ |rr| rr[1] }
                     end
                   }.compact
-                  row[key] = values.join(' ') if !values.empty? || key == :lat || key == :lng # lat or lng must be set even if empty
+                  # lat or lng must be set even if empty but only when specified in columns
+                  row[key] = values.join(' ') if should_fill_row?(key, r, values)
                 elsif r.key?(v[:title])
                   # Import with column name
                   row[key] = r[v[:title]]
@@ -118,6 +119,10 @@ class ImportCsv
   end
 
   private
+
+  def should_fill_row?(key, row, values)
+    !values.empty? || ((key == :lat || key == :lng) && (!without_header? && row.to_h.key?(column_def[:lat] || 'lat') && row.to_h.key?(column_def[:lng] || 'lng')))
+  end
 
   def data
     @data ||= parse_csv
