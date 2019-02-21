@@ -29,6 +29,7 @@ class Ability
         can :manage, Reseller, id: user.reseller_id
         can [:index], Profile
       else
+        can :index, :reporting
         can [:edit, :update, :password, :set_password], User, id: user.id
         can [:edit, :update], Customer, id: user.customer.id
         can [:stop_job_optimizer, :stop_job_destination_geocoding, :stop_job_store_geocoding], Customer
